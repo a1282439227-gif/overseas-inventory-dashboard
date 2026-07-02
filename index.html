@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>海外库存看板</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <section class="title-block" aria-labelledby="pageTitle">
+          <p class="eyebrow">Overseas Inventory Board</p>
+          <h1 id="pageTitle">海外库存看板</h1>
+          <p class="source-note" id="sourceNote">正在读取海外仓库存数据</p>
+        </section>
+
+        <section class="visual-card" aria-label="海外仓作业概览">
+          <img src="./assets/warehouse-operations.png" alt="海外仓库作业和全球配送场景">
+          <div class="visual-metrics">
+            <span>德国法兰克福仓</span>
+            <span>荷兰仓</span>
+            <span>美国芝加哥仓</span>
+            <span>澳大利亚悉尼仓</span>
+          </div>
+        </section>
+      </header>
+
+      <nav class="view-tabs" aria-label="看板页面">
+        <button class="view-tab is-active" type="button" data-view="overview" aria-controls="overviewPage" aria-selected="true">海外仓总览</button>
+        <button class="view-tab" type="button" data-view="material" aria-controls="materialPage" aria-selected="false">料号筛选</button>
+        <button class="view-tab" type="button" data-view="replenishment" aria-controls="replenishmentPage" aria-selected="false">备货订单</button>
+        <button class="view-tab" type="button" data-view="rma" aria-controls="rmaPage" aria-selected="false">RMA订单查询</button>
+      </nav>
+
+      <section class="view-panel is-active" id="overviewPage" data-view-panel="overview">
+        <section class="summary-grid" id="summaryGrid" aria-label="库存指标汇总"></section>
+
+        <section class="warehouse-section" aria-label="仓库总览">
+          <div class="section-title">
+            <div>
+              <h2>海外仓总览</h2>
+              <p class="section-subtitle">按海外仓汇总库存、SKU、预留与可用量。</p>
+            </div>
+            <span id="warehouseCount"></span>
+          </div>
+          <div class="warehouse-list" id="warehouseList"></div>
+        </section>
+
+        <section class="detail-section overview-detail-section" aria-label="仓库库存明细">
+          <div class="section-title">
+            <div>
+              <h2 id="overviewDetailTitle">库存明细</h2>
+              <p class="section-subtitle" id="overviewDetailMeta"></p>
+            </div>
+            <span id="overviewDetailCount"></span>
+          </div>
+          <div class="table-wrap compact-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>项目</th>
+                  <th>物料编码</th>
+                  <th>物料名称</th>
+                  <th>分类</th>
+                  <th>产品线</th>
+                  <th>仓库</th>
+                  <th>货位</th>
+                  <th>规格 / 型号</th>
+                  <th class="num">现存</th>
+                  <th class="num">预留</th>
+                  <th class="num">冻结</th>
+                  <th class="num">可用</th>
+                  <th class="num">库存金额</th>
+                  <th>单位</th>
+                  <th>状态</th>
+                </tr>
+              </thead>
+              <tbody id="overviewTableBody"></tbody>
+            </table>
+          </div>
+          <p id="overviewEmptyState" class="empty-state" hidden>暂无库存明细</p>
+        </section>
+
+        <section class="overview-support-grid">
+          <section class="network-section" aria-label="海外仓分布">
+            <div class="section-title">
+              <h2>海外仓分布</h2>
+              <span id="networkStatus"></span>
+            </div>
+            <div class="warehouse-map" id="warehouseMap"></div>
+          </section>
+
+          <section class="insight-section" aria-label="库存预警">
+            <div class="section-title">
+              <h2>库存重点</h2>
+              <span id="alertCount"></span>
+            </div>
+            <div class="insight-group">
+              <h3>低可用物料</h3>
+              <div id="lowStockList" class="compact-list"></div>
+            </div>
+            <div class="insight-group">
+              <h3>同料跨仓库存</h3>
+              <div id="transferList" class="compact-list"></div>
+            </div>
+          </section>
+        </section>
+
+        <details class="import-section manual-import-section">
+          <summary class="section-title import-summary">
+            <div>
+              <h2>Excel人工导入</h2>
+              <p class="section-subtitle">系统未自动更新时，粘贴库存表格内容。</p>
+            </div>
+            <span id="overviewImportStatus">可粘贴 Excel / CSV</span>
+          </summary>
+          <div class="import-grid">
+            <div class="file-import-box">
+              <div>
+                <strong>上传库存表格</strong>
+                <span>支持 .xlsx、.xls、.csv、.tsv，选择文件后自动导入。</span>
+              </div>
+              <label class="file-picker" for="overviewImportFile">选择文件</label>
+              <input id="overviewImportFile" class="file-input" type="file" accept=".xlsx,.xls,.csv,.tsv,.txt,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv">
+            </div>
+            <label class="field">
+              <span>库存明细</span>
+              <textarea id="overviewImportArea" spellcheck="false" placeholder="仓库,项目,物料编码,物料名称,分类,产品线,货位,规格,型号,现存,预留,冻结,库存金额,单位"></textarea>
+            </label>
+            <div class="import-actions">
+              <button id="overviewImportButton" type="button">导入库存</button>
+              <button id="overviewTemplateButton" class="secondary" type="button">填入模板</button>
+              <button id="overviewRestoreButton" class="ghost" type="button">恢复系统库存</button>
+              <p>导入后会更新“海外仓总览”和“料号筛选”的库存数据。</p>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <section class="view-panel" id="materialPage" data-view-panel="material" hidden>
+        <section class="page-heading">
+          <div>
+            <h2>料号筛选</h2>
+            <p class="section-subtitle">按物料编码聚合海外仓库存。</p>
+          </div>
+        </section>
+
+        <section class="control-panel" aria-label="筛选条件">
+          <label class="field wide">
+            <span>搜索</span>
+            <input id="keywordInput" type="search" placeholder="输入物料编码，例如 1S0114004J0260A 或 S010470502501">
+          </label>
+
+          <label class="field">
+            <span>仓库</span>
+            <select id="warehouseSelect"></select>
+          </label>
+
+          <label class="field">
+            <span>项目</span>
+            <select id="projectSelect"></select>
+          </label>
+
+          <label class="field">
+            <span>状态</span>
+            <select id="statusSelect">
+              <option value="all">全部状态</option>
+              <option value="normal">正常</option>
+              <option value="reserved">有预留</option>
+              <option value="frozen">有冻结</option>
+              <option value="shortage">无可用库存</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>排序</span>
+            <select id="sortSelect">
+              <option value="availableAsc">可用量最低</option>
+              <option value="qtyDesc">现存量最高</option>
+              <option value="warehouseAsc">仓库顺序</option>
+              <option value="materialAsc">物料编码</option>
+            </select>
+          </label>
+
+          <div class="button-row controls">
+            <button id="sampleButton" type="button">恢复 Excel 数据</button>
+            <button id="exportButton" class="secondary" type="button">导出 CSV</button>
+            <button id="resetButton" class="ghost" type="button">重置筛选</button>
+          </div>
+        </section>
+
+        <section class="material-lookup-section" id="materialLookupSection" aria-label="物料编码查询结果" hidden>
+          <div class="section-title">
+            <div>
+              <h2 id="materialLookupTitle">物料编码查询</h2>
+              <p id="materialLookupMeta" class="section-subtitle"></p>
+            </div>
+            <span id="materialLookupCount"></span>
+          </div>
+          <div class="material-lookup-grid" id="materialLookupGrid"></div>
+        </section>
+
+        <section class="detail-section" aria-label="库存明细">
+          <div class="section-title">
+            <h2>筛选明细</h2>
+            <span id="rowCount"></span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>项目</th>
+                  <th>物料编码</th>
+                  <th>物料名称</th>
+                  <th>分类</th>
+                  <th>产品线</th>
+                  <th>仓库</th>
+                  <th>货位</th>
+                  <th>规格 / 型号</th>
+                  <th class="num">现存</th>
+                  <th class="num">预留</th>
+                  <th class="num">冻结</th>
+                  <th class="num">可用</th>
+                  <th>单位</th>
+                  <th>状态</th>
+                </tr>
+              </thead>
+              <tbody id="stockTableBody"></tbody>
+            </table>
+          </div>
+          <p id="emptyState" class="empty-state" hidden>暂无匹配的库存明细</p>
+        </section>
+
+        <section class="import-section" aria-label="数据导入">
+          <div class="section-title">
+            <h2>补充导入</h2>
+            <span id="importStatus">可粘贴 CSV / TSV</span>
+          </div>
+          <div class="import-grid">
+            <label class="field">
+              <span>粘贴库存明细</span>
+              <textarea id="importArea" spellcheck="false" placeholder="仓库,项目,物料编码,物料名称,分类,产品线,货位,规格,型号,现存,预留,冻结,单位"></textarea>
+            </label>
+            <div class="import-actions">
+              <button id="importButton" type="button">导入数据</button>
+              <button id="fillTemplateButton" class="secondary" type="button">填入模板</button>
+              <p>当前看板已内置 Excel 中全部海外仓库存，可在这里追加或覆盖同仓同物料同货位的数据。</p>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="view-panel" id="replenishmentPage" data-view-panel="replenishment" hidden>
+        <section class="page-heading">
+          <div>
+            <h2>备货订单</h2>
+            <p class="section-subtitle">按海外仓汇总备货订单、状态、运输方式和预计到仓信息。</p>
+          </div>
+          <span id="replenishmentCount">0 条备货记录</span>
+        </section>
+
+        <section class="order-filter-panel" aria-label="备货订单筛选">
+          <label class="field wide">
+            <span>搜索</span>
+            <input id="replenishmentKeywordInput" type="search" placeholder="订单号、物料编码、物料名称">
+          </label>
+          <label class="field">
+            <span>海外仓</span>
+            <select id="replenishmentWarehouseSelect"></select>
+          </label>
+          <label class="field">
+            <span>状态</span>
+            <select id="replenishmentStatusSelect"></select>
+          </label>
+          <label class="field">
+            <span>运输方式</span>
+            <select id="replenishmentTransportSelect"></select>
+          </label>
+          <div class="button-row controls">
+            <button id="replenishmentResetButton" class="ghost" type="button">重置筛选</button>
+          </div>
+        </section>
+
+        <section class="replenishment-warehouse-grid" id="replenishmentWarehouseGrid" aria-label="海外仓备货概览"></section>
+
+        <section class="replenishment-section" aria-label="备货订单明细">
+          <div class="section-title">
+            <h2>备货订单台账</h2>
+            <span id="replenishmentStatus">待接入表格数据</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>海外仓</th>
+                  <th>订单编号</th>
+                  <th>发货时间</th>
+                  <th>预计到仓</th>
+                  <th>运输方式</th>
+                  <th>状态</th>
+                  <th>是否入库</th>
+                  <th>物料编码</th>
+                  <th>物料名称</th>
+                  <th class="num">备货数量</th>
+                  <th>时效</th>
+                </tr>
+              </thead>
+              <tbody id="replenishmentTableBody"></tbody>
+            </table>
+          </div>
+          <p id="replenishmentEmptyState" class="empty-state">暂无备货订单记录</p>
+        </section>
+
+        <details class="import-section manual-import-section">
+          <summary class="section-title import-summary">
+            <div>
+              <h2>Excel人工导入</h2>
+              <p class="section-subtitle">系统未自动更新时，粘贴备货订单表格内容。</p>
+            </div>
+            <span id="replenishmentImportStatus">可粘贴 Excel / CSV</span>
+          </summary>
+          <div class="import-grid">
+            <div class="file-import-box">
+              <div>
+                <strong>上传备货订单表</strong>
+                <span>支持 .xlsx、.xls、.csv、.tsv，选择文件后自动替换当前备货订单数据。</span>
+              </div>
+              <label class="file-picker" for="replenishmentImportFile">选择文件</label>
+              <input id="replenishmentImportFile" class="file-input" type="file" accept=".xlsx,.xls,.csv,.tsv,.txt,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv">
+            </div>
+            <label class="field">
+              <span>备货订单明细</span>
+              <textarea id="replenishmentImportArea" spellcheck="false" placeholder="订单编号,物料编码,物料名称,数量,海外仓,单价,总价,发货时间,预计到仓,时效,运输方式,状态,是否入库"></textarea>
+            </label>
+            <div class="import-actions">
+              <button id="replenishmentImportButton" type="button">导入备货订单</button>
+              <button id="replenishmentTemplateButton" class="secondary" type="button">填入模板</button>
+              <button id="replenishmentRestoreButton" class="ghost" type="button">恢复系统订单</button>
+              <p>导入后会替换当前“备货订单”数据，并刷新筛选项。</p>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <section class="view-panel" id="rmaPage" data-view-panel="rma" hidden>
+        <section class="page-heading">
+          <div>
+            <h2>RMA订单查询</h2>
+            <p class="section-subtitle">查询售后单号、服务单号、客户、国家、物料与物流状态。</p>
+          </div>
+          <span id="rmaCount">0 条 RMA 明细</span>
+        </section>
+
+        <section class="summary-grid rma-summary-grid" id="rmaSummaryGrid" aria-label="RMA指标汇总"></section>
+
+        <section class="order-filter-panel" aria-label="RMA订单筛选">
+          <label class="field wide">
+            <span>搜索</span>
+            <input id="rmaKeywordInput" type="search" placeholder="售后单号、服务单号、物料编码、客户、国家、SN">
+          </label>
+          <label class="field">
+            <span>状态</span>
+            <select id="rmaStatusSelect"></select>
+          </label>
+          <label class="field">
+            <span>国家</span>
+            <select id="rmaCountrySelect"></select>
+          </label>
+          <label class="field">
+            <span>项目</span>
+            <select id="rmaProjectSelect"></select>
+          </label>
+          <div class="button-row controls">
+            <button id="rmaResetButton" class="ghost" type="button">重置筛选</button>
+          </div>
+        </section>
+
+        <section class="rma-section" aria-label="RMA订单列表">
+          <div class="section-title">
+            <h2>RMA订单列表</h2>
+            <span id="rmaStatus">已接入售后备件数据</span>
+          </div>
+          <div class="table-wrap">
+            <table id="rmaOrderTable" class="resizable-table">
+              <colgroup>
+                <col style="width: 132px">
+                <col style="width: 132px">
+                <col style="width: 132px">
+                <col style="width: 132px">
+                <col style="width: 132px">
+                <col style="width: 132px">
+                <col style="width: 132px">
+                <col style="width: 132px">
+                <col style="width: 132px">
+                <col style="width: 132px">
+                <col style="width: 132px">
+                <col style="width: 132px">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>RM订单号</th>
+                  <th>服务单号</th>
+                  <th>国家</th>
+                  <th>客户</th>
+                  <th>机型</th>
+                  <th>项目</th>
+                  <th>发出日期</th>
+                  <th class="num">品种</th>
+                  <th class="num">需求总数</th>
+                  <th>状态</th>
+                  <th>物流订单</th>
+                  <th>FAE人员</th>
+                </tr>
+              </thead>
+              <tbody id="rmaTableBody"></tbody>
+            </table>
+          </div>
+          <p id="rmaEmptyState" class="empty-state" hidden>暂无匹配的 RMA 记录</p>
+        </section>
+
+        <section class="rma-section rma-detail-section" aria-label="RMA产品明细">
+          <div class="section-title">
+            <div>
+              <h2 id="rmaDetailTitle">RMA产品明细</h2>
+              <p class="section-subtitle" id="rmaDetailMeta"></p>
+            </div>
+            <span id="rmaDetailCount"></span>
+          </div>
+          <div class="table-wrap">
+            <table id="rmaDetailTable" class="resizable-table">
+              <colgroup>
+                <col style="width: 150px">
+                <col style="width: 180px">
+                <col style="width: 82px">
+                <col style="width: 112px">
+                <col style="width: 210px">
+                <col style="width: 76px">
+                <col style="width: 100px">
+                <col style="width: 280px">
+                <col style="width: 420px">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>物料编码</th>
+                  <th>产品名称</th>
+                  <th class="num">需求数量</th>
+                  <th>状态</th>
+                  <th>物流订单</th>
+                  <th>单价</th>
+                  <th>总价 USD</th>
+                  <th>特殊备注</th>
+                  <th>原因描述</th>
+                </tr>
+              </thead>
+              <tbody id="rmaDetailTableBody"></tbody>
+            </table>
+          </div>
+          <p id="rmaDetailEmptyState" class="empty-state">请选择一个 RM 订单查看产品数量和品种</p>
+        </section>
+
+        <details class="import-section manual-import-section">
+          <summary class="section-title import-summary">
+            <div>
+              <h2>Excel人工导入</h2>
+              <p class="section-subtitle">系统未自动更新时，粘贴RMA订单表格内容。</p>
+            </div>
+            <span id="rmaImportStatus">可粘贴 Excel / CSV</span>
+          </summary>
+          <div class="import-grid">
+            <div class="file-import-box">
+              <div>
+                <strong>上传RMA订单表</strong>
+                <span>支持 .xlsx、.xls、.csv、.tsv，选择文件后自动合并 RM 订单并刷新明细。</span>
+              </div>
+              <label class="file-picker" for="rmaImportFile">选择文件</label>
+              <input id="rmaImportFile" class="file-input" type="file" accept=".xlsx,.xls,.csv,.tsv,.txt,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv">
+            </div>
+            <label class="field">
+              <span>RMA订单明细</span>
+              <textarea id="rmaImportArea" spellcheck="false" placeholder="售后单号,服务单号,SN号,客户名称,产品线,国家,机型,项目,物料编码,产品名称,需求数量,单价,总价 USD,启运地,发出日期,状态,售后类型,特殊备注,原因描述,FAE人员,坏件处置建议,物流单号,物流时效/天,父记录"></textarea>
+            </label>
+            <div class="import-actions">
+              <button id="rmaImportButton" type="button">导入RMA订单</button>
+              <button id="rmaTemplateButton" class="secondary" type="button">填入模板</button>
+              <button id="rmaRestoreButton" class="ghost" type="button">恢复系统RMA</button>
+              <p>导入后会重新合并 RM 订单号，并刷新产品明细。</p>
+            </div>
+          </div>
+        </details>
+      </section>
+    </main>
+
+    <script src="./data-inventory.js"></script>
+    <script src="./data-orders.js"></script>
+    <script src="./vendor/xlsx.full.min.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
