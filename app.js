@@ -58,7 +58,7 @@ const warehouses = [
 const excelRows = [
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "372200100J0260A",
         "materialName":  "车控盒总成",
         "category":  "半成品_畜牧",
@@ -74,7 +74,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "美国芝加哥仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "S050160000502",
         "materialName":  "大垫圈 A级",
         "category":  "零部件及主材_标准件",
@@ -106,7 +106,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "YXL-XS-003033A",
         "materialName":  "线束",
         "category":  "零部件及主材_电器件",
@@ -234,7 +234,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "214200000J0260D",
         "materialName":  "MCU总成",
         "category":  "半成品_畜牧",
@@ -250,7 +250,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "荷兰仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "1H0000000J0260A",
         "materialName":  "底部配重装箱",
         "category":  "半成品_实件",
@@ -314,7 +314,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "280000362J0260A",
         "materialName":  "电源转换器支架",
         "category":  "零部件及主材_金属件",
@@ -330,7 +330,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "S050160000502",
         "materialName":  "大垫圈 A级",
         "category":  "零部件及主材_标准件",
@@ -346,7 +346,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "1S0112000J0260B",
         "materialName":  "超声波测距总成",
         "category":  "半成品_畜牧",
@@ -362,7 +362,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "373600014J0260D",
         "materialName":  "急停开关",
         "category":  "零部件及主材_电器件",
@@ -410,7 +410,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "美国芝加哥仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "S010200501001",
         "materialName":  "内六角圆柱头螺钉",
         "category":  "零部件及主材_标准件",
@@ -426,7 +426,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "1H0000000J0260A",
         "materialName":  "底部配重装箱",
         "category":  "半成品_实件",
@@ -442,7 +442,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "211100024J0030B",
         "materialName":  "磁导航传感器",
         "category":  "零部件及主材_电器件",
@@ -474,7 +474,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "210310004J0020C",
         "materialName":  "行走驱动电机",
         "category":  "零部件及主材_电器件",
@@ -522,7 +522,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "370000124J0260A",
         "materialName":  "直流变换器",
         "category":  "零部件及主材_电器件",
@@ -538,7 +538,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "BZB-CG-003042JC",
         "materialName":  "传感器板",
         "category":  "零部件及主材_电器件",
@@ -570,7 +570,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "1S0114004J0260A",
         "materialName":  "视觉算法板",
         "category":  "半成品_畜牧",
@@ -602,7 +602,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "1R0000011J0260B",
         "materialName":  "胶皮",
         "category":  "零部件及主材_金属件",
@@ -650,7 +650,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "悉尼仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "S050160000502",
         "materialName":  "大垫圈 A级",
         "category":  "零部件及主材_标准件",
@@ -682,7 +682,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "210310004J0020C",
         "materialName":  "行走驱动电机",
         "category":  "零部件及主材_电器件",
@@ -746,7 +746,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "悉尼仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "QXL-XS-003310B",
         "materialName":  "主线束",
         "category":  "零部件及主材_电器件",
@@ -762,7 +762,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "S010200401202",
         "materialName":  "内六角圆柱头螺钉",
         "category":  "零部件及主材_标准件",
@@ -794,7 +794,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "213412004J0020D",
         "materialName":  "接触器",
         "category":  "零部件及主材_电器件",
@@ -826,7 +826,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "悉尼仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "S010200501001",
         "materialName":  "内六角圆柱头螺钉",
         "category":  "零部件及主材_标准件",
@@ -842,7 +842,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "372200100J0260A",
         "materialName":  "车控盒总成",
         "category":  "半成品_畜牧",
@@ -858,7 +858,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "Q0039067",
         "materialName":  "按键板总成",
         "category":  "成品_智能套件",
@@ -906,7 +906,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "213412004J0020D",
         "materialName":  "接触器",
         "category":  "零部件及主材_电器件",
@@ -938,7 +938,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "1S0140000J0260H",
         "materialName":  "视觉盒子",
         "category":  "半成品_畜牧",
@@ -1002,7 +1002,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "370000114J0260B",
         "materialName":  "雷达线",
         "category":  "零部件及主材_电器件",
@@ -1066,7 +1066,7 @@ const excelRows = [
     },
     {
         "warehouseName":  "德国法兰克福仓（Germany-UEX）",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "1R0000011J0260B",
         "materialName":  "胶皮",
         "category":  "零部件及主材_金属件",
@@ -1252,13 +1252,25 @@ function replaceCollection(target, incomingRows) {
   target.splice(0, target.length, ...incomingRows);
 }
 
+function getWarehouseLookupValue(row) {
+  const warehouseId = String(row.warehouseId || "").trim();
+  if (warehouseId && warehouseId !== "unknown") return warehouseId;
+  return row.warehouse || row.warehouseName || warehouseId;
+}
+
+function normalizeProject(value) {
+  const project = String(value || "").trim();
+  if (!project) return "未标注";
+  return project.toUpperCase() === "MRP" ? "R1916" : project;
+}
+
 function normalizeRow(row) {
-  const warehouse = findWarehouse(row.warehouseId || row.warehouse || row.warehouseName);
+  const warehouse = findWarehouse(getWarehouseLookupValue(row));
 
   return {
     warehouseId: warehouse.id,
     warehouseName: String(row.warehouseName || row.warehouse || warehouse.name).trim(),
-    project: String(row.project || "").trim() || "未标注",
+    project: normalizeProject(row.project),
     materialCode: String(row.materialCode || "").trim(),
     materialName: String(row.materialName || "").trim(),
     category: String(row.category || "").trim(),
@@ -1690,8 +1702,9 @@ function uniqueValues(sourceRows, key) {
 }
 
 function renderSummary(filteredRows) {
-  const activeWarehouseTotal = getActiveWarehouses(rows).length;
-  const warehouseCount = new Set(filteredRows.map((row) => row.warehouseId)).size;
+  const activeWarehouseIds = new Set(warehouses.map((warehouse) => warehouse.id));
+  const activeWarehouseTotal = warehouses.length;
+  const warehouseCount = new Set(filteredRows.map((row) => row.warehouseId).filter((id) => activeWarehouseIds.has(id))).size;
   const skuCount = new Set(filteredRows.map((row) => row.materialCode)).size;
   const totalOnHand = filteredRows.reduce((sum, row) => sum + row.onHandQty, 0);
   const totalAvailable = filteredRows.reduce((sum, row) => sum + availableQty(row), 0);
@@ -1862,8 +1875,6 @@ function buildStockRowsHtml(sourceRows) {
           <td class="code-cell">${escapeHtml(row.materialCode)}</td>
           <td>${escapeHtml(row.materialName || "-")}</td>
           <td>${escapeHtml(row.category || "-")}</td>
-          <td>${escapeHtml(row.productLine || "-")}</td>
-          <td>${escapeHtml(getWarehouseName(row.warehouseId))}</td>
           <td>${escapeHtml(row.location || "-")}</td>
           <td class="spec-cell">${escapeHtml(specModel || "-")}</td>
           <td class="num">${formatQty(row.onHandQty)}</td>
@@ -2408,11 +2419,25 @@ function splitLine(line, delimiter) {
 }
 
 function getImportIndexes(headers, aliases) {
+  const normalizedHeaders = headers.map(normalizeHeaderLabel);
+  const genericAliases = new Set(["名称", "name"]);
+
   return Object.fromEntries(
-    Object.entries(aliases).map(([key, names]) => [
-      key,
-      headers.findIndex((header) => names.some((name) => normalizeHeaderLabel(header).includes(normalizeHeaderLabel(name)))),
-    ]),
+    Object.entries(aliases).map(([key, names]) => {
+      const normalizedNames = names.map(normalizeHeaderLabel);
+      const exactIndex = normalizedHeaders.findIndex((header) => normalizedNames.includes(header));
+      if (exactIndex >= 0) return [key, exactIndex];
+
+      const fuzzyNames = names
+        .map((name) => ({ raw: String(name || ""), normalized: normalizeHeaderLabel(name) }))
+        .filter((name) => name.normalized && !genericAliases.has(name.raw.toLowerCase()));
+      return [
+        key,
+        normalizedHeaders.findIndex((header) =>
+          fuzzyNames.some((name) => header.includes(name.normalized) || name.normalized.includes(header)),
+        ),
+      ];
+    }),
   );
 }
 

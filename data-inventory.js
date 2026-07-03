@@ -9,7 +9,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "372200100J0260A",
         "materialName":  "车控盒总成",
         "category":  "半成品_畜牧",
@@ -28,7 +28,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "chicago",
         "warehouseName":  "美国芝加哥仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "S050160000502",
         "materialName":  "大垫圈 A级",
         "category":  "零部件及主材_标准件",
@@ -66,7 +66,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "YXL-XS-003033A",
         "materialName":  "线束",
         "category":  "零部件及主材_电器件",
@@ -218,7 +218,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "214200000J0260D",
         "materialName":  "MCU总成",
         "category":  "半成品_畜牧",
@@ -237,7 +237,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "netherlands",
         "warehouseName":  "荷兰仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "1H0000000J0260A",
         "materialName":  "底部配重装箱",
         "category":  "半成品_实件",
@@ -313,7 +313,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "280000362J0260A",
         "materialName":  "电源转换器支架",
         "category":  "零部件及主材_金属件",
@@ -332,7 +332,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "S050160000502",
         "materialName":  "大垫圈 A级",
         "category":  "零部件及主材_标准件",
@@ -351,7 +351,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "1S0112000J0260B",
         "materialName":  "超声波测距总成",
         "category":  "半成品_畜牧",
@@ -370,7 +370,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "373600014J0260D",
         "materialName":  "急停开关",
         "category":  "零部件及主材_电器件",
@@ -427,7 +427,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "chicago",
         "warehouseName":  "美国芝加哥仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "S010200501001",
         "materialName":  "内六角圆柱头螺钉",
         "category":  "零部件及主材_标准件",
@@ -446,7 +446,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "1H0000000J0260A",
         "materialName":  "底部配重装箱",
         "category":  "半成品_实件",
@@ -465,7 +465,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "211100024J0030B",
         "materialName":  "磁导航传感器",
         "category":  "零部件及主材_电器件",
@@ -503,7 +503,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "210310004J0020C",
         "materialName":  "行走驱动电机",
         "category":  "零部件及主材_电器件",
@@ -560,7 +560,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "370000124J0260A",
         "materialName":  "直流变换器",
         "category":  "零部件及主材_电器件",
@@ -579,7 +579,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "BZB-CG-003042JC",
         "materialName":  "传感器板",
         "category":  "零部件及主材_电器件",
@@ -617,7 +617,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "1S0114004J0260A",
         "materialName":  "视觉算法板",
         "category":  "半成品_畜牧",
@@ -634,7 +634,7 @@ window.inventoryRows = [
         "model":  ""
     },
     {
-        "warehouseId":  "unknown",
+        "warehouseId":  "sydney",
         "warehouseName":  "悉尼仓",
         "project":  "R1916",
         "materialCode":  "S010470502501",
@@ -655,7 +655,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "1R0000011J0260B",
         "materialName":  "胶皮",
         "category":  "零部件及主材_金属件",
@@ -710,9 +710,9 @@ window.inventoryRows = [
         "model":  "无"
     },
     {
-        "warehouseId":  "unknown",
+        "warehouseId":  "sydney",
         "warehouseName":  "悉尼仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "S050160000502",
         "materialName":  "大垫圈 A级",
         "category":  "零部件及主材_标准件",
@@ -750,7 +750,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "210310004J0020C",
         "materialName":  "行走驱动电机",
         "category":  "零部件及主材_电器件",
@@ -824,9 +824,9 @@ window.inventoryRows = [
         "model":  "摩可灵USB转485/422转换器通讯线模块"
     },
     {
-        "warehouseId":  "unknown",
+        "warehouseId":  "sydney",
         "warehouseName":  "悉尼仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "QXL-XS-003310B",
         "materialName":  "主线束",
         "category":  "零部件及主材_电器件",
@@ -845,7 +845,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "S010200401202",
         "materialName":  "内六角圆柱头螺钉",
         "category":  "零部件及主材_标准件",
@@ -883,7 +883,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "213412004J0020D",
         "materialName":  "接触器",
         "category":  "零部件及主材_电器件",
@@ -919,9 +919,9 @@ window.inventoryRows = [
         "model":  "LF02"
     },
     {
-        "warehouseId":  "unknown",
+        "warehouseId":  "sydney",
         "warehouseName":  "悉尼仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "S010200501001",
         "materialName":  "内六角圆柱头螺钉",
         "category":  "零部件及主材_标准件",
@@ -940,7 +940,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "372200100J0260A",
         "materialName":  "车控盒总成",
         "category":  "半成品_畜牧",
@@ -959,7 +959,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "Q0039067",
         "materialName":  "按键板总成",
         "category":  "成品_智能套件",
@@ -1016,7 +1016,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "213412004J0020D",
         "materialName":  "接触器",
         "category":  "零部件及主材_电器件",
@@ -1054,7 +1054,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "1S0140000J0260H",
         "materialName":  "视觉盒子",
         "category":  "半成品_畜牧",
@@ -1130,7 +1130,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "370000114J0260B",
         "materialName":  "雷达线",
         "category":  "零部件及主材_电器件",
@@ -1206,7 +1206,7 @@ window.inventoryRows = [
     {
         "warehouseId":  "frankfurt",
         "warehouseName":  "德国法兰克福仓",
-        "project":  "MRP",
+        "project":  "R1916",
         "materialCode":  "1R0000011J0260B",
         "materialName":  "胶皮",
         "category":  "零部件及主材_金属件",
