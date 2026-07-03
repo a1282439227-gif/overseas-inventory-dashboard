@@ -2290,7 +2290,7 @@ function parseImportedReplenishmentRows(text) {
   const table = parseDelimitedRows(text);
   const indexes = getImportIndexes(table.headers, {
     orderNo: ["订单编号", "订单号", "备货订单", "order"],
-    materialCode: ["物料编码", "料号", "material"],
+    materialCode: ["物料编码", "物料编号", "料号", "material"],
     materialName: ["物料名称", "产品名称", "名称", "name"],
     qty: ["备货数量", "数量", "qty"],
     warehouse: ["海外仓", "仓库", "warehouse"],
@@ -2336,7 +2336,7 @@ function parseImportedRmaRows(text) {
     country: ["国家"],
     model: ["机型", "型号"],
     project: ["项目"],
-    materialCode: ["物料编码", "料号", "material"],
+    materialCode: ["物料编码", "物料编号", "料号", "material"],
     materialName: ["产品名称", "物料名称", "名称"],
     qty: ["需求数量", "需求总数", "数量", "qty"],
     unitPrice: ["单价"],
@@ -2426,7 +2426,7 @@ function getHeaderIndexes(headers) {
   const aliases = {
     warehouse: ["仓库", "warehouse"],
     project: ["项目", "主采购项目", "project"],
-    materialCode: ["物料编码", "料号", "material"],
+    materialCode: ["物料编码", "物料编号", "料号", "material"],
     materialName: ["物料名称", "名称", "name"],
     category: ["分类", "物料基本分类", "category"],
     productLine: ["产品线", "product"],
@@ -2549,23 +2549,75 @@ function formatImportedCell(value) {
   return String(value ?? "").replace(/\r?\n/g, " ").trim();
 }
 
+const importHeaderHints = [
+  "仓库",
+  "海外仓",
+  "物料编码",
+  "物料编号",
+  "料号",
+  "订单编号",
+  "售后单号",
+  "RM订单号",
+  "服务单号",
+  "产品名称",
+  "物料名称",
+  "需求数量",
+  "总价",
+  "状态",
+];
+
+function normalizeWorksheetRows(rows) {
+  return rows
+    .map((row) => row.map(formatImportedCell))
+    .filter((row) => row.some(Boolean));
+}
+
+function countHeaderHits(row) {
+  const normalizedHints = importHeaderHints.map(normalizeHeaderLabel);
+  const labels = row.map(normalizeHeaderLabel).filter(Boolean);
+  return normalizedHints.filter((hint) => labels.some((label) => label.includes(hint) || hint.includes(label))).length;
+}
+
 function findLikelyHeaderRowIndex(rows) {
-  const hints = ["仓库", "海外仓", "物料编码", "料号", "订单编号", "售后单号", "RM订单号", "服务单号", "产品名称", "物料名称", "状态"];
-  const normalizedHints = hints.map(normalizeHeaderLabel);
-  return rows.findIndex((row) => {
-    const labels = row.map(normalizeHeaderLabel).filter(Boolean);
-    const hits = normalizedHints.filter((hint) => labels.some((label) => label.includes(hint) || hint.includes(label))).length;
-    return hits >= 2;
-  });
+  return rows.findIndex((row) => countHeaderHits(row) >= 2);
 }
 
 function worksheetRowsToText(rows) {
-  const normalizedRows = rows
-    .map((row) => row.map(formatImportedCell))
-    .filter((row) => row.some(Boolean));
+  const normalizedRows = normalizeWorksheetRows(rows);
   const headerIndex = findLikelyHeaderRowIndex(normalizedRows);
   const tableRows = headerIndex > 0 ? normalizedRows.slice(headerIndex) : normalizedRows;
   return tableRows.map((row) => row.join("\t")).join("\n");
+}
+
+function scoreWorksheetRows(rows) {
+  const normalizedRows = normalizeWorksheetRows(rows);
+  if (!normalizedRows.length) return 0;
+
+  const headerIndex = findLikelyHeaderRowIndex(normalizedRows);
+  if (headerIndex < 0) return 1;
+
+  const headerHits = countHeaderHits(normalizedRows[headerIndex]);
+  const dataRowCount = Math.max(0, normalizedRows.length - headerIndex - 1);
+  return headerHits * 100 + dataRowCount;
+}
+
+function getBestWorksheetRows(workbook) {
+  const candidates = workbook.SheetNames.map((sheetName) => {
+    const rows = window.XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
+      header: 1,
+      defval: "",
+      raw: false,
+      blankrows: false,
+    });
+
+    return {
+      sheetName,
+      rows,
+      score: scoreWorksheetRows(rows),
+    };
+  }).filter((candidate) => candidate.rows.length);
+
+  return candidates.sort((a, b) => b.score - a.score)[0] || null;
 }
 
 async function readImportFile(file) {
@@ -2576,16 +2628,10 @@ async function readImportFile(file) {
   const workbook = isCsv
     ? window.XLSX.read(await readImportFileAsText(file), { type: "string", raw: false })
     : window.XLSX.read(await readImportFileAsArrayBuffer(file), { type: "array", cellDates: true });
-  const sheetName = workbook.SheetNames[0];
-  if (!sheetName) throw new Error("这个文件没有可读取的工作表。");
+  const bestSheet = getBestWorksheetRows(workbook);
+  if (!bestSheet) throw new Error("这个文件没有可读取的工作表。");
 
-  const rowsFromSheet = window.XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
-    header: 1,
-    defval: "",
-    raw: false,
-    blankrows: false,
-  });
-  const text = worksheetRowsToText(rowsFromSheet);
+  const text = worksheetRowsToText(bestSheet.rows);
   if (!text.trim()) throw new Error("这个文件没有可读取的数据。");
   return text;
 }
