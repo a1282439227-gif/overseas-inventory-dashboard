@@ -468,9 +468,59 @@ textarea:focus {
 
 .material-lookup-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: minmax(180px, 0.75fr) repeat(4, minmax(0, 1fr));
   gap: 12px;
   padding: 14px;
+}
+
+.material-image-card {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-height: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  padding: 12px;
+}
+
+.material-image-frame {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f7fafc;
+}
+
+.material-image-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.material-image-frame span {
+  color: var(--muted);
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.material-image-card strong,
+.material-image-card small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.material-image-card strong {
+  font-size: 13px;
+}
+
+.material-image-card small {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
 }
 
 .material-warehouse-card {
@@ -645,15 +695,20 @@ textarea:focus {
   min-height: 430px;
   overflow: hidden;
   padding: 18px;
-  background:
-    linear-gradient(90deg, rgba(49, 95, 150, 0.08) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(49, 95, 150, 0.08) 1px, transparent 1px),
-    #f8fafc;
-  background-size: 48px 48px;
+  background: #f8fafc url("./assets/world-map.svg") center / 92% auto no-repeat;
+}
+
+.warehouse-map::before {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.62));
+  content: "";
+  pointer-events: none;
 }
 
 .map-route {
   position: absolute;
+  z-index: 1;
   left: 42px;
   right: 42px;
   top: 50%;
@@ -663,6 +718,7 @@ textarea:focus {
 
 .map-node {
   position: absolute;
+  z-index: 2;
   left: var(--x);
   top: var(--y);
   width: min(170px, 38vw);
@@ -748,8 +804,16 @@ textarea:focus {
 
 table {
   width: 100%;
-  min-width: 1460px;
+  min-width: 980px;
   border-collapse: collapse;
+}
+
+.overview-detail-section table {
+  min-width: 1060px;
+}
+
+#materialPage .detail-section table {
+  min-width: 980px;
 }
 
 .replenishment-section table {
@@ -757,7 +821,7 @@ table {
 }
 
 .rma-section table {
-  min-width: 1460px;
+  min-width: 860px;
 }
 
 .rma-section .resizable-table {
@@ -792,6 +856,23 @@ table {
   min-width: 0;
   max-width: 100%;
   overflow: hidden;
+}
+
+#rmaOrderTable .clip-cell {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+#rmaOrderTable .clip-cell.two-line {
+  display: -webkit-box;
+  max-height: 38px;
+  overflow: hidden;
+  white-space: normal;
+  word-break: break-all;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .rma-detail-section table {

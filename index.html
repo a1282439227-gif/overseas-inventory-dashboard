@@ -63,16 +63,12 @@
                   <th>物料编码</th>
                   <th>物料名称</th>
                   <th>分类</th>
-                  <th>产品线</th>
-                  <th>仓库</th>
                   <th>货位</th>
-                  <th>规格 / 型号</th>
                   <th class="num">现存</th>
                   <th class="num">预留</th>
                   <th class="num">冻结</th>
                   <th class="num">可用</th>
                   <th class="num">库存金额</th>
-                  <th>单位</th>
                   <th>状态</th>
                 </tr>
               </thead>
@@ -97,7 +93,7 @@
               <span id="alertCount"></span>
             </div>
             <div class="insight-group">
-              <h3>低可用物料</h3>
+              <h3>低库存备件</h3>
               <div id="lowStockList" class="compact-list"></div>
             </div>
             <div class="insight-group">
@@ -123,6 +119,14 @@
               </div>
               <label class="file-picker" for="overviewImportFile">选择文件</label>
               <input id="overviewImportFile" class="file-input" type="file" accept=".xlsx,.xls,.csv,.tsv,.txt,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv">
+            </div>
+            <div class="file-import-box">
+              <div>
+                <strong>Odoo 数据更新</strong>
+                <span>打开 Odoo 核对库存；本机更新时复制命令并按提示输入账号密码。</span>
+              </div>
+              <a class="file-picker" href="https://odoo-se.fjdac.com/web#menu_id=272&action=418&model=product.template&view_type=kanban" target="_blank" rel="noopener">打开 Odoo</a>
+              <button id="odooCommandButton" class="secondary" type="button">复制更新命令</button>
             </div>
             <label class="field">
               <span>库存明细</span>
@@ -211,17 +215,14 @@
               <thead>
                 <tr>
                   <th>项目</th>
+                  <th>仓库</th>
                   <th>物料编码</th>
                   <th>物料名称</th>
-                  <th>分类</th>
                   <th>货位</th>
-                  <th>规格 / 型号</th>
                   <th class="num">现存</th>
                   <th class="num">预留</th>
                   <th class="num">冻结</th>
                   <th class="num">可用</th>
-                  <th class="num">库存金额</th>
-                  <th>单位</th>
                   <th>状态</th>
                 </tr>
               </thead>
@@ -383,18 +384,14 @@
           <div class="table-wrap">
             <table id="rmaOrderTable" class="resizable-table">
               <colgroup>
-                <col style="width: 132px">
-                <col style="width: 132px">
-                <col style="width: 132px">
-                <col style="width: 132px">
-                <col style="width: 132px">
-                <col style="width: 132px">
-                <col style="width: 132px">
-                <col style="width: 132px">
-                <col style="width: 132px">
-                <col style="width: 132px">
-                <col style="width: 132px">
-                <col style="width: 132px">
+                <col style="width: 126px">
+                <col style="width: 118px">
+                <col style="width: 88px">
+                <col style="width: 88px">
+                <col style="width: 106px">
+                <col style="width: 104px">
+                <col style="width: 128px">
+                <col style="width: 96px">
               </colgroup>
               <thead>
                 <tr>
@@ -402,11 +399,7 @@
                   <th>服务单号</th>
                   <th>国家</th>
                   <th>客户</th>
-                  <th>机型</th>
-                  <th>项目</th>
                   <th>发出日期</th>
-                  <th class="num">品种</th>
-                  <th class="num">需求总数</th>
                   <th>状态</th>
                   <th>物流订单</th>
                   <th>FAE人员</th>

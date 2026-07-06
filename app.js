@@ -10,8 +10,8 @@ const warehouses = [
     role: "欧洲售后与整机库存",
     accent: "#315f96",
     soft: "#e5eef9",
-    x: "28%",
-    y: "30%",
+    x: "48%",
+    y: "36%",
     mobileY: "18%",
   },
   {
@@ -23,8 +23,8 @@ const warehouses = [
     role: "欧洲补充周转仓",
     accent: "#25808a",
     soft: "#e0f3f5",
-    x: "45%",
-    y: "58%",
+    x: "46%",
+    y: "32%",
     mobileY: "38%",
   },
   {
@@ -36,8 +36,8 @@ const warehouses = [
     role: "北美备件库存",
     accent: "#92651f",
     soft: "#fff2d6",
-    x: "63%",
-    y: "34%",
+    x: "25%",
+    y: "42%",
     mobileY: "58%",
   },
   {
@@ -49,11 +49,14 @@ const warehouses = [
     role: "澳洲备件库存",
     accent: "#b84a62",
     soft: "#fde8ed",
-    x: "80%",
-    y: "62%",
+    x: "82%",
+    y: "72%",
     mobileY: "78%",
   },
 ];
+
+const inventoryProjectScope = new Set(["R1916", "R1917", "R2404"]);
+const syncLocationScope = ["SVEA", "售后备件"];
 
 const excelRows = [
     {
@@ -1177,6 +1180,7 @@ const elements = {
   overviewImportButton: document.querySelector("#overviewImportButton"),
   overviewTemplateButton: document.querySelector("#overviewTemplateButton"),
   overviewRestoreButton: document.querySelector("#overviewRestoreButton"),
+  odooCommandButton: document.querySelector("#odooCommandButton"),
   replenishmentCount: document.querySelector("#replenishmentCount"),
   replenishmentStatus: document.querySelector("#replenishmentStatus"),
   replenishmentKeywordInput: document.querySelector("#replenishmentKeywordInput"),
@@ -1285,6 +1289,8 @@ function normalizeRow(row) {
     inventoryAmount: parseNumber(row.inventoryAmount || row.amount || row.value),
     spec: String(row.spec || "").trim(),
     model: String(row.model || "").trim(),
+    productId: String(row.productId || "").trim(),
+    imageUrl: String(row.imageUrl || row.image || "").trim(),
     updatedAt: row.updatedAt || new Date().toISOString(),
   };
 }
@@ -1409,6 +1415,14 @@ function inventoryAmount(row) {
   return row.inventoryAmount || row.onHandQty * row.unitCost;
 }
 
+function isInInventoryProjectScope(row) {
+  return inventoryProjectScope.has(String(row.project || "").trim());
+}
+
+function getVisibleInventoryRows() {
+  return rows.filter(isInInventoryProjectScope);
+}
+
 function rowStatus(row) {
   const available = availableQty(row);
   if (available <= 0) return "shortage";
@@ -1442,13 +1456,13 @@ function getWarehouseName(id) {
 }
 
 function getProjects() {
-  return Array.from(new Set(rows.map((row) => row.project).filter(Boolean))).sort((a, b) => a.localeCompare(b, "zh-CN"));
+  return Array.from(new Set(getVisibleInventoryRows().map((row) => row.project).filter(Boolean))).sort((a, b) => a.localeCompare(b, "zh-CN"));
 }
 
 function getFilteredRows() {
   const keyword = state.keyword.trim().toLowerCase();
 
-  return rows
+  return getVisibleInventoryRows()
     .filter((row) => {
       const warehouse = getWarehouseName(row.warehouseId);
       const text = [
@@ -1502,6 +1516,7 @@ function aggregateRows(sourceRows) {
         availableQty: 0,
         supplierOwnedQty: 0,
         shortageCount: 0,
+        lowStockCount: 0,
         reservedCount: 0,
       },
     ]),
@@ -1519,6 +1534,7 @@ function aggregateRows(sourceRows) {
     item.availableQty += availableQty(row);
     item.supplierOwnedQty += row.supplierOwnedQty;
     if (rowStatus(row) === "shortage") item.shortageCount += 1;
+    if (row.onHandQty < 5) item.lowStockCount += 1;
     if (rowStatus(row) === "reserved") item.reservedCount += 1;
   });
 
@@ -1530,8 +1546,9 @@ function render() {
   renderControls();
   renderReplenishmentControls();
   renderRmaControls();
+  const visibleInventoryRows = getVisibleInventoryRows();
   const filteredRows = getFilteredRows();
-  const allWarehouseStats = aggregateRows(rows);
+  const allWarehouseStats = aggregateRows(visibleInventoryRows);
   const overviewRows = getOverviewRows();
   renderSummary(overviewRows);
   renderMaterialLookup();
@@ -1550,7 +1567,7 @@ function render() {
     : "内置库存数据";
   const replenishmentSource = dataOverrides.replenishment ? "人工导入备货订单" : "备货订单";
   const rmaSource = dataOverrides.rma ? "人工导入 RMA 订单" : "RMA 售后备件表";
-  elements.sourceNote.textContent = `来源：${inventorySource}、${replenishmentSource}、${rmaSource}；当前看板含 ${rows.length} 条库存明细、${replenishmentOrders.length} 条备货明细、${rmaOrders.length} 条 RMA 明细。刷新时间：${updatedText}`;
+  elements.sourceNote.textContent = `来源：${inventorySource}、${replenishmentSource}、${rmaSource}；当前看板展示 ${visibleInventoryRows.length} 条库存明细、${replenishmentOrders.length} 条备货明细、${rmaOrders.length} 条 RMA 明细。刷新时间：${updatedText}`;
 }
 
 function renderView() {
@@ -1571,8 +1588,9 @@ function renderView() {
 }
 
 function getOverviewRows() {
-  if (state.warehouse === "all") return [...rows].sort(sortRows);
-  return rows.filter((row) => row.warehouseId === state.warehouse).sort(sortRows);
+  const sourceRows = getVisibleInventoryRows();
+  if (state.warehouse === "all") return [...sourceRows].sort(sortRows);
+  return sourceRows.filter((row) => row.warehouseId === state.warehouse).sort(sortRows);
 }
 
 function normalizeSearchCode(value) {
@@ -1583,7 +1601,7 @@ function getMaterialLookupMatches() {
   const keyword = normalizeSearchCode(state.keyword);
   if (!keyword) return [];
 
-  return rows.filter((row) => row.materialCode.toLowerCase().includes(keyword));
+  return getVisibleInventoryRows().filter((row) => row.materialCode.toLowerCase().includes(keyword));
 }
 
 function renderMaterialLookup() {
@@ -1609,7 +1627,9 @@ function renderMaterialLookup() {
   elements.materialLookupMeta.textContent = `${names.join(" / ") || "匹配物料"}；匹配 ${lookupRows.length} 条明细，覆盖 ${coveredWarehouseCount} 个海外仓。下方按全部海外仓展示，未存放的仓库显示为 0。`;
   elements.materialLookupCount.textContent = `现存 ${formatQty(totalOnHand)} / 可用 ${formatQty(totalAvailable)} / 金额 ${formatMoney(totalAmount)}`;
 
-  elements.materialLookupGrid.innerHTML = getActiveWarehouses(lookupRows)
+  elements.materialLookupGrid.innerHTML = [
+    buildMaterialImageCard(lookupRows, codes[0], names[0]),
+    ...getActiveWarehouses(lookupRows)
     .map((warehouse) => {
       const warehouseRows = lookupRows.filter((row) => row.warehouseId === warehouse.id);
       const onHand = warehouseRows.reduce((sum, row) => sum + row.onHandQty, 0);
@@ -1640,8 +1660,26 @@ function renderMaterialLookup() {
           <p>${escapeHtml(locations)}</p>
         </article>
       `;
-    })
-    .join("");
+    }),
+  ].join("");
+}
+
+function buildMaterialImageCard(lookupRows, materialCode, materialName) {
+  const imageUrl = lookupRows.map((row) => row.imageUrl).find(Boolean);
+  const initials = String(materialName || materialCode || "SKU").slice(0, 2).toUpperCase();
+  return `
+    <article class="material-image-card">
+      <div class="material-image-frame">
+        ${
+          imageUrl
+            ? `<img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(materialName || materialCode || "产品实物图")}" loading="lazy">`
+            : `<span>${escapeHtml(initials)}</span>`
+        }
+      </div>
+      <strong>${escapeHtml(materialCode || "-")}</strong>
+      <small>${escapeHtml(materialName || "暂无产品图片")}</small>
+    </article>
+  `;
 }
 
 function renderControls() {
@@ -1708,15 +1746,16 @@ function renderSummary(filteredRows) {
   const skuCount = new Set(filteredRows.map((row) => row.materialCode)).size;
   const totalOnHand = filteredRows.reduce((sum, row) => sum + row.onHandQty, 0);
   const totalAvailable = filteredRows.reduce((sum, row) => sum + availableQty(row), 0);
-  const totalReserved = filteredRows.reduce((sum, row) => sum + row.reservedQty, 0);
-  const alertRows = filteredRows.filter((row) => ["shortage", "frozen", "reserved"].includes(rowStatus(row))).length;
+  const totalAmount = filteredRows.reduce((sum, row) => sum + inventoryAmount(row), 0);
+  const lowStockRows = filteredRows.filter((row) => row.onHandQty < 5).length;
 
   const cards = [
     ["覆盖海外仓", `${warehouseCount} / ${activeWarehouseTotal}`, "按当前库存数据统计"],
     ["物料 SKU", `${skuCount}`, getProjects().join(" / ")],
     ["现存总量", formatQty(totalOnHand), "包含预留数量"],
     ["可用库存", formatQty(totalAvailable), "现存减预留减冻结"],
-    ["预留 / 关注", `${formatQty(totalReserved)} / ${alertRows}`, "预留数量与重点行数"],
+    ["库存金额", formatMoney(totalAmount), "按库存数量与单价计算"],
+    ["预留关注", `${lowStockRows}`, "现存量低于 5 的备件"],
   ];
 
   elements.summaryGrid.innerHTML = cards
@@ -1779,17 +1818,17 @@ function renderOverviewDetail(overviewRows) {
     : `覆盖 ${warehouseNames.size} 个海外仓，按当前库存数据展示`;
   elements.overviewDetailCount.textContent = `${overviewRows.length} 条 / SKU ${skuCount} / 可用 ${formatQty(available)}`;
   elements.overviewEmptyState.hidden = overviewRows.length > 0;
-  elements.overviewTableBody.innerHTML = buildStockRowsHtml(overviewRows);
+  elements.overviewTableBody.innerHTML = buildOverviewRowsHtml(overviewRows);
 }
 
 function renderNetwork(stats) {
-  const alertWarehouseCount = stats.filter((item) => item.shortageCount || item.frozenQty > 0 || item.reservedQty > 0).length;
-  elements.networkStatus.textContent = `${alertWarehouseCount} 个仓有预留或关注项`;
+  const alertWarehouseCount = stats.filter((item) => item.lowStockCount > 0).length;
+  elements.networkStatus.textContent = `${alertWarehouseCount} 个仓有低库存或关注项`;
   elements.warehouseMap.innerHTML = [
     '<span class="map-route" aria-hidden="true"></span>',
     ...stats.map((item) => {
       const warehouse = item.warehouse;
-      const risk = item.shortageCount ? "有无可用物料" : item.frozenQty ? "有冻结库存" : item.reservedQty ? "有预留库存" : "库存正常";
+      const risk = item.lowStockCount ? `低库存 ${item.lowStockCount} 项` : "库存正常";
       return `
         <article class="map-node" style="--x: ${warehouse.x}; --y: ${warehouse.y}; --mobile-y: ${warehouse.mobileY}; --accent: ${warehouse.accent}">
           <span class="map-dot" aria-hidden="true"></span>
@@ -1802,9 +1841,9 @@ function renderNetwork(stats) {
 }
 
 function renderInsights() {
-  const alertRows = rows
-    .filter((row) => ["shortage", "frozen", "reserved"].includes(rowStatus(row)))
-    .sort((a, b) => availableQty(a) - availableQty(b))
+  const alertRows = getVisibleInventoryRows()
+    .filter((row) => row.onHandQty < 5)
+    .sort((a, b) => a.onHandQty - b.onHandQty || availableQty(a) - availableQty(b))
     .slice(0, 6);
 
   elements.alertCount.textContent = `${alertRows.length} 条重点`;
@@ -1819,7 +1858,7 @@ function renderInsights() {
           `,
         )
         .join("")
-    : '<p class="muted">暂无预留、冻结或无可用库存项。</p>';
+    : '<p class="muted">暂无现存量低于 5 的备件。</p>';
 
   const sharedItems = buildSharedStockItems().slice(0, 5);
   elements.transferList.innerHTML = sharedItems.length
@@ -1838,7 +1877,7 @@ function renderInsights() {
 
 function buildSharedStockItems() {
   const byMaterial = new Map();
-  rows.forEach((row) => {
+  getVisibleInventoryRows().forEach((row) => {
     const list = byMaterial.get(row.materialCode) || [];
     list.push(row);
     byMaterial.set(row.materialCode, list);
@@ -1861,14 +1900,13 @@ function buildSharedStockItems() {
 function renderTable(filteredRows) {
   elements.rowCount.textContent = `${filteredRows.length} 条`;
   elements.emptyState.hidden = filteredRows.length > 0;
-  elements.stockTableBody.innerHTML = buildStockRowsHtml(filteredRows);
+  elements.stockTableBody.innerHTML = buildMaterialRowsHtml(filteredRows);
 }
 
-function buildStockRowsHtml(sourceRows) {
+function buildOverviewRowsHtml(sourceRows) {
   return sourceRows
     .map((row) => {
       const status = rowStatus(row);
-      const specModel = [row.spec, row.model].filter(Boolean).filter((value, index, list) => list.indexOf(value) === index).join(" / ");
       return `
         <tr>
           <td><span class="project-pill">${escapeHtml(row.project)}</span></td>
@@ -1876,13 +1914,33 @@ function buildStockRowsHtml(sourceRows) {
           <td>${escapeHtml(row.materialName || "-")}</td>
           <td>${escapeHtml(row.category || "-")}</td>
           <td>${escapeHtml(row.location || "-")}</td>
-          <td class="spec-cell">${escapeHtml(specModel || "-")}</td>
           <td class="num">${formatQty(row.onHandQty)}</td>
           <td class="num">${formatQty(row.reservedQty)}</td>
           <td class="num">${formatQty(row.frozenQty)}</td>
           <td class="num">${formatQty(availableQty(row))}</td>
           <td class="num">${formatMoney(inventoryAmount(row))}</td>
-          <td>${escapeHtml(row.unit)}</td>
+          <td><span class="status-tag tag-${status}">${statusLabel(status)}</span></td>
+        </tr>
+      `;
+    })
+    .join("");
+}
+
+function buildMaterialRowsHtml(sourceRows) {
+  return sourceRows
+    .map((row) => {
+      const status = rowStatus(row);
+      return `
+        <tr>
+          <td><span class="project-pill">${escapeHtml(row.project)}</span></td>
+          <td>${escapeHtml(getWarehouseName(row.warehouseId))}</td>
+          <td class="code-cell">${escapeHtml(row.materialCode)}</td>
+          <td>${escapeHtml(row.materialName || "-")}</td>
+          <td>${escapeHtml(row.location || "-")}</td>
+          <td class="num">${formatQty(row.onHandQty)}</td>
+          <td class="num">${formatQty(row.reservedQty)}</td>
+          <td class="num">${formatQty(row.frozenQty)}</td>
+          <td class="num">${formatQty(availableQty(row))}</td>
           <td><span class="status-tag tag-${status}">${statusLabel(status)}</span></td>
         </tr>
       `;
@@ -2000,18 +2058,14 @@ function renderRma() {
     .map(
       (group) => `
         <tr class="clickable-row${selectedGroup && selectedGroup.rmaNo === group.rmaNo ? " active" : ""}" data-rma-no="${escapeHtml(group.rmaNo)}">
-          <td class="code-cell">${escapeHtml(group.rmaNo || "-")}</td>
-          <td>${escapeHtml(group.serviceNos.join("、") || "-")}</td>
-          <td>${escapeHtml(group.countries.join("、") || "-")}</td>
-          <td>${escapeHtml(group.customers.join("、") || "-")}</td>
-          <td>${escapeHtml(group.models.join("、") || "-")}</td>
-          <td>${escapeHtml(group.projects.join(" / ") || "-")}</td>
-          <td>${escapeHtml(group.shippedDates.join("、") || "-")}</td>
-          <td class="num">${formatQty(group.skuCount)}</td>
-          <td class="num">${formatQty(group.totalQty)}</td>
+          <td class="code-cell clip-cell" title="${escapeHtml(group.rmaNo || "-")}">${escapeHtml(group.rmaNo || "-")}</td>
+          <td class="clip-cell two-line" title="${escapeHtml(group.serviceNos.join("、") || "-")}">${escapeHtml(group.serviceNos[0] || "-")}</td>
+          <td class="clip-cell" title="${escapeHtml(group.countries.join("、") || "-")}">${escapeHtml(group.countries.join("、") || "-")}</td>
+          <td class="clip-cell two-line" title="${escapeHtml(group.customers.join("、") || "-")}">${escapeHtml(group.customers.join("、") || "-")}</td>
+          <td class="clip-cell" title="${escapeHtml(group.shippedDates.join("、") || "-")}">${escapeHtml(group.shippedDates.join("、") || "-")}</td>
           <td>${group.statuses.map((status) => `<span class="status-tag ${statusTagClass(status)}">${escapeHtml(status)}</span>`).join("")}</td>
           <td>${buildTrackingLinks(group.trackingNos)}</td>
-          <td>${escapeHtml(group.faes.join("、") || "-")}</td>
+          <td class="clip-cell" title="${escapeHtml(group.faes.join("、") || "-")}">${escapeHtml(group.faes.join("、") || "-")}</td>
         </tr>
       `,
     )
@@ -2703,6 +2757,17 @@ function restoreInventoryFromSource(statusElement) {
   render();
 }
 
+async function copyOdooUpdateCommand() {
+  const command =
+    'powershell -NoProfile -ExecutionPolicy Bypass -File .\\sync-dashboard-data.ps1 -OdooLogin anna.jiang@sveav.com -PromptOdooPassword';
+  try {
+    await navigator.clipboard.writeText(command);
+    setImportStatus(elements.overviewImportStatus, "Odoo 更新命令已复制");
+  } catch {
+    setImportStatus(elements.overviewImportStatus, command);
+  }
+}
+
 function importReplenishmentFromArea(area, statusElement) {
   try {
     const imported = parseImportedReplenishmentRows(area.value);
@@ -2976,6 +3041,7 @@ elements.overviewTemplateButton.addEventListener("click", () => {
 elements.overviewRestoreButton.addEventListener("click", () => {
   restoreInventoryFromSource(elements.overviewImportStatus);
 });
+elements.odooCommandButton?.addEventListener("click", copyOdooUpdateCommand);
 
 elements.replenishmentImportButton.addEventListener("click", () => {
   importReplenishmentFromArea(elements.replenishmentImportArea, elements.replenishmentImportStatus);
