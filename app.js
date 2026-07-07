@@ -10,8 +10,8 @@ const warehouses = [
     role: "欧洲售后与整机库存",
     accent: "#315f96",
     soft: "#e5eef9",
-    x: "48%",
-    y: "36%",
+    x: "54%",
+    y: "40%",
     mobileY: "18%",
   },
   {
@@ -23,8 +23,8 @@ const warehouses = [
     role: "欧洲补充周转仓",
     accent: "#25808a",
     soft: "#e0f3f5",
-    x: "46%",
-    y: "32%",
+    x: "43%",
+    y: "24%",
     mobileY: "38%",
   },
   {
@@ -36,7 +36,7 @@ const warehouses = [
     role: "北美备件库存",
     accent: "#92651f",
     soft: "#fff2d6",
-    x: "25%",
+    x: "24%",
     y: "42%",
     mobileY: "58%",
   },
@@ -1125,6 +1125,7 @@ let state = {
   project: "all",
   status: "all",
   sort: "availableAsc",
+  overviewQuickFilter: "all",
   replenishmentKeyword: "",
   replenishmentWarehouse: "all",
   replenishmentStatus: "all",
@@ -1238,6 +1239,7 @@ function load() {
     }
     state = { ...state, ...(saved.state || {}) };
     if (!views.includes(state.view)) state.view = "overview";
+    if (!["all", "lowStock"].includes(state.overviewQuickFilter)) state.overviewQuickFilter = "all";
     if (!getRmaQuickFilters([]).some((filter) => filter.id === state.rmaQuickFilter)) state.rmaQuickFilter = "all";
   } catch {
     rows = baseRows;
@@ -1419,8 +1421,27 @@ function isInInventoryProjectScope(row) {
   return inventoryProjectScope.has(String(row.project || "").trim());
 }
 
+function isInInventoryLocationScope(row) {
+  const location = String(row.location || "").trim();
+  if (!location) return false;
+  const segments = location
+    .split("/")
+    .map((part) => part.trim())
+    .filter(Boolean);
+  const values = segments.length ? segments : [location];
+
+  return syncLocationScope.some((allowed) => {
+    const value = String(allowed || "").trim();
+    if (!value) return false;
+    return values.some((segment) => {
+      if (segment.toLowerCase() === value.toLowerCase()) return true;
+      return value.toLowerCase() === "svea" && segment.toLowerCase().startsWith("svea");
+    });
+  });
+}
+
 function getVisibleInventoryRows() {
-  return rows.filter(isInInventoryProjectScope);
+  return rows.filter((row) => isInInventoryProjectScope(row) && isInInventoryLocationScope(row));
 }
 
 function rowStatus(row) {
@@ -1563,7 +1584,12 @@ function render() {
   const inventorySource = dataOverrides.inventory
     ? "人工导入库存数据"
     : inventoryRows.length
-    ? `Odoo 库存同步${inventoryData.generatedAt ? `（${inventoryData.generatedAt}）` : ""}`
+    ? [
+        `库存：${inventoryData.source || "系统库存表"}${inventoryData.generatedAt ? `（${inventoryData.generatedAt}）` : ""}`,
+        inventoryData.odooProductMetaAt ? `Odoo 价格/图片：${inventoryData.odooProductMetaAt}` : "",
+      ]
+        .filter(Boolean)
+        .join("，")
     : "内置库存数据";
   const replenishmentSource = dataOverrides.replenishment ? "人工导入备货订单" : "备货订单";
   const rmaSource = dataOverrides.rma ? "人工导入 RMA 订单" : "RMA 售后备件表";
@@ -1589,8 +1615,9 @@ function renderView() {
 
 function getOverviewRows() {
   const sourceRows = getVisibleInventoryRows();
-  if (state.warehouse === "all") return [...sourceRows].sort(sortRows);
-  return sourceRows.filter((row) => row.warehouseId === state.warehouse).sort(sortRows);
+  const warehouseRows = state.warehouse === "all" ? sourceRows : sourceRows.filter((row) => row.warehouseId === state.warehouse);
+  const filteredRows = state.overviewQuickFilter === "lowStock" ? warehouseRows.filter((row) => row.onHandQty < 5) : warehouseRows;
+  return [...filteredRows].sort(sortRows);
 }
 
 function normalizeSearchCode(value) {
@@ -1750,21 +1777,21 @@ function renderSummary(filteredRows) {
   const lowStockRows = filteredRows.filter((row) => row.onHandQty < 5).length;
 
   const cards = [
-    ["覆盖海外仓", `${warehouseCount} / ${activeWarehouseTotal}`, "按当前库存数据统计"],
-    ["物料 SKU", `${skuCount}`, getProjects().join(" / ")],
-    ["现存总量", formatQty(totalOnHand), "包含预留数量"],
-    ["可用库存", formatQty(totalAvailable), "现存减预留减冻结"],
-    ["库存金额", formatMoney(totalAmount), "按库存数量与单价计算"],
-    ["预留关注", `${lowStockRows}`, "现存量低于 5 的备件"],
+    { label: "覆盖海外仓", value: `${warehouseCount} / ${activeWarehouseTotal}`, note: "按当前库存数据统计" },
+    { label: "物料 SKU", value: `${skuCount}`, note: getProjects().join(" / ") },
+    { label: "现存总量", value: formatQty(totalOnHand), note: "包含预留数量" },
+    { label: "可用库存", value: formatQty(totalAvailable), note: "现存减预留减冻结" },
+    { label: "库存金额", value: formatMoney(totalAmount), note: "按库存数量与单价计算" },
+    { label: "预留关注", value: `${lowStockRows}`, note: "现存量低于 5 的备件，点击查看", filter: "lowStock" },
   ];
 
   elements.summaryGrid.innerHTML = cards
     .map(
-      ([label, value, note]) => `
-        <article class="summary-card">
-          <span>${escapeHtml(label)}</span>
-          <strong>${escapeHtml(value)}</strong>
-          <small>${escapeHtml(note)}</small>
+      (card) => `
+        <article class="summary-card${card.filter ? ` summary-action-card${state.overviewQuickFilter === card.filter ? " active" : ""}` : ""}"${card.filter ? ` data-overview-filter="${escapeHtml(card.filter)}" role="button" tabindex="0"` : ""}>
+          <span>${escapeHtml(card.label)}</span>
+          <strong>${escapeHtml(card.value)}</strong>
+          <small>${escapeHtml(card.note)}</small>
         </article>
       `,
     )
@@ -1812,7 +1839,8 @@ function renderOverviewDetail(overviewRows) {
   const skuCount = new Set(overviewRows.map((row) => row.materialCode)).size;
   const available = overviewRows.reduce((sum, row) => sum + availableQty(row), 0);
 
-  elements.overviewDetailTitle.textContent = activeWarehouse ? `${activeWarehouse.name}库存明细` : "全部海外仓库存明细";
+  const quickFilterLabel = state.overviewQuickFilter === "lowStock" ? "低库存备件" : "库存明细";
+  elements.overviewDetailTitle.textContent = activeWarehouse ? `${activeWarehouse.name}${quickFilterLabel}` : `全部海外仓${quickFilterLabel}`;
   elements.overviewDetailMeta.textContent = activeWarehouse
     ? `${activeWarehouse.city} / ${activeWarehouse.role}`
     : `覆盖 ${warehouseNames.size} 个海外仓，按当前库存数据展示`;
@@ -1851,7 +1879,7 @@ function renderInsights() {
     ? alertRows
         .map(
           (row) => `
-            <article class="compact-item">
+            <article class="compact-item clickable-compact-item" data-overview-filter="lowStock" title="点击查看低库存明细">
               <strong>${escapeHtml(row.project)} / ${escapeHtml(row.materialCode)} / ${escapeHtml(row.materialName)}</strong>
               <span>${escapeHtml(getWarehouseName(row.warehouseId))} / 现存 ${formatQty(row.onHandQty)} / 预留 ${formatQty(row.reservedQty)} / 可用 ${formatQty(availableQty(row))}</span>
             </article>
@@ -2058,14 +2086,14 @@ function renderRma() {
     .map(
       (group) => `
         <tr class="clickable-row${selectedGroup && selectedGroup.rmaNo === group.rmaNo ? " active" : ""}" data-rma-no="${escapeHtml(group.rmaNo)}">
-          <td class="code-cell clip-cell" title="${escapeHtml(group.rmaNo || "-")}">${escapeHtml(group.rmaNo || "-")}</td>
-          <td class="clip-cell two-line" title="${escapeHtml(group.serviceNos.join("、") || "-")}">${escapeHtml(group.serviceNos[0] || "-")}</td>
-          <td class="clip-cell" title="${escapeHtml(group.countries.join("、") || "-")}">${escapeHtml(group.countries.join("、") || "-")}</td>
-          <td class="clip-cell two-line" title="${escapeHtml(group.customers.join("、") || "-")}">${escapeHtml(group.customers.join("、") || "-")}</td>
-          <td class="clip-cell" title="${escapeHtml(group.shippedDates.join("、") || "-")}">${escapeHtml(group.shippedDates.join("、") || "-")}</td>
+          <td class="code-cell" title="${escapeHtml(group.rmaNo || "-")}"><span class="clip-text">${escapeHtml(group.rmaNo || "-")}</span></td>
+          <td title="${escapeHtml(group.serviceNos.join("、") || "-")}"><span class="clip-text two-line">${escapeHtml(group.serviceNos[0] || "-")}</span></td>
+          <td title="${escapeHtml(group.countries.join("、") || "-")}"><span class="clip-text">${escapeHtml(group.countries.join("、") || "-")}</span></td>
+          <td title="${escapeHtml(group.customers.join("、") || "-")}"><span class="clip-text two-line">${escapeHtml(group.customers.join("、") || "-")}</span></td>
+          <td title="${escapeHtml(group.shippedDates.join("、") || "-")}"><span class="clip-text">${escapeHtml(group.shippedDates.join("、") || "-")}</span></td>
           <td>${group.statuses.map((status) => `<span class="status-tag ${statusTagClass(status)}">${escapeHtml(status)}</span>`).join("")}</td>
           <td>${buildTrackingLinks(group.trackingNos)}</td>
-          <td class="clip-cell" title="${escapeHtml(group.faes.join("、") || "-")}">${escapeHtml(group.faes.join("、") || "-")}</td>
+          <td title="${escapeHtml(group.faes.join("、") || "-")}"><span class="clip-text">${escapeHtml(group.faes.join("、") || "-")}</span></td>
         </tr>
       `,
     )
@@ -2825,7 +2853,7 @@ function restoreRmaFromSource(statusElement) {
 }
 
 function resetFilters() {
-  state = { ...state, keyword: "", warehouse: "all", project: "all", status: "all", sort: "availableAsc" };
+  state = { ...state, keyword: "", warehouse: "all", project: "all", status: "all", sort: "availableAsc", overviewQuickFilter: "all" };
 }
 
 function resetReplenishmentFilters() {
@@ -2913,6 +2941,33 @@ elements.warehouseList.addEventListener("click", (event) => {
   state.warehouse = state.warehouse === card.dataset.warehouse ? "all" : card.dataset.warehouse;
   save();
   render();
+});
+
+function applyOverviewQuickFilter(filter) {
+  state.view = "overview";
+  state.overviewQuickFilter = state.overviewQuickFilter === filter ? "all" : filter;
+  save();
+  render();
+}
+
+elements.summaryGrid.addEventListener("click", (event) => {
+  const card = event.target.closest("[data-overview-filter]");
+  if (!card) return;
+  applyOverviewQuickFilter(card.dataset.overviewFilter || "all");
+});
+
+elements.summaryGrid.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter" && event.key !== " ") return;
+  const card = event.target.closest("[data-overview-filter]");
+  if (!card) return;
+  event.preventDefault();
+  applyOverviewQuickFilter(card.dataset.overviewFilter || "all");
+});
+
+elements.lowStockList.addEventListener("click", (event) => {
+  const item = event.target.closest("[data-overview-filter]");
+  if (!item) return;
+  applyOverviewQuickFilter(item.dataset.overviewFilter || "all");
 });
 
 elements.replenishmentKeywordInput.addEventListener("input", (event) => {

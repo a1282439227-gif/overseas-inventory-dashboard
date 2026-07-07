@@ -203,7 +203,7 @@ h3 {
 
 .summary-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 12px;
   margin-bottom: 16px;
 }
@@ -721,13 +721,13 @@ textarea:focus {
   z-index: 2;
   left: var(--x);
   top: var(--y);
-  width: min(170px, 38vw);
+  width: min(148px, 34vw);
   transform: translate(-50%, -50%);
   border: 1px solid var(--line);
   border-top: 4px solid var(--accent);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.94);
-  padding: 10px;
+  padding: 9px;
   box-shadow: 0 12px 24px rgba(23, 32, 42, 0.08);
 }
 
@@ -792,6 +792,15 @@ textarea:focus {
   line-height: 1.45;
 }
 
+.clickable-compact-item {
+  cursor: pointer;
+}
+
+.clickable-compact-item:hover {
+  border-color: rgba(47, 125, 98, 0.42);
+  background: #eef6f1;
+}
+
 .detail-section {
   margin-bottom: 16px;
 }
@@ -843,6 +852,8 @@ table {
 #rmaOrderTable td {
   overflow: hidden;
   text-overflow: clip;
+  height: 50px;
+  vertical-align: top;
 }
 
 #rmaOrderTable .status-tag,
@@ -858,14 +869,15 @@ table {
   overflow: hidden;
 }
 
-#rmaOrderTable .clip-cell {
+#rmaOrderTable .clip-text {
+  display: block;
   max-width: 100%;
   overflow: hidden;
   text-overflow: clip;
   white-space: nowrap;
 }
 
-#rmaOrderTable .clip-cell.two-line {
+#rmaOrderTable .clip-text.two-line {
   display: -webkit-box;
   max-height: 38px;
   overflow: hidden;

@@ -2,7 +2,11 @@ window.inventoryData = {
     "generatedAt":  "2026-07-03 04:33:45",
     "source":  "畜牧-海外现存量.xls",
     "sheet":  "现存量",
-    "rowCount":  65
+    "rowCount":  65,
+    "odooProductMetaAt":  "2026-07-06 16:07:52",
+    "odooProductMetaCount":  65,
+    "odooProductPriceCount":  53,
+    "odooProductImageCount":  65
 };
 
 window.inventoryRows = [
@@ -20,10 +24,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "8483",
+        "templateId":  "8496",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/550139",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  127,
+        "inventoryAmount":  127
     },
     {
         "warehouseId":  "chicago",
@@ -39,10 +47,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "GB/T 96.1 5-达克罗96h",
-        "model":  "GB/T 96.1 5-达克罗96h"
+        "model":  "GB/T 96.1 5-达克罗96h",
+        "productId":  "9369",
+        "templateId":  "9382",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/554570",
+        "priceSource":  "Landscaping spare parts-share (USD)",
+        "unitCost":  0.05,
+        "inventoryAmount":  0.5
     },
     {
         "warehouseId":  "frankfurt",
@@ -58,10 +70,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "8103",
+        "templateId":  "8116",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/559286",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  1.87,
+        "inventoryAmount":  5.61
     },
     {
         "warehouseId":  "frankfurt",
@@ -77,10 +93,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "8583",
+        "templateId":  "8596",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/550715",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  12.42,
+        "inventoryAmount":  248.4
     },
     {
         "warehouseId":  "frankfurt",
@@ -96,10 +116,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "控制类-R1911_HW-MCU-CONTROLER-40A-V4.1-大割1500W电机控制板",
-        "model":  "无"
+        "model":  "无",
+        "productId":  "327",
+        "templateId":  "327",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/327/image_1920",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  18,
+        "inventoryAmount":  342
     },
     {
         "warehouseId":  "frankfurt",
@@ -115,10 +139,14 @@ window.inventoryRows = [
         "reservedQty":  1,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "UG67-868",
-        "model":  "UG67-L04EU-868M"
+        "model":  "UG67-L04EU-868M",
+        "productId":  "8402",
+        "templateId":  "8415",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/550116",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  439,
+        "inventoryAmount":  439
     },
     {
         "warehouseId":  "frankfurt",
@@ -134,10 +162,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "超声波测距传感器-3.3~24V-RS485-50~500cm--25~65℃-IP67",
-        "model":  "无"
+        "model":  "无",
+        "productId":  "330",
+        "templateId":  "330",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/330/image_1920",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  30,
+        "inventoryAmount":  240
     },
     {
         "warehouseId":  "frankfurt",
@@ -156,7 +188,11 @@ window.inventoryRows = [
         "unitCost":  0,
         "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "11770",
+        "templateId":  "11783",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/562931",
+        "priceSource":  "畜牧USD价格表 (USD)"
     },
     {
         "warehouseId":  "frankfurt",
@@ -172,10 +208,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "传感器板-R1916-HW-CG-PSO-V1-光敏检测板",
-        "model":  "传感器板-R1916-HW-CG-PSO-V1-光敏检测板"
+        "model":  "传感器板-R1916-HW-CG-PSO-V1-光敏检测板",
+        "productId":  "9699",
+        "templateId":  "9712",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/555873",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  4,
+        "inventoryAmount":  24
     },
     {
         "warehouseId":  "frankfurt",
@@ -191,10 +231,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "868",
-        "model":  "SCN100"
+        "model":  "SCN100",
+        "productId":  "7300",
+        "templateId":  "7313",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/7300/image_1920",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  75,
+        "inventoryAmount":  225
     },
     {
         "warehouseId":  "frankfurt",
@@ -210,10 +254,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "驱动类-R1916-HW-MCU-DRIVER-40A-V3-驱动板",
-        "model":  "无"
+        "model":  "无",
+        "productId":  "332",
+        "templateId":  "332",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/332/image_1920",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  38,
+        "inventoryAmount":  760
     },
     {
         "warehouseId":  "frankfurt",
@@ -229,10 +277,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "8113",
+        "templateId":  "8126",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/563101",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  450,
+        "inventoryAmount":  3150
     },
     {
         "warehouseId":  "netherlands",
@@ -248,10 +300,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "8964",
+        "templateId":  "8977",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/552044",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  220,
+        "inventoryAmount":  2860
     },
     {
         "warehouseId":  "frankfurt",
@@ -267,10 +323,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "Φ250*80",
-        "model":  "Φ250*80"
+        "model":  "Φ250*80",
+        "productId":  "4217",
+        "templateId":  "4217",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/4217/image_1920",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  110,
+        "inventoryAmount":  110
     },
     {
         "warehouseId":  "frankfurt",
@@ -286,10 +346,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "567",
+        "templateId":  "567",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/567/image_1920",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  19,
+        "inventoryAmount":  57
     },
     {
         "warehouseId":  "frankfurt",
@@ -308,7 +372,11 @@ window.inventoryRows = [
         "unitCost":  0,
         "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "11770",
+        "templateId":  "11783",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/562931",
+        "priceSource":  "畜牧USD价格表 (USD)"
     },
     {
         "warehouseId":  "frankfurt",
@@ -324,10 +392,14 @@ window.inventoryRows = [
         "reservedQty":  5,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "12185",
+        "templateId":  "12198",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/564982",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  5,
+        "inventoryAmount":  25
     },
     {
         "warehouseId":  "frankfurt",
@@ -343,10 +415,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "GB/T 96.1 5-达克罗96h",
-        "model":  "GB/T 96.1 5-达克罗96h"
+        "model":  "GB/T 96.1 5-达克罗96h",
+        "productId":  "9369",
+        "templateId":  "9382",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/554570",
+        "priceSource":  "Landscaping spare parts-share (USD)",
+        "unitCost":  0.05,
+        "inventoryAmount":  0.5
     },
     {
         "warehouseId":  "frankfurt",
@@ -362,10 +438,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "7282",
+        "templateId":  "7295",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/583024",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  114,
+        "inventoryAmount":  342
     },
     {
         "warehouseId":  "frankfurt",
@@ -381,10 +461,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "无",
-        "model":  "无"
+        "model":  "无",
+        "productId":  "8291",
+        "templateId":  "8304",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/549166",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  11,
+        "inventoryAmount":  77
     },
     {
         "warehouseId":  "frankfurt",
@@ -403,7 +487,11 @@ window.inventoryRows = [
         "unitCost":  0,
         "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "11770",
+        "templateId":  "11783",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/562931",
+        "priceSource":  "畜牧USD价格表 (USD)"
     },
     {
         "warehouseId":  "frankfurt",
@@ -422,7 +510,11 @@ window.inventoryRows = [
         "unitCost":  0,
         "inventoryAmount":  0,
         "spec":  "",
-        "model":  "摩可灵USB转485/422转换器通讯线模块"
+        "model":  "摩可灵USB转485/422转换器通讯线模块",
+        "productId":  "11775",
+        "templateId":  "11788",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/563751",
+        "priceSource":  "畜牧USD价格表 (USD)"
     },
     {
         "warehouseId":  "chicago",
@@ -438,10 +530,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "GB/T 70.1 M5×10-A2-70-钝化72h",
-        "model":  "GB/T 70.1 M5×10-A2-70-钝化72h"
+        "model":  "GB/T 70.1 M5×10-A2-70-钝化72h",
+        "productId":  "9368",
+        "templateId":  "9381",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/554576",
+        "priceSource":  "Landscaping spare parts-share (USD)",
+        "unitCost":  1,
+        "inventoryAmount":  50
     },
     {
         "warehouseId":  "frankfurt",
@@ -457,10 +553,14 @@ window.inventoryRows = [
         "reservedQty":  2,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "8964",
+        "templateId":  "8977",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/552044",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  220,
+        "inventoryAmount":  440
     },
     {
         "warehouseId":  "frankfurt",
@@ -476,10 +576,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "8289",
+        "templateId":  "8302",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/549160",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  298,
+        "inventoryAmount":  298
     },
     {
         "warehouseId":  "frankfurt",
@@ -498,7 +602,11 @@ window.inventoryRows = [
         "unitCost":  0,
         "inventoryAmount":  0,
         "spec":  "868",
-        "model":  "SCN100"
+        "model":  "SCN100",
+        "productId":  "66",
+        "templateId":  "66",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/66/image_1920",
+        "priceSource":  ""
     },
     {
         "warehouseId":  "frankfurt",
@@ -514,10 +622,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "581",
+        "templateId":  "581",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/581/image_1920",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  248,
+        "inventoryAmount":  2480
     },
     {
         "warehouseId":  "frankfurt",
@@ -533,10 +645,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "无",
-        "model":  "无"
+        "model":  "无",
+        "productId":  "4505",
+        "templateId":  "4505",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/4505/image_1920",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  1.69,
+        "inventoryAmount":  5.07
     },
     {
         "warehouseId":  "frankfurt",
@@ -552,10 +668,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "无",
-        "model":  "无"
+        "model":  "无",
+        "productId":  "574",
+        "templateId":  "574",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/551456",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  146,
+        "inventoryAmount":  1752
     },
     {
         "warehouseId":  "frankfurt",
@@ -571,10 +691,14 @@ window.inventoryRows = [
         "reservedQty":  5,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "12184",
+        "templateId":  "12197",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/564988",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  40,
+        "inventoryAmount":  200
     },
     {
         "warehouseId":  "frankfurt",
@@ -590,10 +714,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "传感器板-R1916-HW-CG-PSO-V1-光敏检测板",
-        "model":  "传感器板-R1916-HW-CG-PSO-V1-光敏检测板"
+        "model":  "传感器板-R1916-HW-CG-PSO-V1-光敏检测板",
+        "productId":  "9698",
+        "templateId":  "9711",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/557980",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  4,
+        "inventoryAmount":  40
     },
     {
         "warehouseId":  "frankfurt",
@@ -612,7 +740,11 @@ window.inventoryRows = [
         "unitCost":  0,
         "inventoryAmount":  0,
         "spec":  "",
-        "model":  "摩可灵USB转485/422转换器通讯线模块"
+        "model":  "摩可灵USB转485/422转换器通讯线模块",
+        "productId":  "11775",
+        "templateId":  "11788",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/563751",
+        "priceSource":  "畜牧USD价格表 (USD)"
     },
     {
         "warehouseId":  "frankfurt",
@@ -628,10 +760,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "10589",
+        "templateId":  "10602",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/560956",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  141,
+        "inventoryAmount":  1269
     },
     {
         "warehouseId":  "sydney",
@@ -647,10 +783,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "GB/T 9074.4 M5×25-A2-70-钝化72H",
-        "model":  "GB/T 9074.4 M5×25-A2-70-钝化72h"
+        "model":  "GB/T 9074.4 M5×25-A2-70-钝化72h",
+        "productId":  "1620",
+        "templateId":  "1620",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/644959",
+        "priceSource":  "Sveaverken Blix Robotic Lawn Mower (USD)",
+        "unitCost":  0.06,
+        "inventoryAmount":  6
     },
     {
         "warehouseId":  "frankfurt",
@@ -666,10 +806,14 @@ window.inventoryRows = [
         "reservedQty":  2,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "326",
+        "templateId":  "326",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/326/image_1920",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  16,
+        "inventoryAmount":  576
     },
     {
         "warehouseId":  "frankfurt",
@@ -685,10 +829,14 @@ window.inventoryRows = [
         "reservedQty":  1,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "10997",
+        "templateId":  "11010",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/563405",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  1099,
+        "inventoryAmount":  2198
     },
     {
         "warehouseId":  "frankfurt",
@@ -707,7 +855,11 @@ window.inventoryRows = [
         "unitCost":  0,
         "inventoryAmount":  0,
         "spec":  "算法类-A311D机器人算法板-R2003-SFB-V1-处理机器人各个功能模块运行，数据收发运算",
-        "model":  "无"
+        "model":  "无",
+        "productId":  "7119",
+        "templateId":  "7132",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/7119/image_1920",
+        "priceSource":  ""
     },
     {
         "warehouseId":  "sydney",
@@ -723,10 +875,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "GB/T 96.1 5-达克罗96h",
-        "model":  "GB/T 96.1 5-达克罗96h"
+        "model":  "GB/T 96.1 5-达克罗96h",
+        "productId":  "9369",
+        "templateId":  "9382",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/554570",
+        "priceSource":  "Landscaping spare parts-share (USD)",
+        "unitCost":  0.05,
+        "inventoryAmount":  0.5
     },
     {
         "warehouseId":  "frankfurt",
@@ -742,10 +898,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "9704",
+        "templateId":  "9717",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/558305",
+        "priceSource":  "XU05-售后备件价格表（USD） (USD)",
+        "unitCost":  12,
+        "inventoryAmount":  36
     },
     {
         "warehouseId":  "frankfurt",
@@ -761,10 +921,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "581",
+        "templateId":  "581",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/581/image_1920",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  248,
+        "inventoryAmount":  1488
     },
     {
         "warehouseId":  "frankfurt",
@@ -780,10 +944,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "UG67-868",
-        "model":  "UG67-L04EU-868M"
+        "model":  "UG67-L04EU-868M",
+        "productId":  "8402",
+        "templateId":  "8415",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/550116",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  439,
+        "inventoryAmount":  439
     },
     {
         "warehouseId":  "frankfurt",
@@ -802,7 +970,11 @@ window.inventoryRows = [
         "unitCost":  0,
         "inventoryAmount":  0,
         "spec":  "",
-        "model":  "9WZ-1.05A(SCP300)"
+        "model":  "9WZ-1.05A(SCP300)",
+        "productId":  "7271",
+        "templateId":  "7284",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/7271/image_1920",
+        "priceSource":  "畜牧USD价格表 (USD)"
     },
     {
         "warehouseId":  "frankfurt",
@@ -821,7 +993,11 @@ window.inventoryRows = [
         "unitCost":  0,
         "inventoryAmount":  0,
         "spec":  "",
-        "model":  "摩可灵USB转485/422转换器通讯线模块"
+        "model":  "摩可灵USB转485/422转换器通讯线模块",
+        "productId":  "11775",
+        "templateId":  "11788",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/563751",
+        "priceSource":  "畜牧USD价格表 (USD)"
     },
     {
         "warehouseId":  "sydney",
@@ -837,10 +1013,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "线束-平地机-2300mm-1",
-        "model":  "线束-平地机-2300mm-1"
+        "model":  "线束-平地机-2300mm-1",
+        "productId":  "8933",
+        "templateId":  "8946",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/556323",
+        "priceSource":  "泛农USD价格表 (USD)",
+        "unitCost":  50,
+        "inventoryAmount":  250
     },
     {
         "warehouseId":  "frankfurt",
@@ -856,10 +1036,14 @@ window.inventoryRows = [
         "reservedQty":  30,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "GB/T 70.1 M4×12-A2-70-钝化72h",
-        "model":  "GB/T 70.1 M4×12-A2-70-钝化72h"
+        "model":  "GB/T 70.1 M4×12-A2-70-钝化72h",
+        "productId":  "9951",
+        "templateId":  "9964",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/564994",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  0.5,
+        "inventoryAmount":  15
     },
     {
         "warehouseId":  "frankfurt",
@@ -875,10 +1059,14 @@ window.inventoryRows = [
         "reservedQty":  4,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  "9WZ-1.05A(SCP300)-X"
+        "model":  "9WZ-1.05A(SCP300)-X",
+        "productId":  "12838",
+        "templateId":  "12851",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/567678",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  8590,
+        "inventoryAmount":  34360
     },
     {
         "warehouseId":  "frankfurt",
@@ -894,10 +1082,14 @@ window.inventoryRows = [
         "reservedQty":  10,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "DH50",
-        "model":  ""
+        "model":  "",
+        "productId":  "8119",
+        "templateId":  "8132",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/549603",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  21,
+        "inventoryAmount":  210
     },
     {
         "warehouseId":  "netherlands",
@@ -916,7 +1108,11 @@ window.inventoryRows = [
         "unitCost":  0,
         "inventoryAmount":  0,
         "spec":  "",
-        "model":  "LF02"
+        "model":  "LF02",
+        "productId":  "10778",
+        "templateId":  "10791",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/562136",
+        "priceSource":  "畜牧USD价格表 (USD)"
     },
     {
         "warehouseId":  "sydney",
@@ -932,10 +1128,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "GB/T 70.1 M5×10-A2-70-钝化72h",
-        "model":  "GB/T 70.1 M5×10-A2-70-钝化72h"
+        "model":  "GB/T 70.1 M5×10-A2-70-钝化72h",
+        "productId":  "9368",
+        "templateId":  "9381",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/554576",
+        "priceSource":  "Landscaping spare parts-share (USD)",
+        "unitCost":  1,
+        "inventoryAmount":  50
     },
     {
         "warehouseId":  "frankfurt",
@@ -951,10 +1151,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "8483",
+        "templateId":  "8496",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/550139",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  127,
+        "inventoryAmount":  1270
     },
     {
         "warehouseId":  "frankfurt",
@@ -970,10 +1174,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  "AT-EC02"
+        "model":  "AT-EC02",
+        "productId":  "7276",
+        "templateId":  "7289",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/583284",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  56,
+        "inventoryAmount":  280
     },
     {
         "warehouseId":  "netherlands",
@@ -992,7 +1200,11 @@ window.inventoryRows = [
         "unitCost":  0,
         "inventoryAmount":  0,
         "spec":  "",
-        "model":  "9WZ-1.05A(SCP300)"
+        "model":  "9WZ-1.05A(SCP300)",
+        "productId":  "7271",
+        "templateId":  "7284",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/7271/image_1920",
+        "priceSource":  "畜牧USD价格表 (USD)"
     },
     {
         "warehouseId":  "frankfurt",
@@ -1008,10 +1220,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "80A",
-        "model":  "AET-80"
+        "model":  "AET-80",
+        "productId":  "4502",
+        "templateId":  "4502",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/4502/image_1920",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  7,
+        "inventoryAmount":  42
     },
     {
         "warehouseId":  "frankfurt",
@@ -1027,10 +1243,14 @@ window.inventoryRows = [
         "reservedQty":  1,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "DH50",
-        "model":  ""
+        "model":  "",
+        "productId":  "8119",
+        "templateId":  "8132",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/549603",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  21,
+        "inventoryAmount":  21
     },
     {
         "warehouseId":  "frankfurt",
@@ -1046,10 +1266,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "63A",
-        "model":  "AET-63"
+        "model":  "AET-63",
+        "productId":  "4503",
+        "templateId":  "4503",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/4503/image_1920",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  6,
+        "inventoryAmount":  36
     },
     {
         "warehouseId":  "frankfurt",
@@ -1065,10 +1289,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "11338",
+        "templateId":  "11351",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/563523",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  257,
+        "inventoryAmount":  1028
     },
     {
         "warehouseId":  "frankfurt",
@@ -1087,7 +1315,11 @@ window.inventoryRows = [
         "unitCost":  0,
         "inventoryAmount":  0,
         "spec":  "SCEB200",
-        "model":  "SCEB200"
+        "model":  "SCEB200",
+        "productId":  "6176",
+        "templateId":  "6176",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/6176/image_1920",
+        "priceSource":  "畜牧USD价格表 (USD)"
     },
     {
         "warehouseId":  "frankfurt",
@@ -1103,10 +1335,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "11857",
+        "templateId":  "11870",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/563069",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  249,
+        "inventoryAmount":  1245
     },
     {
         "warehouseId":  "frankfurt",
@@ -1122,10 +1358,14 @@ window.inventoryRows = [
         "reservedQty":  5,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "充电机-100Vac to 245Vac-58.3V-58.8V-190 X 140 X 75mm-欧规 SB50A-600V IP65",
-        "model":  "H82-48V10A"
+        "model":  "H82-48V10A",
+        "productId":  "324",
+        "templateId":  "324",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/324/image_1920",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  153,
+        "inventoryAmount":  1071
     },
     {
         "warehouseId":  "frankfurt",
@@ -1141,10 +1381,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "10803",
+        "templateId":  "10816",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/563045",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  21,
+        "inventoryAmount":  105
     },
     {
         "warehouseId":  "chicago",
@@ -1160,10 +1404,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "GB/T 9074.4 M5×25-A2-70-钝化72H",
-        "model":  "GB/T 9074.4 M5×25-A2-70-钝化72h"
+        "model":  "GB/T 9074.4 M5×25-A2-70-钝化72h",
+        "productId":  "1620",
+        "templateId":  "1620",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/644959",
+        "priceSource":  "Sveaverken Blix Robotic Lawn Mower (USD)",
+        "unitCost":  0.06,
+        "inventoryAmount":  6
     },
     {
         "warehouseId":  "frankfurt",
@@ -1179,10 +1427,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "868",
-        "model":  "SCN100"
+        "model":  "SCN100",
+        "productId":  "7300",
+        "templateId":  "7313",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/7300/image_1920",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  75,
+        "inventoryAmount":  75
     },
     {
         "warehouseId":  "frankfurt",
@@ -1198,10 +1450,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "ND67_868",
-        "model":  "ND67"
+        "model":  "ND67",
+        "productId":  "1854",
+        "templateId":  "1854",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/1854/image_1920",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  439,
+        "inventoryAmount":  439
     },
     {
         "warehouseId":  "frankfurt",
@@ -1217,10 +1473,14 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "326",
+        "templateId":  "326",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/326/image_1920",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  16,
+        "inventoryAmount":  160
     },
     {
         "warehouseId":  "frankfurt",
@@ -1236,9 +1496,13 @@ window.inventoryRows = [
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  0,
-        "inventoryAmount":  0,
         "spec":  "",
-        "model":  ""
+        "model":  "",
+        "productId":  "10997",
+        "templateId":  "11010",
+        "imageUrl":  "https://odoo-se.fjdac.com/web/image/563405",
+        "priceSource":  "畜牧USD价格表 (USD)",
+        "unitCost":  1099,
+        "inventoryAmount":  1099
     }
 ];
