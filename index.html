@@ -3,16 +3,20 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>海外库存看板</title>
+    <title>SVEA畜牧海外库存看板</title>
     <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
     <main class="app-shell">
       <header class="topbar">
         <section class="title-block" aria-labelledby="pageTitle">
-          <p class="eyebrow">Overseas Inventory Board</p>
-          <h1 id="pageTitle">海外库存看板</h1>
-          <p class="source-note" id="sourceNote">正在读取海外仓库存数据</p>
+          <div class="brand-heading">
+            <div>
+              <p class="eyebrow">Overseas Inventory Board</p>
+              <h1 id="pageTitle">SVEA畜牧海外库存看板</h1>
+            </div>
+          </div>
+          <p class="source-note" id="sourceNote">正在读取刷新时间</p>
         </section>
 
         <section class="visual-card" aria-label="海外仓作业概览">
@@ -68,6 +72,7 @@
                   <th class="num">预留</th>
                   <th class="num">冻结</th>
                   <th class="num">可用</th>
+                  <th class="num">Fuzhou USD单价</th>
                   <th class="num">库存金额</th>
                   <th>状态</th>
                 </tr>
@@ -245,7 +250,7 @@
             <div class="import-actions">
               <button id="importButton" type="button">导入数据</button>
               <button id="fillTemplateButton" class="secondary" type="button">填入模板</button>
-              <p>当前看板已内置 Excel 中全部海外仓库存，可在这里追加或覆盖同仓同物料同货位的数据。</p>
+              <p>当前看板已内置库存数据，可在这里追加或覆盖同仓同物料同货位的数据。</p>
             </div>
           </div>
         </section>

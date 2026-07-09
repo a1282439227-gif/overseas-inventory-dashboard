@@ -82,7 +82,7 @@ button.ghost:hover {
 
 .topbar {
   display: grid;
-  grid-template-columns: minmax(360px, 0.84fr) minmax(420px, 1.16fr);
+  grid-template-columns: 1fr;
   gap: 16px;
   align-items: stretch;
   margin-bottom: 16px;
@@ -109,10 +109,34 @@ button.ghost:hover {
 }
 
 .title-block {
+  position: relative;
   display: grid;
   align-content: center;
-  min-height: 188px;
-  padding: 24px;
+  min-height: 244px;
+  overflow: hidden;
+  padding: 32px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.88) 42%, rgba(255, 255, 255, 0.58) 74%, rgba(255, 255, 255, 0.82) 100%),
+    url("./assets/sveaverken-logo.png") right 34px center / min(78%, 980px) auto no-repeat,
+    #fff;
+}
+
+.brand-heading {
+  position: relative;
+  z-index: 1;
+  max-width: 620px;
+}
+
+.brand-logo-image {
+  flex: 0 0 auto;
+  width: min(260px, 42vw);
+  height: 70px;
+  object-fit: contain;
+  object-position: left center;
+  border: 1px solid rgba(49, 95, 150, 0.14);
+  border-radius: 8px;
+  background: #fff;
+  padding: 8px 10px;
 }
 
 .eyebrow {
@@ -150,6 +174,8 @@ h3 {
 }
 
 .source-note {
+  position: relative;
+  z-index: 1;
   max-width: 760px;
   margin-bottom: 0;
   color: var(--muted);
@@ -158,6 +184,7 @@ h3 {
 }
 
 .visual-card {
+  display: none;
   position: relative;
   min-height: 188px;
   overflow: hidden;
@@ -468,7 +495,7 @@ textarea:focus {
 
 .material-lookup-grid {
   display: grid;
-  grid-template-columns: minmax(180px, 0.75fr) repeat(4, minmax(0, 1fr));
+  grid-template-columns: minmax(180px, 0.75fr) repeat(5, minmax(0, 1fr));
   gap: 12px;
   padding: 14px;
 }
@@ -628,6 +655,10 @@ textarea:focus {
   box-shadow: 0 12px 26px rgba(23, 32, 42, 0.08);
 }
 
+.warehouse-card.empty {
+  background: #fbfcfd;
+}
+
 .warehouse-head {
   display: flex;
   align-items: flex-start;
@@ -676,18 +707,14 @@ textarea:focus {
 }
 
 .bar-track {
-  height: 8px;
-  overflow: hidden;
+  height: 2px;
   border-radius: 999px;
-  background: #e7ecf1;
+  background: var(--accent);
+  opacity: 0.85;
 }
 
 .bar {
-  display: block;
-  height: 100%;
-  width: var(--width);
-  border-radius: inherit;
-  background: var(--accent);
+  display: none;
 }
 
 .warehouse-map {
@@ -721,7 +748,7 @@ textarea:focus {
   z-index: 2;
   left: var(--x);
   top: var(--y);
-  width: min(148px, 34vw);
+  width: min(166px, 34vw);
   transform: translate(-50%, -50%);
   border: 1px solid var(--line);
   border-top: 4px solid var(--accent);
@@ -1227,6 +1254,20 @@ th {
   .title-block {
     min-height: 0;
     padding: 20px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.84) 58%, rgba(255, 255, 255, 0.72) 100%),
+      url("./assets/sveaverken-logo.png") center bottom 12px / min(92%, 420px) auto no-repeat,
+      #fff;
+  }
+
+  .brand-heading {
+    max-width: 100%;
+    min-height: 120px;
+  }
+
+  .brand-logo-image {
+    width: min(240px, 72vw);
+    height: 58px;
   }
 
   h1 {

@@ -55,6 +55,22 @@ const warehouses = [
   },
 ];
 
+const domesticWarehouses = [
+  {
+    id: "fuzhou",
+    code: "FZ",
+    name: "福州仓",
+    sourceName: "FJDYN 福州成品仓 福州原材料仓 福州半成品仓",
+    city: "中国福州",
+    role: "国内备货与发运仓",
+    accent: "#5f6f7e",
+    soft: "#eef2f6",
+    x: "70%",
+    y: "43%",
+    mobileY: "88%",
+  },
+];
+
 const inventoryProjectScope = new Set(["R1916", "R1917", "R2404"]);
 const syncLocationScope = ["SVEA", "售后备件"];
 
@@ -1289,6 +1305,8 @@ function normalizeRow(row) {
     supplierOwnedQty: parseNumber(row.supplierOwnedQty),
     unitCost: parseNumber(row.unitCost || row.standardPrice || row.cost || row.price),
     inventoryAmount: parseNumber(row.inventoryAmount || row.amount || row.value),
+    priceSource: String(row.priceSource || "").trim(),
+    priceStartPlace: String(row.priceStartPlace || "").trim(),
     spec: String(row.spec || "").trim(),
     model: String(row.model || "").trim(),
     productId: String(row.productId || "").trim(),
@@ -1349,12 +1367,16 @@ function normalizeRmaOrder(order) {
 function findWarehouse(value) {
   const rawText = String(value || "").trim();
   const text = rawText.toLowerCase();
-  const matched = warehouses.find((warehouse) => {
+  const matched = getKnownWarehouses().find((warehouse) => {
     const haystack = [warehouse.id, warehouse.code, warehouse.name, warehouse.sourceName, warehouse.city].join(" ").toLowerCase();
     return haystack.includes(text) || text.includes(warehouse.name.toLowerCase()) || text.includes(warehouse.sourceName.toLowerCase());
   });
 
   return matched || createDynamicWarehouse(makeWarehouseId(rawText), rawText || "未匹配仓库");
+}
+
+function getKnownWarehouses() {
+  return [...warehouses, ...domesticWarehouses];
 }
 
 function makeWarehouseId(value) {
@@ -1391,8 +1413,9 @@ function createDynamicWarehouse(id, name, index = 0) {
   };
 }
 
-function getActiveWarehouses(sourceRows = rows) {
-  const map = new Map(warehouses.map((warehouse) => [warehouse.id, warehouse]));
+function getActiveWarehouses(sourceRows = rows, options = {}) {
+  const knownWarehouses = options.includeDomestic === false ? warehouses : getKnownWarehouses();
+  const map = new Map(knownWarehouses.map((warehouse) => [warehouse.id, warehouse]));
 
   sourceRows.forEach((row) => {
     if (!row.warehouseId || map.has(row.warehouseId)) return;
@@ -1441,7 +1464,23 @@ function isInInventoryLocationScope(row) {
 }
 
 function getVisibleInventoryRows() {
-  return rows.filter((row) => isInInventoryProjectScope(row) && isInInventoryLocationScope(row));
+  return getOverviewInventoryRows();
+}
+
+function hasInventory(row) {
+  return row.onHandQty > 0 || row.reservedQty > 0 || row.frozenQty > 0 || availableQty(row) > 0;
+}
+
+function isOverseasWarehouse(row) {
+  return warehouses.some((warehouse) => warehouse.id === row.warehouseId);
+}
+
+function getOverviewInventoryRows() {
+  return rows.filter((row) => isInInventoryProjectScope(row) && isOverseasWarehouse(row) && isInInventoryLocationScope(row) && hasInventory(row));
+}
+
+function getMaterialInventoryRows() {
+  return rows.filter((row) => isInInventoryProjectScope(row) && hasInventory(row));
 }
 
 function rowStatus(row) {
@@ -1477,13 +1516,13 @@ function getWarehouseName(id) {
 }
 
 function getProjects() {
-  return Array.from(new Set(getVisibleInventoryRows().map((row) => row.project).filter(Boolean))).sort((a, b) => a.localeCompare(b, "zh-CN"));
+  return Array.from(new Set(getMaterialInventoryRows().map((row) => row.project).filter(Boolean))).sort((a, b) => a.localeCompare(b, "zh-CN"));
 }
 
 function getFilteredRows() {
   const keyword = state.keyword.trim().toLowerCase();
 
-  return getVisibleInventoryRows()
+  return getMaterialInventoryRows()
     .filter((row) => {
       const warehouse = getWarehouseName(row.warehouseId);
       const text = [
@@ -1522,9 +1561,11 @@ function warehouseIndex(id) {
   return getActiveWarehouses().findIndex((warehouse) => warehouse.id === id);
 }
 
-function aggregateRows(sourceRows) {
+function aggregateRows(sourceRows, options = {}) {
+  const warehouseList = options.warehouses || getActiveWarehouses(sourceRows);
+  const includeEmpty = Boolean(options.includeEmpty);
   const base = new Map(
-    getActiveWarehouses(sourceRows).map((warehouse) => [
+    warehouseList.map((warehouse) => [
       warehouse.id,
       {
         warehouse,
@@ -1535,6 +1576,7 @@ function aggregateRows(sourceRows) {
         reservedQty: 0,
         frozenQty: 0,
         availableQty: 0,
+        inventoryAmount: 0,
         supplierOwnedQty: 0,
         shortageCount: 0,
         lowStockCount: 0,
@@ -1553,13 +1595,14 @@ function aggregateRows(sourceRows) {
     item.reservedQty += row.reservedQty;
     item.frozenQty += row.frozenQty;
     item.availableQty += availableQty(row);
+    item.inventoryAmount += inventoryAmount(row);
     item.supplierOwnedQty += row.supplierOwnedQty;
     if (rowStatus(row) === "shortage") item.shortageCount += 1;
     if (row.onHandQty < 5) item.lowStockCount += 1;
     if (rowStatus(row) === "reserved") item.reservedCount += 1;
   });
 
-  return Array.from(base.values()).filter((item) => item.onHandQty || item.materialCodes.size);
+  return Array.from(base.values()).filter((item) => includeEmpty || item.onHandQty || item.materialCodes.size);
 }
 
 function render() {
@@ -1569,7 +1612,7 @@ function render() {
   renderRmaControls();
   const visibleInventoryRows = getVisibleInventoryRows();
   const filteredRows = getFilteredRows();
-  const allWarehouseStats = aggregateRows(visibleInventoryRows);
+  const allWarehouseStats = aggregateRows(visibleInventoryRows, { warehouses, includeEmpty: true });
   const overviewRows = getOverviewRows();
   renderSummary(overviewRows);
   renderMaterialLookup();
@@ -1581,19 +1624,8 @@ function render() {
   renderReplenishment();
   renderRma();
   const updatedText = new Date().toLocaleString("zh-CN", { hour12: false });
-  const inventorySource = dataOverrides.inventory
-    ? "人工导入库存数据"
-    : inventoryRows.length
-    ? [
-        `库存：${inventoryData.source || "系统库存表"}${inventoryData.generatedAt ? `（${inventoryData.generatedAt}）` : ""}`,
-        inventoryData.odooProductMetaAt ? `Odoo 价格/图片：${inventoryData.odooProductMetaAt}` : "",
-      ]
-        .filter(Boolean)
-        .join("，")
-    : "内置库存数据";
-  const replenishmentSource = dataOverrides.replenishment ? "人工导入备货订单" : "备货订单";
-  const rmaSource = dataOverrides.rma ? "人工导入 RMA 订单" : "RMA 售后备件表";
-  elements.sourceNote.textContent = `来源：${inventorySource}、${replenishmentSource}、${rmaSource}；当前看板展示 ${visibleInventoryRows.length} 条库存明细、${replenishmentOrders.length} 条备货明细、${rmaOrders.length} 条 RMA 明细。刷新时间：${updatedText}`;
+  const refreshText = inventoryData.generatedAt || afterSalesData.generatedAt || updatedText;
+  elements.sourceNote.textContent = `SVEA畜牧海外库存看板刷新时间：${refreshText}`;
 }
 
 function renderView() {
@@ -1615,7 +1647,8 @@ function renderView() {
 
 function getOverviewRows() {
   const sourceRows = getVisibleInventoryRows();
-  const warehouseRows = state.warehouse === "all" ? sourceRows : sourceRows.filter((row) => row.warehouseId === state.warehouse);
+  const selectedOverseasWarehouse = warehouses.some((warehouse) => warehouse.id === state.warehouse);
+  const warehouseRows = state.warehouse === "all" || !selectedOverseasWarehouse ? sourceRows : sourceRows.filter((row) => row.warehouseId === state.warehouse);
   const filteredRows = state.overviewQuickFilter === "lowStock" ? warehouseRows.filter((row) => row.onHandQty < 5) : warehouseRows;
   return [...filteredRows].sort(sortRows);
 }
@@ -1628,7 +1661,7 @@ function getMaterialLookupMatches() {
   const keyword = normalizeSearchCode(state.keyword);
   if (!keyword) return [];
 
-  return getVisibleInventoryRows().filter((row) => row.materialCode.toLowerCase().includes(keyword));
+  return getMaterialInventoryRows().filter((row) => row.materialCode.toLowerCase().includes(keyword));
 }
 
 function renderMaterialLookup() {
@@ -1651,7 +1684,7 @@ function renderMaterialLookup() {
 
   elements.materialLookupSection.hidden = false;
   elements.materialLookupTitle.textContent = exactRows.length ? `物料编码查询：${codes[0]}` : `物料编码查询：${state.keyword.trim()}`;
-  elements.materialLookupMeta.textContent = `${names.join(" / ") || "匹配物料"}；匹配 ${lookupRows.length} 条明细，覆盖 ${coveredWarehouseCount} 个海外仓。下方按全部海外仓展示，未存放的仓库显示为 0。`;
+  elements.materialLookupMeta.textContent = `${names.join(" / ") || "匹配物料"}；匹配 ${lookupRows.length} 条明细，覆盖 ${coveredWarehouseCount} 个仓库。下方按全部仓库展示，未存放的仓库显示为 0。`;
   elements.materialLookupCount.textContent = `现存 ${formatQty(totalOnHand)} / 可用 ${formatQty(totalAvailable)} / 金额 ${formatMoney(totalAmount)}`;
 
   elements.materialLookupGrid.innerHTML = [
@@ -1664,6 +1697,7 @@ function renderMaterialLookup() {
       const frozen = warehouseRows.reduce((sum, row) => sum + row.frozenQty, 0);
       const available = onHand - reserved - frozen;
       const amount = warehouseRows.reduce((sum, row) => sum + inventoryAmount(row), 0);
+      const unitCost = warehouseRows.find((row) => row.unitCost > 0)?.unitCost || 0;
       const locations = Array.from(new Set(warehouseRows.map((row) => row.location).filter(Boolean))).join("、") || "无库存";
       const projects = Array.from(new Set(warehouseRows.map((row) => row.project).filter(Boolean))).join(" / ") || "-";
       const hasStockClass = onHand > 0 || reserved > 0 || frozen > 0 ? " has-stock" : "";
@@ -1683,7 +1717,7 @@ function renderMaterialLookup() {
             <span><b>${formatQty(frozen)}</b><small>冻结</small></span>
             <span><b>${formatQty(available)}</b><small>可用</small></span>
           </div>
-          <p class="amount-line">库存金额 ${formatMoney(amount)}</p>
+          <p class="amount-line">Fuzhou USD单价 ${unitCost > 0 ? formatMoney(unitCost) : "-"} / 库存金额 ${formatMoney(amount)}</p>
           <p>${escapeHtml(locations)}</p>
         </article>
       `;
@@ -1719,10 +1753,10 @@ function renderControls() {
   elements.statusSelect.value = state.status;
   elements.sortSelect.value = state.sort;
   elements.warehouseSelect.innerHTML = [
-    '<option value="all">全部海外仓</option>',
-    ...getActiveWarehouses().map((warehouse) => `<option value="${escapeHtml(warehouse.id)}">${escapeHtml(warehouse.name)}</option>`),
+    '<option value="all">全部仓库</option>',
+    ...getActiveWarehouses(getMaterialInventoryRows()).map((warehouse) => `<option value="${escapeHtml(warehouse.id)}">${escapeHtml(warehouse.name)}</option>`),
   ].join("");
-  elements.warehouseSelect.value = getActiveWarehouses().some((warehouse) => warehouse.id === state.warehouse) ? state.warehouse : "all";
+  elements.warehouseSelect.value = getActiveWarehouses(getMaterialInventoryRows()).some((warehouse) => warehouse.id === state.warehouse) ? state.warehouse : "all";
 }
 
 function renderReplenishmentControls() {
@@ -1767,9 +1801,8 @@ function uniqueValues(sourceRows, key) {
 }
 
 function renderSummary(filteredRows) {
-  const activeWarehouseIds = new Set(warehouses.map((warehouse) => warehouse.id));
   const activeWarehouseTotal = warehouses.length;
-  const warehouseCount = new Set(filteredRows.map((row) => row.warehouseId).filter((id) => activeWarehouseIds.has(id))).size;
+  const warehouseCount = activeWarehouseTotal;
   const skuCount = new Set(filteredRows.map((row) => row.materialCode)).size;
   const totalOnHand = filteredRows.reduce((sum, row) => sum + row.onHandQty, 0);
   const totalAvailable = filteredRows.reduce((sum, row) => sum + availableQty(row), 0);
@@ -1777,7 +1810,7 @@ function renderSummary(filteredRows) {
   const lowStockRows = filteredRows.filter((row) => row.onHandQty < 5).length;
 
   const cards = [
-    { label: "覆盖海外仓", value: `${warehouseCount} / ${activeWarehouseTotal}`, note: "按当前库存数据统计" },
+    { label: "覆盖海外仓", value: `${warehouseCount} / ${activeWarehouseTotal}`, note: "固定展示 4 个海外仓" },
     { label: "物料 SKU", value: `${skuCount}`, note: getProjects().join(" / ") },
     { label: "现存总量", value: formatQty(totalOnHand), note: "包含预留数量" },
     { label: "可用库存", value: formatQty(totalAvailable), note: "现存减预留减冻结" },
@@ -1806,8 +1839,10 @@ function renderWarehouses(stats) {
       const warehouse = item.warehouse;
       const width = Math.max(2, Math.round((item.onHandQty / maxQty) * 100));
       const activeClass = state.warehouse === warehouse.id ? " active" : "";
+      const emptyClass = item.materialCodes.size ? "" : " empty";
+      const projectText = Array.from(item.projects).sort().join(" / ") || "-";
       return `
-        <article class="warehouse-card${activeClass}" data-warehouse="${warehouse.id}" style="--accent: ${warehouse.accent}; --soft: ${warehouse.soft}; --width: ${width}%">
+        <article class="warehouse-card${activeClass}${emptyClass}" data-warehouse="${warehouse.id}" style="--accent: ${warehouse.accent}; --soft: ${warehouse.soft}; --width: ${width}%">
           <div class="warehouse-head">
             <div>
               <div class="warehouse-name">${escapeHtml(warehouse.name)}</div>
@@ -1818,8 +1853,9 @@ function renderWarehouses(stats) {
           <div class="warehouse-meta">
             <span>现存 ${formatQty(item.onHandQty)}</span>
             <span>可用 ${formatQty(item.availableQty)}</span>
+            <span>金额 ${formatMoney(item.inventoryAmount)}</span>
             <span>SKU ${item.materialCodes.size}</span>
-            <span>项目 ${Array.from(item.projects).sort().join(" / ")}</span>
+            <span>项目 ${escapeHtml(projectText)}</span>
           </div>
           <div class="bar-track"><span class="bar"></span></div>
           <div class="warehouse-meta">
@@ -1834,7 +1870,7 @@ function renderWarehouses(stats) {
 }
 
 function renderOverviewDetail(overviewRows) {
-  const activeWarehouse = getActiveWarehouses().find((warehouse) => warehouse.id === state.warehouse);
+  const activeWarehouse = warehouses.find((warehouse) => warehouse.id === state.warehouse);
   const warehouseNames = new Set(overviewRows.map((row) => row.warehouseId));
   const skuCount = new Set(overviewRows.map((row) => row.materialCode)).size;
   const available = overviewRows.reduce((sum, row) => sum + availableQty(row), 0);
@@ -1856,7 +1892,7 @@ function renderNetwork(stats) {
     '<span class="map-route" aria-hidden="true"></span>',
     ...stats.map((item) => {
       const warehouse = item.warehouse;
-      const risk = item.lowStockCount ? `低库存 ${item.lowStockCount} 项` : "库存正常";
+      const risk = item.materialCodes.size === 0 ? "暂无库存" : item.lowStockCount ? `低库存 ${item.lowStockCount} 项` : "库存正常";
       return `
         <article class="map-node" style="--x: ${warehouse.x}; --y: ${warehouse.y}; --mobile-y: ${warehouse.mobileY}; --accent: ${warehouse.accent}">
           <span class="map-dot" aria-hidden="true"></span>
@@ -1946,6 +1982,7 @@ function buildOverviewRowsHtml(sourceRows) {
           <td class="num">${formatQty(row.reservedQty)}</td>
           <td class="num">${formatQty(row.frozenQty)}</td>
           <td class="num">${formatQty(availableQty(row))}</td>
+          <td class="num">${row.unitCost > 0 ? formatMoney(row.unitCost) : "-"}</td>
           <td class="num">${formatMoney(inventoryAmount(row))}</td>
           <td><span class="status-tag tag-${status}">${statusLabel(status)}</span></td>
         </tr>
