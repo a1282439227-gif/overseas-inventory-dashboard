@@ -1697,7 +1697,6 @@ function renderMaterialLookup() {
       const frozen = warehouseRows.reduce((sum, row) => sum + row.frozenQty, 0);
       const available = onHand - reserved - frozen;
       const amount = warehouseRows.reduce((sum, row) => sum + inventoryAmount(row), 0);
-      const unitCost = warehouseRows.find((row) => row.unitCost > 0)?.unitCost || 0;
       const locations = Array.from(new Set(warehouseRows.map((row) => row.location).filter(Boolean))).join("、") || "无库存";
       const projects = Array.from(new Set(warehouseRows.map((row) => row.project).filter(Boolean))).join(" / ") || "-";
       const hasStockClass = onHand > 0 || reserved > 0 || frozen > 0 ? " has-stock" : "";
@@ -1717,7 +1716,7 @@ function renderMaterialLookup() {
             <span><b>${formatQty(frozen)}</b><small>冻结</small></span>
             <span><b>${formatQty(available)}</b><small>可用</small></span>
           </div>
-          <p class="amount-line">Fuzhou USD单价 ${unitCost > 0 ? formatMoney(unitCost) : "-"} / 库存金额 ${formatMoney(amount)}</p>
+          <p class="amount-line">库存金额 ${formatMoney(amount)}</p>
           <p>${escapeHtml(locations)}</p>
         </article>
       `;
@@ -1982,7 +1981,6 @@ function buildOverviewRowsHtml(sourceRows) {
           <td class="num">${formatQty(row.reservedQty)}</td>
           <td class="num">${formatQty(row.frozenQty)}</td>
           <td class="num">${formatQty(availableQty(row))}</td>
-          <td class="num">${row.unitCost > 0 ? formatMoney(row.unitCost) : "-"}</td>
           <td class="num">${formatMoney(inventoryAmount(row))}</td>
           <td><span class="status-tag tag-${status}">${statusLabel(status)}</span></td>
         </tr>
@@ -2603,6 +2601,45 @@ function upsertRows(incomingRows) {
   save();
 }
 
+function replaceInventoryRows(incomingRows) {
+  const metaByMaterial = new Map();
+  [...baseRows, ...rows].forEach((row) => {
+    const key = String(row.materialCode || "").trim().toLowerCase();
+    if (!key) return;
+    const existing = metaByMaterial.get(key) || {};
+    metaByMaterial.set(key, {
+      ...existing,
+      productId: row.productId || existing.productId,
+      productTemplateId: row.productTemplateId || existing.productTemplateId,
+      imageUrl: row.imageUrl || existing.imageUrl,
+      priceSource: row.priceSource || existing.priceSource,
+      priceStartPlace: row.priceStartPlace || existing.priceStartPlace,
+      unitCost: row.unitCost > 0 ? row.unitCost : existing.unitCost || 0,
+    });
+  });
+
+  rows = incomingRows
+    .map((row) => {
+      const normalized = normalizeRow(row);
+      const meta = metaByMaterial.get(normalized.materialCode.toLowerCase());
+      if (!meta) return normalized;
+      const unitCost = normalized.unitCost > 0 ? normalized.unitCost : meta.unitCost || 0;
+      return {
+        ...normalized,
+        productId: normalized.productId || meta.productId || "",
+        productTemplateId: normalized.productTemplateId || meta.productTemplateId || "",
+        imageUrl: normalized.imageUrl || meta.imageUrl || "",
+        priceSource: normalized.priceSource || meta.priceSource || "",
+        priceStartPlace: normalized.priceStartPlace || meta.priceStartPlace || "",
+        unitCost,
+        inventoryAmount: normalized.inventoryAmount > 0 ? normalized.inventoryAmount : normalized.onHandQty * unitCost,
+      };
+    })
+    .filter((row) => row.materialCode);
+  dataOverrides.inventory = true;
+  save();
+}
+
 function rowKey(row) {
   return [row.warehouseId, row.project, row.materialCode, row.location].join("|");
 }
@@ -2800,7 +2837,7 @@ function importInventoryFromArea(area, statusElement) {
   try {
     const imported = parseImportedRows(area.value).filter((row) => row.materialCode);
     if (!imported.length) throw new Error("没有识别到库存明细，请保留表头后再粘贴。");
-    upsertRows(imported);
+    replaceInventoryRows(imported);
     resetFilters();
     area.value = "";
     const message = `已导入 ${imported.length} 条库存`;
