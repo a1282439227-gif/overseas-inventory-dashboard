@@ -1913,9 +1913,10 @@ function render() {
   renderTable(filteredRows);
   renderReplenishment();
   renderRma();
-  const updatedText = new Date().toLocaleString("zh-CN", { hour12: false });
-  const refreshText = inventoryData.generatedAt || afterSalesData.generatedAt || updatedText;
-  elements.sourceNote.textContent = `SVEA畜牧海外库存看板刷新时间：${refreshText}`;
+  if (elements.sourceNote) {
+    elements.sourceNote.textContent = "";
+    elements.sourceNote.hidden = true;
+  }
   if (elements.languageSelect) elements.languageSelect.value = state.language;
   scheduleLanguageRender();
 }
