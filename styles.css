@@ -121,6 +121,63 @@ button.ghost:hover {
     #fff;
 }
 
+.language-picker {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(49, 95, 150, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  padding: 6px 8px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 800;
+  backdrop-filter: blur(10px);
+}
+
+.language-picker.is-busy {
+  border-color: rgba(49, 95, 150, 0.42);
+  box-shadow: 0 0 0 3px rgba(49, 95, 150, 0.08);
+}
+
+.language-picker.is-error {
+  border-color: rgba(179, 38, 30, 0.45);
+  box-shadow: 0 0 0 3px rgba(179, 38, 30, 0.08);
+}
+
+.language-icon {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  color: var(--blue);
+}
+
+.language-icon svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.language-picker select {
+  min-width: 116px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  padding: 4px 4px 4px 0;
+  font-size: 13px;
+  font-weight: 800;
+  outline: none;
+}
+
 .brand-heading {
   position: relative;
   z-index: 1;
@@ -627,6 +684,35 @@ textarea:focus {
 .material-warehouse-card .amount-line {
   color: var(--text);
   font-weight: 800;
+}
+
+.transit-line {
+  display: grid;
+  gap: 2px;
+  border: 1px solid rgba(37, 128, 138, 0.18);
+  border-radius: 6px;
+  background: rgba(224, 243, 245, 0.58);
+  padding: 8px;
+}
+
+.transit-line strong {
+  color: var(--teal);
+  font-size: 13px;
+}
+
+.transit-line span {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.transit-line.muted-transit {
+  border-color: rgba(217, 224, 232, 0.78);
+  background: rgba(248, 250, 252, 0.86);
+}
+
+.transit-line.muted-transit strong {
+  color: var(--muted);
 }
 
 .warehouse-list {

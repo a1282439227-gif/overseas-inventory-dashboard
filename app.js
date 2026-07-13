@@ -1,4 +1,24 @@
 const STORAGE_KEY = "overseas-inventory-board-v2";
+const TRANSLATE_CACHE_STORAGE_KEY = `${STORAGE_KEY}:google-translate-cache`;
+const GOOGLE_TRANSLATE_ENDPOINT = "https://translate.googleapis.com/translate_a/single";
+const TRANSLATE_SOURCE_LANGUAGE = "zh-CN";
+const SUPPORTED_TRANSLATION_LANGUAGES = new Set([
+  "zh-CN",
+  "en",
+  "de",
+  "fr",
+  "es",
+  "it",
+  "pt",
+  "ja",
+  "ko",
+  "ru",
+  "vi",
+  "th",
+  "ms",
+  "id",
+  "tr",
+]);
 
 const warehouses = [
   {
@@ -1136,6 +1156,7 @@ let dataOverrides = {
 };
 let state = {
   view: "overview",
+  language: "zh-CN",
   keyword: "",
   warehouse: "all",
   project: "all",
@@ -1156,6 +1177,9 @@ let state = {
 
 const elements = {
   sourceNote: document.querySelector("#sourceNote"),
+  languageSelect: document.querySelector("#languageSelect"),
+  languagePicker: document.querySelector(".language-picker"),
+  translationStatus: document.querySelector("#translationStatus"),
   viewTabs: document.querySelectorAll("[data-view]"),
   viewPanels: document.querySelectorAll("[data-view-panel]"),
   summaryGrid: document.querySelector("#summaryGrid"),
@@ -1239,6 +1263,270 @@ const elements = {
   rmaRestoreButton: document.querySelector("#rmaRestoreButton"),
 };
 
+let translationRunId = 0;
+let translationTimer = null;
+const sourceTextByNode = new WeakMap();
+const sourceAttributesByElement = new WeakMap();
+const translationCache = loadTranslationCache();
+
+function loadTranslationCache() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(TRANSLATE_CACHE_STORAGE_KEY) || "{}");
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveTranslationCache() {
+  const entries = Object.entries(translationCache);
+  const capped = entries.slice(Math.max(0, entries.length - 3000));
+  localStorage.setItem(TRANSLATE_CACHE_STORAGE_KEY, JSON.stringify(Object.fromEntries(capped)));
+}
+
+function setTranslationStatus(message, type = "normal") {
+  if (elements.translationStatus) elements.translationStatus.textContent = message;
+  elements.languagePicker?.classList.toggle("is-busy", type === "busy");
+  elements.languagePicker?.classList.toggle("is-error", type === "error");
+}
+
+function normalizeGoogleTargetLanguage(language) {
+  return language === "zh-CN" ? "zh-CN" : language;
+}
+
+function restoreOriginalLanguage() {
+  translationRunId += 1;
+  collectTranslatableEntries(document.querySelector(".app-shell")).forEach((entry) => entry.restore());
+  document.documentElement.lang = "zh-CN";
+  setTranslationStatus("Google翻译");
+}
+
+function scheduleLanguageRender() {
+  window.clearTimeout(translationTimer);
+  translationTimer = window.setTimeout(() => {
+    applyPageLanguage(state.language);
+  }, 60);
+}
+
+function isTranslatableText(value) {
+  const trimmed = String(value || "").trim();
+  if (!trimmed || trimmed.length < 2) return false;
+  if (!/[\u4e00-\u9fff]/.test(trimmed)) return false;
+  return !/^[\d\s.,:;+\-/()%#A-Za-z]+$/.test(trimmed);
+}
+
+function getTranslationRoots() {
+  return [
+    document.querySelector(".topbar"),
+    document.querySelector(".view-tabs"),
+    document.querySelector(`[data-view-panel="${state.view}"]`),
+  ].filter(Boolean);
+}
+
+function collectTranslatableEntries(root = null) {
+  const roots = root ? [root] : getTranslationRoots();
+  return roots.flatMap((targetRoot) => [
+    ...collectTranslatableTextNodes(targetRoot),
+    ...collectTranslatableAttributeEntries(targetRoot),
+  ]);
+}
+
+function collectTranslatableTextNodes(root = document.querySelector(".app-shell")) {
+  if (!root) return [];
+  const nodes = [];
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      const parent = node.parentElement;
+      if (!parent) return NodeFilter.FILTER_REJECT;
+      if (parent.closest("script, style, noscript, textarea, input, #languageSelect")) return NodeFilter.FILTER_REJECT;
+      if (parent.closest("[data-no-translate]")) return NodeFilter.FILTER_REJECT;
+      const text = node.nodeValue || "";
+      const source = sourceTextByNode.get(node) || text;
+      const trimmed = source.trim();
+      if (!isTranslatableText(trimmed)) return NodeFilter.FILTER_REJECT;
+      sourceTextByNode.set(node, source);
+      nodes.push({
+        source,
+        text: trimmed,
+        apply: (target) => applyTranslatedText(node, source, target),
+        restore: () => {
+          node.nodeValue = source;
+        },
+      });
+      return NodeFilter.FILTER_ACCEPT;
+    },
+  });
+  while (walker.nextNode()) {
+    // The acceptNode callback records accepted nodes.
+  }
+  return nodes;
+}
+
+function collectTranslatableAttributeEntries(root = document.querySelector(".app-shell")) {
+  if (!root) return [];
+  const entries = [];
+  const attributes = ["placeholder", "aria-label", "alt"];
+  const selector = attributes.map((attribute) => `[${attribute}]`).join(",");
+  root.querySelectorAll(selector).forEach((element) => {
+    if (element.closest("[data-no-translate], #languageSelect")) return;
+    attributes.forEach((attribute) => {
+      if (!element.hasAttribute(attribute)) return;
+      const source = getSourceAttribute(element, attribute);
+      const text = source.trim();
+      if (!isTranslatableText(text)) return;
+      entries.push({
+        source,
+        text,
+        apply: (target) => element.setAttribute(attribute, target),
+        restore: () => element.setAttribute(attribute, source),
+      });
+    });
+  });
+  return entries;
+}
+
+function getSourceAttribute(element, attribute) {
+  let sourceMap = sourceAttributesByElement.get(element);
+  if (!sourceMap) {
+    sourceMap = new Map();
+    sourceAttributesByElement.set(element, sourceMap);
+  }
+  if (!sourceMap.has(attribute)) {
+    sourceMap.set(attribute, element.getAttribute(attribute) || "");
+  }
+  return sourceMap.get(attribute) || "";
+}
+
+function applyTranslatedText(node, source, target) {
+  const prefix = (source.match(/^\s*/) || [""])[0];
+  const suffix = (source.match(/\s*$/) || [""])[0];
+  node.nodeValue = `${prefix}${target}${suffix}`;
+}
+
+function getTranslationCacheKey(language, text) {
+  return `${language}\n${text}`;
+}
+
+async function translateTextBatch(texts, language) {
+  if (!texts.length) return [];
+  if (texts.length === 1) return [await translateTextWithGoogle(texts[0], language)];
+
+  const mergedText = texts.join("\n");
+  const mergedTranslation = await translateTextWithGoogle(mergedText, language);
+  const parts = mergedTranslation
+    .split(/\r?\n/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  if (parts.length === texts.length) return parts;
+
+  const results = [];
+  for (const text of texts) {
+    results.push(await translateTextWithGoogle(text, language));
+  }
+  return results;
+}
+
+function createTranslationBatches(texts) {
+  const batches = [];
+  let current = [];
+  let currentLength = 0;
+  const maxBatchCount = 32;
+  const maxBatchLength = 1600;
+
+  texts.forEach((text) => {
+    const length = text.length + 1;
+    if (current.length && (current.length >= maxBatchCount || currentLength + length > maxBatchLength)) {
+      batches.push(current);
+      current = [];
+      currentLength = 0;
+    }
+    current.push(text);
+    currentLength += length;
+  });
+
+  if (current.length) batches.push(current);
+  return batches;
+}
+
+async function translateTextWithGoogle(text, language) {
+  const target = normalizeGoogleTargetLanguage(language);
+  const params = new URLSearchParams({
+    client: "gtx",
+    sl: TRANSLATE_SOURCE_LANGUAGE,
+    tl: target,
+    dt: "t",
+    q: text,
+  });
+  const response = await fetch(`${GOOGLE_TRANSLATE_ENDPOINT}?${params.toString()}`, {
+    method: "GET",
+  });
+  if (!response.ok) {
+    throw new Error(response.status === 429 ? "Google 翻译请求过多，请稍后再试" : `Google 翻译返回 ${response.status}`);
+  }
+  const payload = await response.json();
+  return parseGoogleTranslateResponse(payload) || text;
+}
+
+function parseGoogleTranslateResponse(payload) {
+  if (!Array.isArray(payload?.[0])) throw new Error("Google 翻译返回格式不正确");
+  return payload[0]
+    .map((segment) => (Array.isArray(segment) ? segment[0] || "" : ""))
+    .join("")
+    .trim();
+}
+
+async function applyPageLanguage(language) {
+  if (!SUPPORTED_TRANSLATION_LANGUAGES.has(language)) return;
+  if (elements.languageSelect && elements.languageSelect.value !== language) elements.languageSelect.value = language;
+  if (language === "zh-CN") {
+    restoreOriginalLanguage();
+    return;
+  }
+
+  const runId = ++translationRunId;
+  const entries = collectTranslatableEntries();
+  const uniqueTexts = Array.from(new Set(entries.map((item) => item.text)));
+  const missingTexts = uniqueTexts.filter((text) => !translationCache[getTranslationCacheKey(language, text)]);
+
+  try {
+    entries.forEach((entry) => {
+      const translated = translationCache[getTranslationCacheKey(language, entry.text)];
+      if (translated) entry.apply(translated);
+    });
+
+    setTranslationStatus(missingTexts.length ? "翻译中..." : "已缓存", missingTexts.length ? "busy" : "normal");
+    const batches = createTranslationBatches(missingTexts);
+    let translatedCount = 0;
+    for (const batch of batches) {
+      setTranslationStatus(`翻译中 ${Math.min(translatedCount + batch.length, missingTexts.length)}/${missingTexts.length}`, "busy");
+      const translations = await translateTextBatch(batch, language);
+      batch.forEach((text, batchIndex) => {
+        translationCache[getTranslationCacheKey(language, text)] = translations[batchIndex] || text;
+      });
+      saveTranslationCache();
+      if (runId !== translationRunId) return;
+      translatedCount += batch.length;
+
+      entries.forEach((entry) => {
+        if (!batch.includes(entry.text)) return;
+        const translated = translationCache[getTranslationCacheKey(language, entry.text)];
+        if (translated) entry.apply(translated);
+      });
+    }
+
+    entries.forEach((entry) => {
+      const translated = translationCache[getTranslationCacheKey(language, entry.text)];
+      if (translated) entry.apply(translated);
+    });
+    document.documentElement.lang = language;
+    setTranslationStatus("Google已翻译");
+  } catch (error) {
+    console.error(error);
+    setTranslationStatus("翻译失败", "error");
+  }
+}
+
 function load() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
@@ -1255,6 +1543,7 @@ function load() {
     }
     state = { ...state, ...(saved.state || {}) };
     if (!views.includes(state.view)) state.view = "overview";
+    if (!SUPPORTED_TRANSLATION_LANGUAGES.has(state.language)) state.language = "zh-CN";
     if (!["all", "lowStock"].includes(state.overviewQuickFilter)) state.overviewQuickFilter = "all";
     if (!getRmaQuickFilters([]).some((filter) => filter.id === state.rmaQuickFilter)) state.rmaQuickFilter = "all";
   } catch {
@@ -1316,7 +1605,8 @@ function normalizeRow(row) {
 }
 
 function normalizeReplenishmentOrder(order) {
-  const warehouse = findWarehouse(order.warehouseId || order.warehouseText || order.warehouse);
+  const warehouseLookup = order.warehouseId && order.warehouseId !== "unknown" ? order.warehouseId : order.warehouseText || order.warehouse;
+  const warehouse = findWarehouse(warehouseLookup);
   return {
     orderNo: String(order.orderNo || "").trim(),
     materialCode: String(order.materialCode || "").trim(),
@@ -1626,6 +1916,8 @@ function render() {
   const updatedText = new Date().toLocaleString("zh-CN", { hour12: false });
   const refreshText = inventoryData.generatedAt || afterSalesData.generatedAt || updatedText;
   elements.sourceNote.textContent = `SVEA畜牧海外库存看板刷新时间：${refreshText}`;
+  if (elements.languageSelect) elements.languageSelect.value = state.language;
+  scheduleLanguageRender();
 }
 
 function renderView() {
@@ -1700,6 +1992,7 @@ function renderMaterialLookup() {
       const locations = Array.from(new Set(warehouseRows.map((row) => row.location).filter(Boolean))).join("、") || "无库存";
       const projects = Array.from(new Set(warehouseRows.map((row) => row.project).filter(Boolean))).join(" / ") || "-";
       const hasStockClass = onHand > 0 || reserved > 0 || frozen > 0 ? " has-stock" : "";
+      const transitInfo = warehouse.id === "fuzhou" ? null : getMaterialTransitInfo(codes, warehouse.id);
 
       return `
         <article class="material-warehouse-card${hasStockClass}" style="--accent: ${warehouse.accent}; --soft: ${warehouse.soft}">
@@ -1717,11 +2010,49 @@ function renderMaterialLookup() {
             <span><b>${formatQty(available)}</b><small>可用</small></span>
           </div>
           <p class="amount-line">库存金额 ${formatMoney(amount)}</p>
+          ${
+            transitInfo
+              ? `<div class="transit-line">
+                  <strong>在途 ${formatQty(transitInfo.qty)}</strong>
+                  <span>${escapeHtml(transitInfo.summary)}</span>
+                </div>`
+              : warehouse.id !== "fuzhou"
+                ? '<div class="transit-line muted-transit"><strong>在途 0</strong><span>暂无未入库备货</span></div>'
+                : ""
+          }
           <p>${escapeHtml(locations)}</p>
         </article>
       `;
     }),
   ].join("");
+}
+
+function getMaterialTransitInfo(materialCodes, warehouseId) {
+  const codeSet = new Set(materialCodes.map((code) => String(code || "").trim().toLowerCase()).filter(Boolean));
+  if (!codeSet.size) return null;
+
+  const openOrders = replenishmentOrders.filter((order) => {
+    if (order.warehouseId !== warehouseId) return false;
+    if (!codeSet.has(String(order.materialCode || "").trim().toLowerCase())) return false;
+    const statusText = `${order.status || ""} ${inboundLabel(order.inboundFlag)}`;
+    if (String(order.inboundFlag || "").trim() === "1") return false;
+    if (/已入库|已完成|完成/.test(statusText)) return false;
+    return true;
+  });
+  if (!openOrders.length) return null;
+
+  const qty = openOrders.reduce((sum, order) => sum + parseNumber(order.qty), 0);
+  const orderNos = Array.from(new Set(openOrders.map((order) => order.orderNo).filter(Boolean)));
+  const statuses = Array.from(new Set(openOrders.map((order) => order.status).filter(Boolean)));
+  const arrivals = Array.from(new Set(openOrders.map((order) => order.expectedArrival).filter(Boolean))).slice(0, 2);
+  const summaryParts = [];
+  summaryParts.push(`${orderNos.length || openOrders.length} 个订单`);
+  if (statuses.length) summaryParts.push(statuses.slice(0, 2).join(" / "));
+  if (arrivals.length) summaryParts.push(`预计 ${arrivals.join(" / ")}`);
+  return {
+    qty,
+    summary: summaryParts.join("，"),
+  };
 }
 
 function buildMaterialImageCard(lookupRows, materialCode, materialName) {
@@ -3008,6 +3339,12 @@ elements.resetButton.addEventListener("click", () => {
 });
 
 elements.exportButton.addEventListener("click", exportCsv);
+
+elements.languageSelect?.addEventListener("change", (event) => {
+  state.language = event.target.value;
+  save();
+  applyPageLanguage(state.language);
+});
 
 elements.warehouseList.addEventListener("click", (event) => {
   const card = event.target.closest("[data-warehouse]");
