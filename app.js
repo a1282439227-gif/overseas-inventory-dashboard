@@ -1636,9 +1636,31 @@ async function triggerAfterSalesRefreshEndpoint() {
 }
 
 async function fetchLatestAfterSalesData() {
-  const response = await fetch(getAfterSalesDataUrl(), { cache: "no-store" });
-  if (!response.ok) throw new Error(`数据文件返回 ${response.status}`);
-  return parseAfterSalesDataScript(await response.text());
+  try {
+    const response = await fetch(getAfterSalesDataUrl(), { cache: "no-store" });
+    if (!response.ok) throw new Error(`数据文件返回 ${response.status}`);
+    return parseAfterSalesDataScript(await response.text());
+  } catch (error) {
+    if (window.location.protocol !== "file:") throw error;
+    return loadAfterSalesDataScript();
+  }
+}
+
+function loadAfterSalesDataScript() {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = getAfterSalesDataUrl();
+    script.async = true;
+    script.onload = () => {
+      script.remove();
+      resolve(window.afterSalesData || { replenishmentOrders: [], rmaOrders: [] });
+    };
+    script.onerror = () => {
+      script.remove();
+      reject(new Error("数据脚本加载失败"));
+    };
+    document.head.appendChild(script);
+  });
 }
 
 async function fetchLatestAfterSalesDataAfterSync(previousGeneratedAt) {
@@ -1686,7 +1708,7 @@ async function refreshAfterSalesFromSource() {
   const previousGeneratedAt = afterSalesGeneratedAt;
   const hadManualOverrides = dataOverrides.replenishment || dataOverrides.rma;
   afterSalesRefreshBusy = true;
-  afterSalesRefreshMessage = "正在刷新多维表格数据...";
+  afterSalesRefreshMessage = afterSalesRefreshEndpoint ? "正在同步多维表格数据..." : "正在读取已发布数据...";
   render();
   try {
     const triggeredRemoteSync = await triggerAfterSalesRefreshEndpoint();
