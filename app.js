@@ -1144,6 +1144,7 @@ const hasSyncedInventoryRows = inventoryRows.length > 0;
 const afterSalesData = window.afterSalesData || { replenishmentOrders: [], rmaOrders: [] };
 const dashboardRefreshConfig = window.dashboardRefreshConfig || {};
 const afterSalesRefreshEndpoint = String(dashboardRefreshConfig.afterSalesEndpoint || "").trim();
+const afterSalesRefreshToken = String(dashboardRefreshConfig.refreshToken || "").trim();
 let afterSalesGeneratedAt = String(afterSalesData.generatedAt || "");
 let afterSalesRefreshMessage = "";
 let afterSalesRefreshBusy = false;
@@ -1626,9 +1627,13 @@ function sleep(ms) {
 
 async function triggerAfterSalesRefreshEndpoint() {
   if (!afterSalesRefreshEndpoint) return false;
+  const headers = { "Content-Type": "application/json" };
+  if (afterSalesRefreshToken) {
+    headers.Authorization = `Bearer ${afterSalesRefreshToken}`;
+  }
   const response = await fetch(afterSalesRefreshEndpoint, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify({ scope: "afterSales", requestedAt: new Date().toISOString() }),
   });
   if (!response.ok) throw new Error(`同步接口返回 ${response.status}`);
@@ -1665,10 +1670,10 @@ function loadAfterSalesDataScript() {
 
 async function fetchLatestAfterSalesDataAfterSync(previousGeneratedAt) {
   let latestData = await fetchLatestAfterSalesData();
-  for (let attempt = 0; attempt < 8; attempt += 1) {
+  for (let attempt = 0; attempt < 20; attempt += 1) {
     const latestGeneratedAt = String(latestData.generatedAt || "");
     if (!previousGeneratedAt || latestGeneratedAt !== previousGeneratedAt) return latestData;
-    await sleep(3000);
+    await sleep(5000);
     latestData = await fetchLatestAfterSalesData();
   }
   return latestData;
