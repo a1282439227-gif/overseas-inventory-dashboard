@@ -1142,7 +1142,11 @@ const inventoryData = window.inventoryData || {};
 const inventoryRows = Array.isArray(window.inventoryRows) ? window.inventoryRows : [];
 const hasSyncedInventoryRows = inventoryRows.length > 0;
 const afterSalesData = window.afterSalesData || { replenishmentOrders: [], rmaOrders: [] };
-const afterSalesGeneratedAt = String(afterSalesData.generatedAt || "");
+const dashboardRefreshConfig = window.dashboardRefreshConfig || {};
+const afterSalesRefreshEndpoint = String(dashboardRefreshConfig.afterSalesEndpoint || "").trim();
+let afterSalesGeneratedAt = String(afterSalesData.generatedAt || "");
+let afterSalesRefreshMessage = "";
+let afterSalesRefreshBusy = false;
 const baseReplenishmentOrders = (afterSalesData.replenishmentOrders || []).map(normalizeReplenishmentOrder);
 const baseRmaOrders = (afterSalesData.rmaOrders || []).map(normalizeRmaOrder);
 const replenishmentOrders = [...baseReplenishmentOrders];
@@ -1224,6 +1228,7 @@ const elements = {
   overviewRestoreButton: document.querySelector("#overviewRestoreButton"),
   odooCommandButton: document.querySelector("#odooCommandButton"),
   replenishmentCount: document.querySelector("#replenishmentCount"),
+  replenishmentRefreshButton: document.querySelector("#replenishmentRefreshButton"),
   replenishmentStatus: document.querySelector("#replenishmentStatus"),
   replenishmentKeywordInput: document.querySelector("#replenishmentKeywordInput"),
   replenishmentWarehouseSelect: document.querySelector("#replenishmentWarehouseSelect"),
@@ -1262,6 +1267,7 @@ const elements = {
   rmaImportButton: document.querySelector("#rmaImportButton"),
   rmaTemplateButton: document.querySelector("#rmaTemplateButton"),
   rmaRestoreButton: document.querySelector("#rmaRestoreButton"),
+  rmaRefreshButton: document.querySelector("#rmaRefreshButton"),
 };
 
 let translationRunId = 0;
@@ -1601,6 +1607,110 @@ function replaceCollection(target, incomingRows) {
   target.splice(0, target.length, ...incomingRows);
 }
 
+function getAfterSalesDataUrl() {
+  const url = new URL("data-orders.js", window.location.href);
+  url.searchParams.set("refresh", String(Date.now()));
+  return url.toString();
+}
+
+function parseAfterSalesDataScript(scriptText) {
+  const jsonText = String(scriptText || "")
+    .replace(/^\s*window\.afterSalesData\s*=\s*/, "")
+    .replace(/;\s*$/, "");
+  return JSON.parse(jsonText);
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function triggerAfterSalesRefreshEndpoint() {
+  if (!afterSalesRefreshEndpoint) return false;
+  const response = await fetch(afterSalesRefreshEndpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ scope: "afterSales", requestedAt: new Date().toISOString() }),
+  });
+  if (!response.ok) throw new Error(`同步接口返回 ${response.status}`);
+  return true;
+}
+
+async function fetchLatestAfterSalesData() {
+  const response = await fetch(getAfterSalesDataUrl(), { cache: "no-store" });
+  if (!response.ok) throw new Error(`数据文件返回 ${response.status}`);
+  return parseAfterSalesDataScript(await response.text());
+}
+
+async function fetchLatestAfterSalesDataAfterSync(previousGeneratedAt) {
+  let latestData = await fetchLatestAfterSalesData();
+  for (let attempt = 0; attempt < 8; attempt += 1) {
+    const latestGeneratedAt = String(latestData.generatedAt || "");
+    if (!previousGeneratedAt || latestGeneratedAt !== previousGeneratedAt) return latestData;
+    await sleep(3000);
+    latestData = await fetchLatestAfterSalesData();
+  }
+  return latestData;
+}
+
+function applyLatestAfterSalesData(data) {
+  const previousGeneratedAt = afterSalesGeneratedAt;
+  const nextReplenishmentOrders = (data.replenishmentOrders || []).map(normalizeReplenishmentOrder);
+  const nextRmaOrders = (data.rmaOrders || []).map(normalizeRmaOrder);
+  afterSalesGeneratedAt = String(data.generatedAt || "");
+  window.afterSalesData = data;
+  replaceCollection(baseReplenishmentOrders, nextReplenishmentOrders);
+  replaceCollection(baseRmaOrders, nextRmaOrders);
+  replaceCollection(replenishmentOrders, nextReplenishmentOrders);
+  replaceCollection(rmaOrders, nextRmaOrders);
+  dataOverrides.replenishment = false;
+  dataOverrides.rma = false;
+  return {
+    changed: previousGeneratedAt !== afterSalesGeneratedAt,
+    replenishmentRows: nextReplenishmentOrders.length,
+    rmaRows: nextRmaOrders.length,
+  };
+}
+
+function renderAfterSalesRefreshControls() {
+  const buttons = [elements.replenishmentRefreshButton, elements.rmaRefreshButton].filter(Boolean);
+  buttons.forEach((button) => {
+    button.disabled = afterSalesRefreshBusy;
+    button.textContent = afterSalesRefreshBusy ? "刷新中..." : "刷新数据";
+    button.classList.toggle("is-loading", afterSalesRefreshBusy);
+    button.title = afterSalesRefreshEndpoint ? "从多维表格同步最新数据" : "刷新已发布的多维表格数据";
+  });
+}
+
+async function refreshAfterSalesFromSource() {
+  if (afterSalesRefreshBusy) return;
+  const previousGeneratedAt = afterSalesGeneratedAt;
+  const hadManualOverrides = dataOverrides.replenishment || dataOverrides.rma;
+  afterSalesRefreshBusy = true;
+  afterSalesRefreshMessage = "正在刷新多维表格数据...";
+  render();
+  try {
+    const triggeredRemoteSync = await triggerAfterSalesRefreshEndpoint();
+    const latestData = triggeredRemoteSync
+      ? await fetchLatestAfterSalesDataAfterSync(previousGeneratedAt)
+      : await fetchLatestAfterSalesData();
+    const result = applyLatestAfterSalesData(latestData);
+    resetAfterSalesFilters();
+    const sourceLabel = triggeredRemoteSync ? "已同步多维表格" : "已刷新线上发布数据";
+    if (result.changed || hadManualOverrides) {
+      afterSalesRefreshMessage = `${sourceLabel}：${afterSalesGeneratedAt || "-"} / 备货 ${result.replenishmentRows} 条 / RMA ${result.rmaRows} 条`;
+    } else {
+      afterSalesRefreshMessage = `已是最新发布数据：${afterSalesGeneratedAt || "-"} / 备货 ${result.replenishmentRows} 条 / RMA ${result.rmaRows} 条`;
+    }
+  } catch (error) {
+    console.error(error);
+    afterSalesRefreshMessage = "刷新失败，请稍后重试或等待定时同步";
+  } finally {
+    afterSalesRefreshBusy = false;
+    save();
+    render();
+  }
+}
+
 function getWarehouseLookupValue(row) {
   const warehouseId = String(row.warehouseId || "").trim();
   if (warehouseId && warehouseId !== "unknown") return warehouseId;
@@ -1938,6 +2048,7 @@ function render() {
   renderControls();
   renderReplenishmentControls();
   renderRmaControls();
+  renderAfterSalesRefreshControls();
   const visibleInventoryRows = getVisibleInventoryRows();
   const filteredRows = getFilteredRows();
   const allWarehouseStats = aggregateRows(visibleInventoryRows, { warehouses, includeEmpty: true });
@@ -2386,7 +2497,7 @@ function renderReplenishment() {
   const totalQty = filteredOrders.reduce((sum, order) => sum + order.qty, 0);
   const orderCount = new Set(filteredOrders.map((order) => order.orderNo)).size;
   elements.replenishmentCount.textContent = `${filteredOrders.length} 条 / ${orderCount} 个订单 / 数量 ${formatQty(totalQty)}`;
-  elements.replenishmentStatus.textContent = replenishmentOrders.length ? `源数据 ${replenishmentOrders.length} 条` : "待接入表格数据";
+  elements.replenishmentStatus.textContent = afterSalesRefreshMessage || (replenishmentOrders.length ? `源数据 ${replenishmentOrders.length} 条` : "待接入表格数据");
 
   elements.replenishmentWarehouseGrid.innerHTML = warehouses
     .map((warehouse) => {
@@ -2473,7 +2584,7 @@ function renderRma() {
   const activeFilter = getRmaQuickFilter(state.rmaQuickFilter);
 
   elements.rmaCount.textContent = `${filteredGroups.length} 个 RM 订单 / ${filteredRows.length} 条明细`;
-  elements.rmaStatus.textContent = rmaOrders.length ? `当前分组：${activeFilter.label} / 源数据 ${rmaOrders.length} 条` : "待接入 RMA 数据";
+  elements.rmaStatus.textContent = afterSalesRefreshMessage || (rmaOrders.length ? `当前分组：${activeFilter.label} / 源数据 ${rmaOrders.length} 条` : "待接入 RMA 数据");
   elements.rmaSummaryGrid.innerHTML = getRmaQuickFilters(baseGroups)
     .map(
       (filter) => `
@@ -3246,6 +3357,7 @@ function importReplenishmentFromArea(area, statusElement) {
     if (!imported.length) throw new Error("没有识别到备货订单，请保留表头后再粘贴。");
     replaceCollection(replenishmentOrders, imported);
     dataOverrides.replenishment = true;
+    afterSalesRefreshMessage = "";
     resetReplenishmentFilters();
     area.value = "";
     save();
@@ -3262,6 +3374,7 @@ function importReplenishmentFromArea(area, statusElement) {
 function restoreReplenishmentFromSource(statusElement) {
   replaceCollection(replenishmentOrders, baseReplenishmentOrders);
   dataOverrides.replenishment = false;
+  afterSalesRefreshMessage = "";
   resetReplenishmentFilters();
   save();
   setImportStatus(statusElement, "已恢复系统备货订单");
@@ -3274,6 +3387,7 @@ function importRmaFromArea(area, statusElement) {
     if (!imported.length) throw new Error("没有识别到 RMA 明细，请保留表头后再粘贴。");
     replaceCollection(rmaOrders, imported);
     dataOverrides.rma = true;
+    afterSalesRefreshMessage = "";
     resetRmaFilters();
     area.value = "";
     save();
@@ -3290,6 +3404,7 @@ function importRmaFromArea(area, statusElement) {
 function restoreRmaFromSource(statusElement) {
   replaceCollection(rmaOrders, baseRmaOrders);
   dataOverrides.rma = false;
+  afterSalesRefreshMessage = "";
   resetRmaFilters();
   save();
   setImportStatus(statusElement, "已恢复系统 RMA 订单");
@@ -3450,6 +3565,8 @@ elements.replenishmentResetButton.addEventListener("click", () => {
   render();
 });
 
+elements.replenishmentRefreshButton?.addEventListener("click", refreshAfterSalesFromSource);
+
 elements.replenishmentWarehouseGrid.addEventListener("click", (event) => {
   const card = event.target.closest("[data-replenishment-warehouse]");
   if (!card) return;
@@ -3520,6 +3637,8 @@ elements.rmaResetButton.addEventListener("click", () => {
   save();
   render();
 });
+
+elements.rmaRefreshButton?.addEventListener("click", refreshAfterSalesFromSource);
 
 elements.importButton.addEventListener("click", () => {
   importInventoryFromArea(elements.importArea, elements.importStatus);

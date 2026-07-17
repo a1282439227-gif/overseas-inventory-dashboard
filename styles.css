@@ -357,6 +357,34 @@ h3 {
   font-weight: 800;
 }
 
+.page-heading-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-left: auto;
+  min-width: max-content;
+}
+
+.refresh-button {
+  min-width: 88px;
+  border-color: rgba(47, 125, 98, 0.32);
+  background: #f4fbf8;
+  color: var(--green);
+  font-weight: 800;
+}
+
+.refresh-button:hover {
+  border-color: rgba(47, 125, 98, 0.5);
+  background: #e8f6ef;
+}
+
+.refresh-button.is-loading,
+.refresh-button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
 .summary-card {
   min-height: 104px;
   border: 1px solid var(--line);
@@ -1378,6 +1406,13 @@ th {
   .page-heading {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .page-heading-actions {
+    justify-content: space-between;
+    margin-left: 0;
+    min-width: 0;
+    width: 100%;
   }
 
   .warehouse-map {

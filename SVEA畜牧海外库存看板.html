@@ -14,7 +14,7 @@
     <meta name="twitter:title" content="SVEA畜牧海外库存看板">
     <meta name="twitter:description" content="海外仓库存、料号筛选、备货订单和RMA订单查询。">
     <meta name="twitter:image" content="https://a1282439227-gif.github.io/overseas-inventory-dashboard/assets/sveaverken-logo.png">
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./styles.css?v=20260717-refresh-button">
   </head>
   <body>
     <main class="app-shell">
@@ -298,7 +298,10 @@
             <h2>备货订单</h2>
             <p class="section-subtitle">按海外仓汇总备货订单、状态、运输方式和预计到仓信息。</p>
           </div>
-          <span id="replenishmentCount">0 条备货记录</span>
+          <div class="page-heading-actions">
+            <button id="replenishmentRefreshButton" class="refresh-button" type="button">刷新数据</button>
+            <span id="replenishmentCount">0 条备货记录</span>
+          </div>
         </section>
 
         <section class="order-filter-panel" aria-label="备货订单筛选">
@@ -390,7 +393,10 @@
             <h2>RMA订单查询</h2>
             <p class="section-subtitle">查询售后单号、服务单号、客户、国家、物料与物流状态。</p>
           </div>
-          <span id="rmaCount">0 条 RMA 明细</span>
+          <div class="page-heading-actions">
+            <button id="rmaRefreshButton" class="refresh-button" type="button">刷新数据</button>
+            <span id="rmaCount">0 条 RMA 明细</span>
+          </div>
         </section>
 
         <section class="summary-grid rma-summary-grid" id="rmaSummaryGrid" aria-label="RMA指标汇总"></section>
@@ -524,9 +530,9 @@
       </section>
     </main>
 
-    <script src="./data-inventory.js?v=20260717-rma-cachefix"></script>
-    <script src="./data-orders.js?v=20260717-rma-cachefix"></script>
+    <script src="./data-inventory.js?v=20260717-refresh-button"></script>
+    <script src="./data-orders.js?v=20260717-refresh-button"></script>
     <script src="./vendor/xlsx.full.min.js"></script>
-    <script src="./app.js?v=20260717-rma-cachefix"></script>
+    <script src="./app.js?v=20260717-refresh-button"></script>
   </body>
 </html>
