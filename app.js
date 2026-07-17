@@ -1142,6 +1142,7 @@ const inventoryData = window.inventoryData || {};
 const inventoryRows = Array.isArray(window.inventoryRows) ? window.inventoryRows : [];
 const hasSyncedInventoryRows = inventoryRows.length > 0;
 const afterSalesData = window.afterSalesData || { replenishmentOrders: [], rmaOrders: [] };
+const afterSalesGeneratedAt = String(afterSalesData.generatedAt || "");
 const baseReplenishmentOrders = (afterSalesData.replenishmentOrders || []).map(normalizeReplenishmentOrder);
 const baseRmaOrders = (afterSalesData.rmaOrders || []).map(normalizeRmaOrder);
 const replenishmentOrders = [...baseReplenishmentOrders];
@@ -1527,13 +1528,43 @@ async function applyPageLanguage(language) {
   }
 }
 
+function getSavedAfterSalesGeneratedAt(saved) {
+  const sourceGeneratedAt = saved && saved.sourceGeneratedAt;
+  return sourceGeneratedAt ? String(sourceGeneratedAt.afterSales || "") : "";
+}
+
+function shouldUseSavedAfterSalesData(saved) {
+  const overrides = (saved && saved.dataOverrides) || {};
+  if (!overrides.replenishment && !overrides.rma) return true;
+  if (!afterSalesGeneratedAt) return true;
+  return getSavedAfterSalesGeneratedAt(saved) === afterSalesGeneratedAt;
+}
+
+function resetAfterSalesFilters() {
+  state.replenishmentKeyword = "";
+  state.replenishmentWarehouse = "all";
+  state.replenishmentStatus = "all";
+  state.replenishmentTransport = "all";
+  state.rmaKeyword = "";
+  state.rmaStatus = "all";
+  state.rmaCountry = "all";
+  state.rmaProject = "all";
+  state.rmaQuickFilter = "all";
+  state.rmaSelectedNo = "";
+}
+
 function load() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    const useSavedAfterSalesData = shouldUseSavedAfterSalesData(saved);
     dataOverrides = {
       ...dataOverrides,
       ...(saved.dataOverrides || {}),
     };
+    if (!useSavedAfterSalesData) {
+      dataOverrides.replenishment = false;
+      dataOverrides.rma = false;
+    }
     rows = dataOverrides.inventory && Array.isArray(saved.rows) && saved.rows.length ? saved.rows.map(normalizeRow) : baseRows;
     if (dataOverrides.replenishment && Array.isArray(saved.replenishmentOrders)) {
       replaceCollection(replenishmentOrders, saved.replenishmentOrders.map(normalizeReplenishmentOrder));
@@ -1542,6 +1573,7 @@ function load() {
       replaceCollection(rmaOrders, saved.rmaOrders.map(normalizeRmaOrder));
     }
     state = { ...state, ...(saved.state || {}) };
+    if (!useSavedAfterSalesData) resetAfterSalesFilters();
     if (!views.includes(state.view)) state.view = "overview";
     if (!SUPPORTED_TRANSLATION_LANGUAGES.has(state.language)) state.language = "zh-CN";
     if (!["all", "lowStock"].includes(state.overviewQuickFilter)) state.overviewQuickFilter = "all";
@@ -1552,7 +1584,13 @@ function load() {
 }
 
 function save() {
-  const payload = { state, dataOverrides };
+  const payload = {
+    state,
+    dataOverrides,
+    sourceGeneratedAt: {
+      afterSales: afterSalesGeneratedAt,
+    },
+  };
   if (dataOverrides.inventory) payload.rows = rows;
   if (dataOverrides.replenishment) payload.replenishmentOrders = replenishmentOrders;
   if (dataOverrides.rma) payload.rmaOrders = rmaOrders;
