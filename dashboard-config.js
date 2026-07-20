@@ -1,5 +1,6 @@
 (function () {
   const localRefreshEndpoint = "http://127.0.0.1:8787/api/refresh-after-sales";
+  const cloudRefreshEndpoint = "https://fjdynamics.feishuapp.com/app/app_17aftyrd4rf/api/refresh-after-sales";
   const endpointKey = "sveaDashboardRefreshEndpoint";
   const tokenKey = "sveaDashboardRefreshToken";
   const params = new URLSearchParams(window.location.search);
@@ -10,6 +11,9 @@
   }
   if (params.get("refreshApi") === "local") {
     window.localStorage.setItem(endpointKey, localRefreshEndpoint);
+  }
+  if (params.get("refreshApi") === "cloud") {
+    window.localStorage.setItem(endpointKey, cloudRefreshEndpoint);
   }
   if (params.get("refreshApi") === "off") {
     window.localStorage.removeItem(endpointKey);
