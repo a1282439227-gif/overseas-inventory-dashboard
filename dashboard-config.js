@@ -23,7 +23,7 @@
   const localPage = window.location.protocol === "file:" || ["127.0.0.1", "localhost"].includes(window.location.hostname);
 
   window.dashboardRefreshConfig = {
-    afterSalesEndpoint: savedEndpoint || (localPage ? localRefreshEndpoint : ""),
+    afterSalesEndpoint: savedEndpoint || (localPage ? localRefreshEndpoint : cloudRefreshEndpoint),
     refreshToken: window.localStorage.getItem(tokenKey) || "",
   };
 })();
