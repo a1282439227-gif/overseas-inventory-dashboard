@@ -2690,6 +2690,37 @@ function groupHasAnyStatus(group, statuses) {
   return group.statuses.some((status) => statuses.includes(status));
 }
 
+function parseRmaDateMs(value) {
+  const text = String(value || "").trim();
+  if (!text) return 0;
+  const normalized = text
+    .replace(/[年月.]/g, "-")
+    .replace(/[日号]/g, "")
+    .replace(/\//g, "-");
+  const match = /^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(normalized);
+  if (match) {
+    return Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+  }
+  const parsed = Date.parse(text);
+  return Number.isNaN(parsed) ? 0 : parsed;
+}
+
+function rmaNoSortValue(value) {
+  const digits = String(value || "").match(/\d+/g);
+  if (!digits) return 0;
+  const number = Number(digits.join(""));
+  return Number.isFinite(number) ? number : 0;
+}
+
+function compareRmaGroupsByNewest(a, b) {
+  return (
+    (b.latestShippedDateMs || 0) - (a.latestShippedDateMs || 0) ||
+    (b.rmaNoSortValue || 0) - (a.rmaNoSortValue || 0) ||
+    (b.latestSourceIndex || 0) - (a.latestSourceIndex || 0) ||
+    String(b.rmaNo || "").localeCompare(String(a.rmaNo || ""), "zh-CN")
+  );
+}
+
 function buildRmaGroups(sourceRows) {
   const groupMap = new Map();
   sourceRows.forEach((row, index) => {
@@ -2711,9 +2742,15 @@ function buildRmaGroups(sourceRows) {
         skuCount: 0,
         lines: [],
         searchText: "",
+        latestShippedDateMs: 0,
+        latestSourceIndex: index,
+        rmaNoSortValue: rmaNoSortValue(row.rmaNo || key),
       };
 
     group.lines.push(row);
+    group.latestSourceIndex = Math.max(group.latestSourceIndex || 0, index);
+    group.latestShippedDateMs = Math.max(group.latestShippedDateMs || 0, parseRmaDateMs(row.shippedDate));
+    group.rmaNoSortValue = Math.max(group.rmaNoSortValue || 0, rmaNoSortValue(row.rmaNo || key));
     group.totalQty += row.qty;
     pushUnique(group.serviceNos, row.serviceNo);
     pushUnique(group.countries, row.country);
@@ -2728,6 +2765,8 @@ function buildRmaGroups(sourceRows) {
   });
 
   return Array.from(groupMap.values()).map((group) => {
+    group.shippedDates.sort((a, b) => parseRmaDateMs(b) - parseRmaDateMs(a) || String(b).localeCompare(String(a), "zh-CN"));
+    group.lines.sort((a, b) => parseRmaDateMs(b.shippedDate) - parseRmaDateMs(a.shippedDate) || String(a.materialCode).localeCompare(String(b.materialCode), "zh-CN"));
     group.skuCount = new Set(group.lines.map((line) => line.materialCode).filter(Boolean)).size;
     group.searchText = [
       group.rmaNo,
@@ -2753,7 +2792,7 @@ function buildRmaGroups(sourceRows) {
       .join(" ")
       .toLowerCase();
     return group;
-  });
+  }).sort(compareRmaGroupsByNewest);
 }
 
 function getSelectedRmaGroup(groups) {
