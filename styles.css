@@ -367,6 +367,7 @@ h3 {
 }
 
 .refresh-button {
+  display: none !important;
   min-width: 88px;
   border-color: rgba(47, 125, 98, 0.32);
   background: #f4fbf8;
