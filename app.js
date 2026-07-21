@@ -1680,6 +1680,19 @@ async function fetchLatestAfterSalesDataAfterSync(previousGeneratedAt) {
   return latestData;
 }
 
+async function refreshAfterSalesOnStartup() {
+  try {
+    const latestData = await fetchLatestAfterSalesData();
+    const latestGeneratedAt = String(latestData.generatedAt || "");
+    if (!latestGeneratedAt || latestGeneratedAt === afterSalesGeneratedAt) return;
+    applyLatestAfterSalesData(latestData);
+    save();
+    render();
+  } catch (error) {
+    console.warn("After-sales startup refresh skipped:", error);
+  }
+}
+
 function applyLatestAfterSalesData(data) {
   const previousGeneratedAt = afterSalesGeneratedAt;
   const nextReplenishmentOrders = (data.replenishmentOrders || []).map(normalizeReplenishmentOrder);
@@ -3789,3 +3802,4 @@ load();
 setupResizableColumns(elements.rmaOrderTable, `${STORAGE_KEY}-rma-order-columns`, { minWidth: 16 });
 setupResizableColumns(elements.rmaDetailTable, `${STORAGE_KEY}-rma-detail-columns`);
 render();
+refreshAfterSalesOnStartup();
