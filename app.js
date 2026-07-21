@@ -1145,11 +1145,12 @@ const afterSalesData = window.afterSalesData || { replenishmentOrders: [], rmaOr
 const dashboardRefreshConfig = window.dashboardRefreshConfig || {};
 const afterSalesRefreshEndpoint = String(dashboardRefreshConfig.afterSalesEndpoint || "").trim();
 const afterSalesRefreshToken = String(dashboardRefreshConfig.refreshToken || "").trim();
+const RMA_PRODUCT_LINE_KEYWORD = "畜牧";
 let afterSalesGeneratedAt = String(afterSalesData.generatedAt || "");
 let afterSalesRefreshMessage = "";
 let afterSalesRefreshBusy = false;
 const baseReplenishmentOrders = (afterSalesData.replenishmentOrders || []).map(normalizeReplenishmentOrder);
-const baseRmaOrders = (afterSalesData.rmaOrders || []).map(normalizeRmaOrder);
+const baseRmaOrders = (afterSalesData.rmaOrders || []).map(normalizeRmaOrder).filter(isAnimalRmaOrder);
 const replenishmentOrders = [...baseReplenishmentOrders];
 const rmaOrders = [...baseRmaOrders];
 const baseRows = (inventoryRows.length ? inventoryRows : excelRows).map(normalizeRow);
@@ -1682,7 +1683,7 @@ async function fetchLatestAfterSalesDataAfterSync(previousGeneratedAt) {
 function applyLatestAfterSalesData(data) {
   const previousGeneratedAt = afterSalesGeneratedAt;
   const nextReplenishmentOrders = (data.replenishmentOrders || []).map(normalizeReplenishmentOrder);
-  const nextRmaOrders = (data.rmaOrders || []).map(normalizeRmaOrder);
+  const nextRmaOrders = (data.rmaOrders || []).map(normalizeRmaOrder).filter(isAnimalRmaOrder);
   afterSalesGeneratedAt = String(data.generatedAt || "");
   window.afterSalesData = data;
   replaceCollection(baseReplenishmentOrders, nextReplenishmentOrders);
@@ -1827,6 +1828,10 @@ function normalizeRmaOrder(order) {
     logisticsDays: String(order.logisticsDays || "").trim(),
     parentRecord: String(order.parentRecord || "").trim(),
   };
+}
+
+function isAnimalRmaOrder(order) {
+  return String(order?.productLine || "").includes(RMA_PRODUCT_LINE_KEYWORD);
 }
 
 function findWarehouse(value) {
@@ -2712,9 +2717,16 @@ function rmaNoSortValue(value) {
   return Number.isFinite(number) ? number : 0;
 }
 
-function compareRmaGroupsByNewest(a, b) {
+function compareRmaNoDesc(a, b) {
+  return String(b.rmaNo || "").localeCompare(String(a.rmaNo || ""), "zh-CN", {
+    numeric: true,
+    sensitivity: "base",
+  });
+}
+
+function compareRmaGroupsByServiceNoDesc(a, b) {
   return (
-    (b.latestShippedDateMs || 0) - (a.latestShippedDateMs || 0) ||
+    compareRmaNoDesc(a, b) ||
     (b.rmaNoSortValue || 0) - (a.rmaNoSortValue || 0) ||
     (b.latestSourceIndex || 0) - (a.latestSourceIndex || 0) ||
     String(b.rmaNo || "").localeCompare(String(a.rmaNo || ""), "zh-CN")
@@ -2792,7 +2804,7 @@ function buildRmaGroups(sourceRows) {
       .join(" ")
       .toLowerCase();
     return group;
-  }).sort(compareRmaGroupsByNewest);
+  }).sort(compareRmaGroupsByServiceNoDesc);
 }
 
 function getSelectedRmaGroup(groups) {
@@ -3058,7 +3070,7 @@ function parseImportedRmaRows(text) {
         parentRecord: cell(cells, indexes.parentRecord),
       }),
     )
-    .filter((order) => order.rmaNo && order.materialCode);
+    .filter((order) => order.rmaNo && order.materialCode && isAnimalRmaOrder(order));
 }
 
 function parseDelimitedRows(text) {
