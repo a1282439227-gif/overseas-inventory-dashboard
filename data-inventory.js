@@ -1,5 +1,5 @@
 window.inventoryData = {
-    "generatedAt":  "2026-07-21 09:19:25",
+    "generatedAt":  "2026-07-23 09:16:01",
     "source":  "7.9海外仓现存量.xls",
     "sheet":  "现存量",
     "headerRow":  1,
