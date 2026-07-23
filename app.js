@@ -1612,9 +1612,16 @@ function getSavedInventoryGeneratedAt(saved) {
 
 function shouldUseSavedInventoryRows(saved) {
   if (!saved?.dataOverrides?.inventory || !Array.isArray(saved.rows) || !saved.rows.length) return false;
+  if (isSparseInventorySnapshot(saved.rows)) return false;
   if (!inventoryGeneratedAt) return true;
   const savedGeneratedAt = getSavedInventoryGeneratedAt(saved);
   return Boolean(savedGeneratedAt && savedGeneratedAt >= inventoryGeneratedAt);
+}
+
+function isSparseInventorySnapshot(candidateRows) {
+  const count = Array.isArray(candidateRows) ? candidateRows.length : 0;
+  if (baseRows.length < 20) return false;
+  return count < Math.max(5, Math.floor(baseRows.length * 0.4));
 }
 
 function shouldUseSavedAfterSalesData(saved) {
@@ -2023,6 +2030,9 @@ function getInventoryGeneratedAt(data) {
 
 function applyLatestInventoryData(data, options = {}) {
   const nextRows = Array.isArray(data?.rows) ? data.rows : [];
+  if (isSparseInventorySnapshot(nextRows)) {
+    throw new Error(`库存刷新结果异常偏少（${nextRows.length} 条），已保留当前海外仓总览数据。`);
+  }
   inventoryGeneratedAt = getInventoryGeneratedAt(data);
   window.inventoryData = data?.metadata || {};
   window.inventoryRows = nextRows;
@@ -2173,7 +2183,10 @@ async function refreshSalesFromOdoo() {
     render();
   } catch (error) {
     console.error(error);
-    salesRefreshMessage = "刷新失败：请确认本机 Odoo 看板服务已启动，并使用正确的 Odoo 密码或 API Key。";
+    const detail = String(error?.message || "").trim();
+    salesRefreshMessage = detail
+      ? `刷新失败：${detail}`
+      : "刷新失败：请确认本机 Odoo 看板服务已启动，并使用正确的 Odoo 密码或 API Key。";
     setSalesRefreshStatus(salesRefreshMessage, true);
   } finally {
     salesRefreshBusy = false;
