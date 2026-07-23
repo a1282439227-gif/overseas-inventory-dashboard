@@ -2165,7 +2165,8 @@ async function refreshSalesFromOdoo() {
     const salesResult = applyLatestSalesData(latestSalesData);
     resetFilters();
     resetSalesFilters();
-    salesRefreshMessage = `Odoo 已刷新：库存 ${inventoryResult.rows} 条 / SKU ${inventoryResult.skuCount} 个；销售整机 ${salesResult.machineRows} 条 / 销售备件 ${salesResult.spareRows} 条`;
+    const elapsedText = payload.elapsedSeconds ? `；耗时 ${payload.elapsedSeconds} 秒` : "";
+    salesRefreshMessage = `Odoo 已刷新：库存 ${inventoryResult.rows} 条 / SKU ${inventoryResult.skuCount} 个；销售整机 ${salesResult.machineRows} 条 / 销售备件 ${salesResult.spareRows} 条${elapsedText}`;
     if (elements.salesOdooSecret) elements.salesOdooSecret.value = "";
     setSalesRefreshStatus(salesRefreshMessage);
     save();
