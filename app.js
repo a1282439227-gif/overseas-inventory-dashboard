@@ -1159,6 +1159,7 @@ let afterSalesRefreshBusy = false;
 let salesGeneratedAt = String(salesData.generatedAt || salesData.summary?.generatedAt || "");
 let salesRefreshMessage = "";
 let salesRefreshBusy = false;
+let backgroundOdooReloadTimer = 0;
 const baseReplenishmentOrders = (afterSalesData.replenishmentOrders || []).map(normalizeReplenishmentOrder);
 const baseRmaOrders = (afterSalesData.rmaOrders || []).map(normalizeRmaOrder).filter(isAnimalRmaOrder);
 const replenishmentOrders = [...baseReplenishmentOrders];
@@ -2121,6 +2122,78 @@ async function fetchSalesDataFromLocalService() {
   return parseSalesDataScript(await response.text());
 }
 
+function getRefreshPayloadStatus(payload, name) {
+  return String(payload?.[name]?.status || "").trim();
+}
+
+function shouldPollBackgroundRefresh(payload) {
+  return ["inventory", "sales"].some((name) => getRefreshPayloadStatus(payload, name) === "pending");
+}
+
+async function reloadOdooDataFiles({ quiet = false } = {}) {
+  const [inventorySettled, sellableSettled, salesSettled] = await Promise.allSettled([
+    fetchInventoryDataFromLocalService(),
+    fetchSellableSpareDataFromLocalService(),
+    fetchSalesDataFromLocalService(),
+  ]);
+
+  let inventoryResult = null;
+  let salesResult = null;
+  const warnings = [];
+
+  if (sellableSettled.status === "fulfilled") {
+    rebuildSellableSpareCatalog(sellableSettled.value.items || []);
+  } else if (!quiet) {
+    warnings.push(sellableSettled.reason?.message || "可售备件清单未加载。");
+  }
+
+  if (inventorySettled.status === "fulfilled") {
+    try {
+      inventoryResult = applyLatestInventoryData(inventorySettled.value);
+    } catch (error) {
+      warnings.push(error?.message || "库存数据未更新。");
+    }
+  } else if (!quiet) {
+    warnings.push(inventorySettled.reason?.message || "库存数据未加载。");
+  }
+
+  if (salesSettled.status === "fulfilled") {
+    salesResult = applyLatestSalesData(salesSettled.value);
+  } else if (!quiet) {
+    warnings.push(salesSettled.reason?.message || "销售数据未加载。");
+  }
+
+  if (inventoryResult || salesResult) {
+    save();
+    render();
+  }
+
+  return { inventoryResult, salesResult, warnings };
+}
+
+function scheduleBackgroundOdooReload(payload) {
+  if (!shouldPollBackgroundRefresh(payload)) return;
+  if (backgroundOdooReloadTimer) window.clearTimeout(backgroundOdooReloadTimer);
+
+  let attempts = 0;
+  const poll = async () => {
+    attempts += 1;
+    try {
+      const result = await reloadOdooDataFiles({ quiet: true });
+      if (result.inventoryResult || result.salesResult) {
+        salesRefreshMessage = "后台刷新数据已载入。";
+        setSalesRefreshStatus(salesRefreshMessage);
+        return;
+      }
+    } catch {}
+    if (attempts < 8) {
+      backgroundOdooReloadTimer = window.setTimeout(poll, 3000);
+    }
+  };
+
+  backgroundOdooReloadTimer = window.setTimeout(poll, 3000);
+}
+
 function setSalesRefreshStatus(message, isError = false) {
   if (!elements.salesRefreshStatus) return;
   elements.salesRefreshStatus.textContent = message;
@@ -2164,23 +2237,25 @@ async function refreshSalesFromOdoo() {
     if (!response.ok || payload.ok === false) {
       throw new Error(payload.message || `刷新失败：HTTP ${response.status}`);
     }
-    setSalesRefreshStatus("Odoo 已刷新，正在载入最新库存和销售数据...");
-    const [latestInventoryData, latestSellableSpareData, latestSalesData] = await Promise.all([
-      fetchInventoryDataFromLocalService(),
-      fetchSellableSpareDataFromLocalService(),
-      fetchSalesDataFromLocalService(),
-    ]);
-    rebuildSellableSpareCatalog(latestSellableSpareData.items || []);
-    const inventoryResult = applyLatestInventoryData(latestInventoryData);
-    const salesResult = applyLatestSalesData(latestSalesData);
+    setSalesRefreshStatus("Odoo 刷新已响应，正在载入可用数据...");
+    const { inventoryResult, salesResult, warnings } = await reloadOdooDataFiles();
     resetFilters();
     resetSalesFilters();
     const elapsedText = payload.elapsedSeconds ? `；耗时 ${payload.elapsedSeconds} 秒` : "";
-    salesRefreshMessage = `Odoo 已刷新：库存 ${inventoryResult.rows} 条 / SKU ${inventoryResult.skuCount} 个；销售整机 ${salesResult.machineRows} 条 / 销售备件 ${salesResult.spareRows} 条${elapsedText}`;
+    const inventoryStatus = getRefreshPayloadStatus(payload, "inventory");
+    const salesStatus = getRefreshPayloadStatus(payload, "sales");
+    const inventoryText = inventoryResult
+      ? `库存 ${inventoryResult.rows} 条 / SKU ${inventoryResult.skuCount} 个`
+      : `库存保留当前 ${rows.length} 条`;
+    const salesText = salesResult
+      ? `销售整机 ${salesResult.machineRows} 条 / 销售备件 ${salesResult.spareRows} 条`
+      : "销售数据后台更新中";
+    const pendingText = inventoryStatus === "pending" || salesStatus === "pending" ? "；后台仍在继续更新" : "";
+    const warningText = warnings.length ? `；${warnings[0]}` : "";
+    salesRefreshMessage = `Odoo 已响应：${inventoryText}；${salesText}${elapsedText}${pendingText}${warningText}`;
     if (elements.salesOdooSecret) elements.salesOdooSecret.value = "";
     setSalesRefreshStatus(salesRefreshMessage);
-    save();
-    render();
+    scheduleBackgroundOdooReload(payload);
   } catch (error) {
     console.error(error);
     const detail = String(error?.message || "").trim();
