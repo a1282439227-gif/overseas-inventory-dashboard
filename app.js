@@ -2131,6 +2131,8 @@ function shouldPollBackgroundRefresh(payload) {
 }
 
 async function reloadOdooDataFiles({ quiet = false } = {}) {
+  const previousInventoryGeneratedAt = inventoryGeneratedAt;
+  const previousSalesGeneratedAt = salesGeneratedAt;
   const [inventorySettled, sellableSettled, salesSettled] = await Promise.allSettled([
     fetchInventoryDataFromLocalService(),
     fetchSellableSpareDataFromLocalService(),
@@ -2168,7 +2170,13 @@ async function reloadOdooDataFiles({ quiet = false } = {}) {
     render();
   }
 
-  return { inventoryResult, salesResult, warnings };
+  return {
+    inventoryResult,
+    salesResult,
+    warnings,
+    inventoryChanged: Boolean(inventoryResult && inventoryResult.generatedAt !== previousInventoryGeneratedAt),
+    salesChanged: Boolean(salesResult && salesResult.generatedAt !== previousSalesGeneratedAt),
+  };
 }
 
 function scheduleBackgroundOdooReload(payload) {
@@ -2180,7 +2188,7 @@ function scheduleBackgroundOdooReload(payload) {
     attempts += 1;
     try {
       const result = await reloadOdooDataFiles({ quiet: true });
-      if (result.inventoryResult || result.salesResult) {
+      if (result.inventoryChanged || result.salesChanged) {
         salesRefreshMessage = "后台刷新数据已载入。";
         setSalesRefreshStatus(salesRefreshMessage);
         return;
