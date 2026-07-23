@@ -3,18 +3,18 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SVEA畜牧海外库存看板</title>
-    <meta name="description" content="SVEA畜牧海外仓库存、料号筛选、备货订单和RMA订单查询看板。">
-    <meta property="og:title" content="SVEA畜牧海外库存看板">
-    <meta property="og:description" content="海外仓库存、料号筛选、备货订单和RMA订单查询。">
+    <title>SVEA畜牧海外</title>
+    <meta name="description" content="SVEA畜牧海外库存、备货、RMA、销售整机和销售备件总看板。">
+    <meta property="og:title" content="SVEA畜牧海外">
+    <meta property="og:description" content="海外库存、备货、RMA、销售整机和销售备件总看板。">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://a1282439227-gif.github.io/overseas-inventory-dashboard/">
     <meta property="og:image" content="https://a1282439227-gif.github.io/overseas-inventory-dashboard/assets/sveaverken-logo.png">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="SVEA畜牧海外库存看板">
-    <meta name="twitter:description" content="海外仓库存、料号筛选、备货订单和RMA订单查询。">
+    <meta name="twitter:title" content="SVEA畜牧海外">
+    <meta name="twitter:description" content="海外库存、备货、RMA、销售整机和销售备件总看板。">
     <meta name="twitter:image" content="https://a1282439227-gif.github.io/overseas-inventory-dashboard/assets/sveaverken-logo.png">
-    <link rel="stylesheet" href="./styles.css?v=20260717-refresh-published-data">
+    <link rel="stylesheet" href="./styles.css?v=20260723-sales-merge">
   </head>
   <body>
     <main class="app-shell">
@@ -23,10 +23,11 @@
           <div class="brand-heading">
             <div>
               <p class="eyebrow">Overseas Inventory Board</p>
-              <h1 id="pageTitle">SVEA畜牧海外库存看板</h1>
+              <h1 id="pageTitle">SVEA畜牧海外</h1>
             </div>
           </div>
           <p class="source-note" id="sourceNote" hidden aria-hidden="true"></p>
+          <div class="title-actions">
           <label class="language-picker" aria-label="语言选择">
             <span class="language-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" focusable="false">
@@ -54,6 +55,8 @@
               <option value="tr">Türkçe</option>
             </select>
           </label>
+          <button class="title-refresh-button" id="salesRefreshButton" type="button">刷新 Odoo</button>
+          </div>
         </section>
 
         <section class="visual-card" aria-label="海外仓作业概览">
@@ -72,6 +75,8 @@
         <button class="view-tab" type="button" data-view="material" aria-controls="materialPage" aria-selected="false">料号筛选</button>
         <button class="view-tab" type="button" data-view="replenishment" aria-controls="replenishmentPage" aria-selected="false">备货订单</button>
         <button class="view-tab" type="button" data-view="rma" aria-controls="rmaPage" aria-selected="false">RMA订单查询</button>
+        <button class="view-tab" type="button" data-view="salesMachine" aria-controls="salesMachinePage" aria-selected="false">销售整机区域情况</button>
+        <button class="view-tab" type="button" data-view="salesSpare" aria-controls="salesSparePage" aria-selected="false">销售备件区域情况</button>
       </nav>
 
       <section class="view-panel is-active" id="overviewPage" data-view-panel="overview">
@@ -528,12 +533,182 @@
           </div>
         </details>
       </section>
+
+      <section class="view-panel" id="salesMachinePage" data-view-panel="salesMachine" hidden>
+        <section class="page-heading">
+          <div>
+            <h2>销售整机区域情况</h2>
+            <p class="section-subtitle">按仓库辐射区域、产品品类、国家/地区和序列号状态查看整机销售。</p>
+          </div>
+          <div class="page-heading-actions">
+            <span id="salesMachineCount">0 条整机销售</span>
+          </div>
+        </section>
+
+        <section class="summary-grid sales-summary-grid" id="salesMachineSummaryGrid" aria-label="销售整机指标"></section>
+
+        <section class="sales-chart-grid" aria-label="销售整机分布">
+          <section class="sales-panel">
+            <h3>整机仓库数量分布</h3>
+            <div id="salesMachineWarehouseBars"></div>
+          </section>
+          <section class="sales-panel">
+            <h3>整机品类数量分布</h3>
+            <div id="salesMachineCategoryBars"></div>
+          </section>
+          <section class="sales-panel">
+            <h3>售卖类型分布</h3>
+            <div id="salesMachineSaleTypeBars"></div>
+          </section>
+        </section>
+
+        <section class="order-filter-panel" aria-label="销售整机筛选">
+          <label class="field wide">
+            <span>搜索</span>
+            <input id="salesMachineKeywordInput" type="search" placeholder="源单据、客户、序列号、料号、产品名称">
+          </label>
+          <label class="field">
+            <span>仓库</span>
+            <select id="salesMachineWarehouseSelect"></select>
+          </label>
+          <label class="field">
+            <span>品类</span>
+            <select id="salesMachineCategorySelect"></select>
+          </label>
+          <label class="field">
+            <span>国家/地区</span>
+            <select id="salesMachineCountrySelect"></select>
+          </label>
+          <label class="field">
+            <span>序列号</span>
+            <select id="salesMachineSerialSelect">
+              <option value="all">全部序列号状态</option>
+              <option value="yes">有序列号</option>
+              <option value="no">缺序列号</option>
+            </select>
+          </label>
+          <div class="button-row controls">
+            <button id="salesMachineResetButton" class="ghost" type="button">重置筛选</button>
+          </div>
+        </section>
+
+        <section class="detail-section" aria-label="销售整机明细">
+          <div class="section-title">
+            <h2>整机销售明细</h2>
+            <span id="salesMachineStatus">等待销售数据</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>仓库</th>
+                  <th>品类</th>
+                  <th>源单据</th>
+                  <th>料号</th>
+                  <th>序列号</th>
+                  <th>客户</th>
+                  <th>国家/地区</th>
+                  <th>产品名称</th>
+                </tr>
+              </thead>
+              <tbody id="salesMachineTableBody"></tbody>
+            </table>
+          </div>
+          <p id="salesMachineEmptyState" class="empty-state" hidden>暂无匹配的整机销售记录</p>
+        </section>
+      </section>
+
+      <section class="view-panel" id="salesSparePage" data-view-panel="salesSpare" hidden>
+        <section class="page-heading">
+          <div>
+            <h2>销售备件区域情况</h2>
+            <p class="section-subtitle">按仓库、料号、产品名称和源单据汇总销售备件数量。</p>
+          </div>
+          <div class="page-heading-actions">
+            <span id="salesSpareCount">0 条备件销售</span>
+          </div>
+        </section>
+
+        <section class="summary-grid sales-summary-grid" id="salesSpareSummaryGrid" aria-label="销售备件指标"></section>
+
+        <section class="order-filter-panel" aria-label="销售备件筛选">
+          <label class="field wide">
+            <span>搜索</span>
+            <input id="salesSpareKeywordInput" type="search" placeholder="料号、产品名称、源单据、客户">
+          </label>
+          <label class="field">
+            <span>仓库</span>
+            <select id="salesSpareWarehouseSelect"></select>
+          </label>
+          <label class="field">
+            <span>国家/地区</span>
+            <select id="salesSpareCountrySelect"></select>
+          </label>
+          <div class="button-row controls">
+            <button id="salesSpareResetButton" class="ghost" type="button">重置筛选</button>
+          </div>
+        </section>
+
+        <section class="sales-spare-layout" aria-label="销售备件分布和明细">
+          <section class="sales-panel">
+            <h3>备件仓库数量分布</h3>
+            <div id="salesSpareWarehouseBars"></div>
+            <div class="sales-spare-detail-panel" id="salesSpareDetailPanel" hidden>
+              <h3 id="salesSpareDetailTitle">备件明细</h3>
+              <div class="sales-spare-detail-meta" id="salesSpareDetailMeta"></div>
+              <div class="sales-spare-detail-cards" id="salesSpareDetailCards"></div>
+            </div>
+          </section>
+
+          <section class="detail-section sales-spare-table-panel">
+            <div class="section-title">
+              <h2>备件售卖数量</h2>
+              <span id="salesSpareStatus">等待销售数据</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>仓库</th>
+                    <th>料号</th>
+                    <th>产品名称</th>
+                    <th class="num">售卖数量</th>
+                    <th class="num">源单据数</th>
+                    <th>最近发货</th>
+                  </tr>
+                </thead>
+                <tbody id="salesSpareTableBody"></tbody>
+              </table>
+            </div>
+            <p id="salesSpareEmptyState" class="empty-state" hidden>暂无匹配的备件销售记录</p>
+          </section>
+        </section>
+      </section>
     </main>
+
+    <div class="modal-backdrop" id="salesRefreshDialog" hidden>
+      <div class="refresh-dialog" role="dialog" aria-modal="true" aria-labelledby="salesRefreshTitle">
+        <div class="dialog-head">
+          <h2 id="salesRefreshTitle">刷新 Odoo 销售数据</h2>
+          <button class="icon-btn" id="salesRefreshCloseButton" type="button" title="关闭" aria-label="关闭">×</button>
+        </div>
+        <label class="field" for="salesOdooSecret">
+          <span>Odoo 密码 / API Key</span>
+          <input id="salesOdooSecret" type="password" autocomplete="current-password" placeholder="输入 Odoo 密码或 API Key">
+        </label>
+        <p class="refresh-status" id="salesRefreshStatus">输入后点击开始刷新，将从本机 Odoo 刷新服务获取最新销售数据。</p>
+        <div class="dialog-actions">
+          <button class="secondary" id="salesRefreshCancelButton" type="button">取消</button>
+          <button id="salesRefreshConfirmButton" type="button">开始刷新</button>
+        </div>
+      </div>
+    </div>
 
     <script src="./dashboard-config.js?v=20260720-cloud-refresh"></script>
     <script src="./data-inventory.js?v=20260717-refresh-api"></script>
     <script src="./data-orders.js?v=20260721-182638"></script>
+    <script src="./data-sales.js?v=20260723-sales-merge"></script>
     <script src="./vendor/xlsx.full.min.js"></script>
-    <script src="./app.js?v=20260721-after-sales-startup-refresh"></script>
+    <script src="./app.js?v=20260723-sales-merge"></script>
   </body>
 </html>

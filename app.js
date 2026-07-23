@@ -1137,22 +1137,34 @@ const excelRows = [
     }
 ];
 
-const views = ["overview", "material", "replenishment", "rma"];
+const views = ["overview", "material", "replenishment", "rma", "salesMachine", "salesSpare"];
 const inventoryData = window.inventoryData || {};
 const inventoryRows = Array.isArray(window.inventoryRows) ? window.inventoryRows : [];
 const hasSyncedInventoryRows = inventoryRows.length > 0;
 const afterSalesData = window.afterSalesData || { replenishmentOrders: [], rmaOrders: [] };
+const salesData = window.salesDashboardData || { machineRows: [], spareRows: [], summary: {}, generatedAt: "" };
 const dashboardRefreshConfig = window.dashboardRefreshConfig || {};
 const afterSalesRefreshEndpoint = String(dashboardRefreshConfig.afterSalesEndpoint || "").trim();
 const afterSalesRefreshToken = String(dashboardRefreshConfig.refreshToken || "").trim();
+const SALES_REFRESH_ENDPOINT = "http://127.0.0.1:8766/refresh-odoo-dashboard";
+const SALES_DATA_LOCAL_URL = "http://127.0.0.1:8766/data-sales.js";
 const RMA_PRODUCT_LINE_KEYWORD = "畜牧";
 let afterSalesGeneratedAt = String(afterSalesData.generatedAt || "");
 let afterSalesRefreshMessage = "";
 let afterSalesRefreshBusy = false;
+let salesGeneratedAt = String(salesData.generatedAt || salesData.summary?.generatedAt || "");
+let salesRefreshMessage = "";
+let salesRefreshBusy = false;
 const baseReplenishmentOrders = (afterSalesData.replenishmentOrders || []).map(normalizeReplenishmentOrder);
 const baseRmaOrders = (afterSalesData.rmaOrders || []).map(normalizeRmaOrder).filter(isAnimalRmaOrder);
 const replenishmentOrders = [...baseReplenishmentOrders];
 const rmaOrders = [...baseRmaOrders];
+let salesMachineRows = Array.isArray(salesData.machineRows) ? [...salesData.machineRows] : [];
+let salesSpareRows = Array.isArray(salesData.spareRows) ? [...salesData.spareRows] : [];
+let salesSummary = salesData.summary || {};
+let salesMaterialNameByCode = salesData.materialNameByCode && typeof salesData.materialNameByCode === "object"
+  ? { ...salesData.materialNameByCode }
+  : {};
 const baseRows = (inventoryRows.length ? inventoryRows : excelRows).map(normalizeRow);
 
 let rows = [];
@@ -1160,6 +1172,7 @@ let dataOverrides = {
   inventory: false,
   replenishment: false,
   rma: false,
+  sales: false,
 };
 let state = {
   view: "overview",
@@ -1180,6 +1193,15 @@ let state = {
   rmaProject: "all",
   rmaQuickFilter: "all",
   rmaSelectedNo: "",
+  salesMachineKeyword: "",
+  salesMachineWarehouse: "all",
+  salesMachineCategory: "all",
+  salesMachineCountry: "all",
+  salesMachineSerial: "all",
+  salesSpareKeyword: "",
+  salesSpareWarehouse: "all",
+  salesSpareCountry: "all",
+  salesSpareSelectedKey: "",
 };
 
 const elements = {
@@ -1270,6 +1292,41 @@ const elements = {
   rmaTemplateButton: document.querySelector("#rmaTemplateButton"),
   rmaRestoreButton: document.querySelector("#rmaRestoreButton"),
   rmaRefreshButton: document.querySelector("#rmaRefreshButton"),
+  salesRefreshButton: document.querySelector("#salesRefreshButton"),
+  salesRefreshDialog: document.querySelector("#salesRefreshDialog"),
+  salesRefreshCloseButton: document.querySelector("#salesRefreshCloseButton"),
+  salesRefreshCancelButton: document.querySelector("#salesRefreshCancelButton"),
+  salesRefreshConfirmButton: document.querySelector("#salesRefreshConfirmButton"),
+  salesOdooSecret: document.querySelector("#salesOdooSecret"),
+  salesRefreshStatus: document.querySelector("#salesRefreshStatus"),
+  salesMachineCount: document.querySelector("#salesMachineCount"),
+  salesMachineSummaryGrid: document.querySelector("#salesMachineSummaryGrid"),
+  salesMachineWarehouseBars: document.querySelector("#salesMachineWarehouseBars"),
+  salesMachineCategoryBars: document.querySelector("#salesMachineCategoryBars"),
+  salesMachineSaleTypeBars: document.querySelector("#salesMachineSaleTypeBars"),
+  salesMachineKeywordInput: document.querySelector("#salesMachineKeywordInput"),
+  salesMachineWarehouseSelect: document.querySelector("#salesMachineWarehouseSelect"),
+  salesMachineCategorySelect: document.querySelector("#salesMachineCategorySelect"),
+  salesMachineCountrySelect: document.querySelector("#salesMachineCountrySelect"),
+  salesMachineSerialSelect: document.querySelector("#salesMachineSerialSelect"),
+  salesMachineResetButton: document.querySelector("#salesMachineResetButton"),
+  salesMachineStatus: document.querySelector("#salesMachineStatus"),
+  salesMachineTableBody: document.querySelector("#salesMachineTableBody"),
+  salesMachineEmptyState: document.querySelector("#salesMachineEmptyState"),
+  salesSpareCount: document.querySelector("#salesSpareCount"),
+  salesSpareSummaryGrid: document.querySelector("#salesSpareSummaryGrid"),
+  salesSpareKeywordInput: document.querySelector("#salesSpareKeywordInput"),
+  salesSpareWarehouseSelect: document.querySelector("#salesSpareWarehouseSelect"),
+  salesSpareCountrySelect: document.querySelector("#salesSpareCountrySelect"),
+  salesSpareResetButton: document.querySelector("#salesSpareResetButton"),
+  salesSpareWarehouseBars: document.querySelector("#salesSpareWarehouseBars"),
+  salesSpareStatus: document.querySelector("#salesSpareStatus"),
+  salesSpareTableBody: document.querySelector("#salesSpareTableBody"),
+  salesSpareEmptyState: document.querySelector("#salesSpareEmptyState"),
+  salesSpareDetailPanel: document.querySelector("#salesSpareDetailPanel"),
+  salesSpareDetailTitle: document.querySelector("#salesSpareDetailTitle"),
+  salesSpareDetailMeta: document.querySelector("#salesSpareDetailMeta"),
+  salesSpareDetailCards: document.querySelector("#salesSpareDetailCards"),
 };
 
 let translationRunId = 0;
@@ -1548,6 +1605,18 @@ function shouldUseSavedAfterSalesData(saved) {
   return getSavedAfterSalesGeneratedAt(saved) === afterSalesGeneratedAt;
 }
 
+function getSalesGeneratedAt(data) {
+  return String(data?.generatedAt || data?.summary?.generatedAt || "");
+}
+
+function shouldUseSavedSalesData(saved) {
+  const savedSalesData = saved?.salesData || null;
+  if (!saved?.dataOverrides?.sales || !savedSalesData) return false;
+  const savedGeneratedAt = getSalesGeneratedAt(savedSalesData);
+  if (!savedGeneratedAt) return false;
+  return !salesGeneratedAt || savedGeneratedAt >= salesGeneratedAt;
+}
+
 function resetAfterSalesFilters() {
   state.replenishmentKeyword = "";
   state.replenishmentWarehouse = "all";
@@ -1569,6 +1638,11 @@ function load() {
       ...dataOverrides,
       ...(saved.dataOverrides || {}),
     };
+    if (shouldUseSavedSalesData(saved)) {
+      applyLatestSalesData(saved.salesData, { preserveOverride: true });
+    } else {
+      dataOverrides.sales = false;
+    }
     if (!useSavedAfterSalesData) {
       dataOverrides.replenishment = false;
       dataOverrides.rma = false;
@@ -1597,11 +1671,21 @@ function save() {
     dataOverrides,
     sourceGeneratedAt: {
       afterSales: afterSalesGeneratedAt,
+      sales: salesGeneratedAt,
     },
   };
   if (dataOverrides.inventory) payload.rows = rows;
   if (dataOverrides.replenishment) payload.replenishmentOrders = replenishmentOrders;
   if (dataOverrides.rma) payload.rmaOrders = rmaOrders;
+  if (dataOverrides.sales) {
+    payload.salesData = {
+      generatedAt: salesGeneratedAt,
+      machineRows: salesMachineRows,
+      spareRows: salesSpareRows,
+      materialNameByCode: salesMaterialNameByCode,
+      summary: salesSummary,
+    };
+  }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
 }
 
@@ -1617,6 +1701,7 @@ function getAfterSalesDataUrl() {
 
 function parseAfterSalesDataScript(scriptText) {
   const jsonText = String(scriptText || "")
+    .replace(/^\uFEFF/, "")
     .replace(/^\s*window\.afterSalesData\s*=\s*/, "")
     .replace(/;\s*$/, "");
   return JSON.parse(jsonText);
@@ -1750,6 +1835,482 @@ async function refreshAfterSalesFromSource() {
     save();
     render();
   }
+}
+
+function salesRows(value) {
+  return Array.isArray(value) ? value : value ? [value] : [];
+}
+
+function cleanSalesProductName(value) {
+  return String(value || "")
+    .replace(/^\s*\[[^\]]+\]\s*/, "")
+    .replace(/^\s*[A-Z0-9][A-Z0-9._-]{3,}\s+/, "")
+    .trim();
+}
+
+function hasChineseText(value) {
+  return /[\u4e00-\u9fff]/.test(String(value || ""));
+}
+
+function getSalesRowMaterialCode(row) {
+  const direct = String(row?.materialCode || row?.deviceMaterialCode || "").trim();
+  if (direct) return direct;
+  const source = String(row?.productName || row?.deviceName || "").trim();
+  const bracketMatch = source.match(/^\s*\[([^\]]+)\]/);
+  if (bracketMatch) return bracketMatch[1].trim();
+  const tokenMatch = source.match(/^\s*([A-Z0-9][A-Z0-9._-]{3,})\b/);
+  return tokenMatch ? tokenMatch[1].trim() : "";
+}
+
+function getSalesMappedMaterialName(row) {
+  const code = getSalesRowMaterialCode(row);
+  if (!code) return "";
+  const value = salesMaterialNameByCode[code] || salesMaterialNameByCode[code.toUpperCase()] || "";
+  return String(value || "").trim();
+}
+
+function getSalesProductName(row) {
+  const mapped = getSalesMappedMaterialName(row);
+  if (mapped) return mapped;
+  const candidates = [row.productName, row.deviceName, row.productModel, row.productSpec]
+    .map(cleanSalesProductName)
+    .filter(Boolean);
+  return candidates.find(hasChineseText) || candidates[0] || "";
+}
+
+function getSalesSpareProductName(row) {
+  const mapped = getSalesMappedMaterialName(row);
+  if (mapped) return mapped;
+  const productName = cleanSalesProductName(row.productName);
+  if (productName) return productName;
+  return [row.productModel, row.productSpec].map(cleanSalesProductName).find(Boolean) || "";
+}
+
+function saleTypeLabel(value) {
+  const raw = String(value || "").trim();
+  if (raw.toLowerCase() === "sale") return "销售";
+  if (raw.toLowerCase() === "loan for sale") return "借货转销售";
+  return raw || "未标注";
+}
+
+function salesWarehouseOrder(values) {
+  const order = ["法兰克福仓", "荷兰仓", "福州仓", "芝加哥仓", "悉尼仓"];
+  return [...values].sort((a, b) => {
+    const ai = order.indexOf(a);
+    const bi = order.indexOf(b);
+    if (ai >= 0 || bi >= 0) return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi);
+    return String(a).localeCompare(String(b), "zh-CN");
+  });
+}
+
+function uniqueSalesValues(sourceRows, key) {
+  return Array.from(new Set(sourceRows.map((row) => row[key]).filter(Boolean))).sort((a, b) => String(a).localeCompare(String(b), "zh-CN"));
+}
+
+function salesCountBy(sourceRows, key, mapper = null) {
+  const map = new Map();
+  sourceRows.forEach((row) => {
+    const name = mapper ? mapper(row) : row[key];
+    const label = String(name || "未标注");
+    map.set(label, (map.get(label) || 0) + 1);
+  });
+  return Array.from(map, ([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count);
+}
+
+function salesSumBy(sourceRows, key, valueKey = "quantity") {
+  const map = new Map();
+  sourceRows.forEach((row) => {
+    const label = String(row[key] || "未标注");
+    map.set(label, (map.get(label) || 0) + parseNumber(row[valueKey]));
+  });
+  return Array.from(map, ([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count);
+}
+
+function renderSalesBars(element, items, className = "", baseline = 1) {
+  if (!element) return;
+  const maxValue = Math.max(...items.map((item) => parseNumber(item.count)), baseline, 1);
+  element.innerHTML = items.length
+    ? items
+        .map((item) => {
+          const width = Math.max(3, Math.round((parseNumber(item.count) / maxValue) * 100));
+          return `
+            <div class="bar-row">
+              <div title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</div>
+              <div class="mini-bar ${className}" title="${formatQty(item.count)}"><span style="width:${width}%"></span></div>
+              <b>${formatQty(item.count)}</b>
+            </div>
+          `;
+        })
+        .join("")
+    : '<p class="muted">暂无数据</p>';
+}
+
+function renderSalesRefreshControls() {
+  if (!elements.salesRefreshButton) return;
+  elements.salesRefreshButton.disabled = salesRefreshBusy;
+  elements.salesRefreshButton.textContent = salesRefreshBusy ? "刷新中..." : "刷新 Odoo";
+  elements.salesRefreshButton.classList.toggle("is-loading", salesRefreshBusy);
+}
+
+function resetSalesFilters() {
+  state.salesMachineKeyword = "";
+  state.salesMachineWarehouse = "all";
+  state.salesMachineCategory = "all";
+  state.salesMachineCountry = "all";
+  state.salesMachineSerial = "all";
+  state.salesSpareKeyword = "";
+  state.salesSpareWarehouse = "all";
+  state.salesSpareCountry = "all";
+  state.salesSpareSelectedKey = "";
+}
+
+function applyLatestSalesData(data, options = {}) {
+  const nextMachineRows = salesRows(data?.machineRows);
+  const nextSpareRows = salesRows(data?.spareRows);
+  salesGeneratedAt = getSalesGeneratedAt(data);
+  salesMachineRows = [...nextMachineRows];
+  salesSpareRows = [...nextSpareRows];
+  salesSummary = data?.summary || {};
+  salesMaterialNameByCode = data?.materialNameByCode && typeof data.materialNameByCode === "object"
+    ? { ...data.materialNameByCode }
+    : {};
+  window.salesDashboardData = {
+    generatedAt: salesGeneratedAt,
+    machineRows: salesMachineRows,
+    spareRows: salesSpareRows,
+    materialNameByCode: salesMaterialNameByCode,
+    summary: salesSummary,
+  };
+  if (!options.preserveOverride) dataOverrides.sales = true;
+  return {
+    machineRows: salesMachineRows.length,
+    spareRows: salesSpareRows.length,
+    generatedAt: salesGeneratedAt,
+  };
+}
+
+function parseSalesDataScript(scriptText) {
+  const jsonText = String(scriptText || "")
+    .replace(/^\uFEFF/, "")
+    .replace(/^\s*window\.salesDashboardData\s*=\s*/, "")
+    .replace(/;\s*$/, "");
+  return JSON.parse(jsonText);
+}
+
+async function fetchSalesDataFromLocalService() {
+  const url = new URL(SALES_DATA_LOCAL_URL);
+  url.searchParams.set("refresh", String(Date.now()));
+  const response = await fetch(url.toString(), { cache: "no-store" });
+  if (!response.ok) throw new Error(`销售数据文件返回 ${response.status}`);
+  return parseSalesDataScript(await response.text());
+}
+
+function setSalesRefreshStatus(message, isError = false) {
+  if (!elements.salesRefreshStatus) return;
+  elements.salesRefreshStatus.textContent = message;
+  elements.salesRefreshStatus.classList.toggle("error", isError);
+}
+
+function openSalesRefreshDialog() {
+  if (!elements.salesRefreshDialog) return;
+  elements.salesRefreshDialog.hidden = false;
+  setSalesRefreshStatus("输入 Odoo 密码或 API Key 后开始刷新。");
+  window.setTimeout(() => elements.salesOdooSecret?.focus(), 0);
+}
+
+function closeSalesRefreshDialog() {
+  if (!elements.salesRefreshDialog) return;
+  elements.salesRefreshDialog.hidden = true;
+  if (elements.salesOdooSecret) elements.salesOdooSecret.value = "";
+  setSalesRefreshStatus("");
+}
+
+async function refreshSalesFromOdoo() {
+  if (salesRefreshBusy) return;
+  const secret = String(elements.salesOdooSecret?.value || "").trim();
+  if (!secret) {
+    setSalesRefreshStatus("请输入 Odoo 密码或 API Key。", true);
+    return;
+  }
+
+  salesRefreshBusy = true;
+  salesRefreshMessage = "正在连接本地 Odoo 刷新服务...";
+  setSalesRefreshStatus(salesRefreshMessage);
+  renderSalesRefreshControls();
+
+  try {
+    const response = await fetch(SALES_REFRESH_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ apiPassword: secret }),
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok || payload.ok === false) {
+      throw new Error(payload.message || `刷新失败：HTTP ${response.status}`);
+    }
+    setSalesRefreshStatus("Odoo 已刷新，正在载入最新销售数据...");
+    const latestData = await fetchSalesDataFromLocalService();
+    const result = applyLatestSalesData(latestData);
+    resetSalesFilters();
+    salesRefreshMessage = `销售数据已刷新：${result.generatedAt || "-"} / 整机 ${result.machineRows} 条 / 备件 ${result.spareRows} 条`;
+    if (elements.salesOdooSecret) elements.salesOdooSecret.value = "";
+    setSalesRefreshStatus(salesRefreshMessage);
+    save();
+    render();
+  } catch (error) {
+    console.error(error);
+    salesRefreshMessage = "刷新失败：请确认本机 Odoo 看板服务已启动，并使用正确的 Odoo 密码或 API Key。";
+    setSalesRefreshStatus(salesRefreshMessage, true);
+  } finally {
+    salesRefreshBusy = false;
+    renderSalesRefreshControls();
+  }
+}
+
+function renderSalesControls() {
+  if (!elements.salesMachineKeywordInput) return;
+  elements.salesMachineKeywordInput.value = state.salesMachineKeyword;
+  elements.salesMachineWarehouseSelect.innerHTML = buildOptions("全部仓库", salesWarehouseOrder(uniqueSalesValues(salesMachineRows, "assignedWarehouse")));
+  elements.salesMachineWarehouseSelect.value = uniqueSalesValues(salesMachineRows, "assignedWarehouse").includes(state.salesMachineWarehouse)
+    ? state.salesMachineWarehouse
+    : "all";
+  elements.salesMachineCategorySelect.innerHTML = buildOptions("全部品类", uniqueSalesValues(salesMachineRows, "category"));
+  elements.salesMachineCategorySelect.value = uniqueSalesValues(salesMachineRows, "category").includes(state.salesMachineCategory)
+    ? state.salesMachineCategory
+    : "all";
+  elements.salesMachineCountrySelect.innerHTML = buildOptions("全部国家/地区", uniqueSalesValues(salesMachineRows, "country"));
+  elements.salesMachineCountrySelect.value = uniqueSalesValues(salesMachineRows, "country").includes(state.salesMachineCountry)
+    ? state.salesMachineCountry
+    : "all";
+  elements.salesMachineSerialSelect.value = ["all", "yes", "no"].includes(state.salesMachineSerial) ? state.salesMachineSerial : "all";
+
+  elements.salesSpareKeywordInput.value = state.salesSpareKeyword;
+  elements.salesSpareWarehouseSelect.innerHTML = buildOptions("全部仓库", salesWarehouseOrder(uniqueSalesValues(salesSpareRows, "assignedWarehouse")));
+  elements.salesSpareWarehouseSelect.value = uniqueSalesValues(salesSpareRows, "assignedWarehouse").includes(state.salesSpareWarehouse)
+    ? state.salesSpareWarehouse
+    : "all";
+  elements.salesSpareCountrySelect.innerHTML = buildOptions("全部国家/地区", uniqueSalesValues(salesSpareRows, "country"));
+  elements.salesSpareCountrySelect.value = uniqueSalesValues(salesSpareRows, "country").includes(state.salesSpareCountry)
+    ? state.salesSpareCountry
+    : "all";
+}
+
+function getSalesMachineFilteredRows() {
+  const keyword = String(state.salesMachineKeyword || "").trim().toLowerCase();
+  return salesMachineRows.filter((row) => {
+    const productName = getSalesProductName(row);
+    const text = [
+      row.assignedWarehouse,
+      row.category,
+      row.sourceOrder,
+      row.customer,
+      row.country,
+      row.serialNumber,
+      row.materialCode,
+      row.deviceMaterialCode,
+      row.deviceName,
+      row.productName,
+      productName,
+      row.saleType,
+    ]
+      .join(" ")
+      .toLowerCase();
+    const matchesKeyword = !keyword || text.includes(keyword);
+    const matchesWarehouse = state.salesMachineWarehouse === "all" || row.assignedWarehouse === state.salesMachineWarehouse;
+    const matchesCategory = state.salesMachineCategory === "all" || row.category === state.salesMachineCategory;
+    const matchesCountry = state.salesMachineCountry === "all" || row.country === state.salesMachineCountry;
+    const hasSerial = Boolean(String(row.serialNumber || "").trim());
+    const matchesSerial = state.salesMachineSerial === "all" || (state.salesMachineSerial === "yes" ? hasSerial : !hasSerial);
+    return matchesKeyword && matchesWarehouse && matchesCategory && matchesCountry && matchesSerial;
+  });
+}
+
+function renderSalesMachine() {
+  if (!elements.salesMachineTableBody) return;
+  const filteredRows = getSalesMachineFilteredRows();
+  const serialized = filteredRows.filter((row) => String(row.serialNumber || "").trim()).length;
+  const skuCount = new Set(filteredRows.map((row) => row.materialCode || row.deviceMaterialCode).filter(Boolean)).size;
+  const countries = new Set(filteredRows.map((row) => row.country).filter(Boolean)).size;
+
+  elements.salesMachineCount.textContent = `${filteredRows.length} 条整机销售 / 序列号 ${serialized}`;
+  elements.salesMachineStatus.textContent = salesRefreshMessage || (salesGeneratedAt ? `Odoo 数据：${salesGeneratedAt}` : "等待 Odoo 销售数据");
+  elements.salesMachineSummaryGrid.innerHTML = [
+    { label: "整机销售行", value: filteredRows.length, note: `源数据 ${salesMachineRows.length} 条` },
+    { label: "已绑定序列号", value: serialized, note: `缺序列号 ${filteredRows.length - serialized} 条` },
+    { label: "产品品类", value: new Set(filteredRows.map((row) => row.category).filter(Boolean)).size, note: `SKU ${skuCount}` },
+    { label: "国家/地区", value: countries, note: "按客户国家统计" },
+  ]
+    .map(
+      (card) => `
+        <article class="summary-card">
+          <span>${escapeHtml(card.label)}</span>
+          <strong>${escapeHtml(formatQty(card.value))}</strong>
+          <small>${escapeHtml(card.note)}</small>
+        </article>
+      `,
+    )
+    .join("");
+
+  renderSalesBars(elements.salesMachineWarehouseBars, salesCountBy(filteredRows, "assignedWarehouse"));
+  renderSalesBars(elements.salesMachineCategoryBars, salesCountBy(filteredRows, "category"), "cat");
+  renderSalesBars(elements.salesMachineSaleTypeBars, salesCountBy(filteredRows, "saleType", (row) => saleTypeLabel(row.saleType)), "sale");
+
+  elements.salesMachineEmptyState.hidden = filteredRows.length > 0;
+  elements.salesMachineTableBody.innerHTML = filteredRows
+    .map((row) => {
+      const productName = getSalesProductName(row) || row.productName || row.deviceName || "-";
+      const materialCode = row.materialCode || row.deviceMaterialCode || "-";
+      const serialNumber = row.serialNumber || "缺序列号";
+      return `
+        <tr>
+          <td><span class="project-pill">${escapeHtml(row.assignedWarehouse || "-")}</span></td>
+          <td>${escapeHtml(row.category || "-")}</td>
+          <td class="code-cell">${escapeHtml(row.sourceOrder || "-")}</td>
+          <td class="code-cell">${escapeHtml(materialCode)}</td>
+          <td class="${row.serialNumber ? "" : "warn"}">${escapeHtml(serialNumber)}</td>
+          <td>${escapeHtml(row.customer || "-")}</td>
+          <td>${escapeHtml(row.country || "-")}</td>
+          <td>${escapeHtml(productName)}</td>
+        </tr>
+      `;
+    })
+    .join("");
+}
+
+function getSalesSpareFilteredRows() {
+  const keyword = String(state.salesSpareKeyword || "").trim().toLowerCase();
+  return salesSpareRows.filter((row) => {
+    const productName = getSalesSpareProductName(row);
+    const text = [
+      row.assignedWarehouse,
+      row.sourceOrder,
+      row.shipment,
+      row.customer,
+      row.country,
+      row.materialCode,
+      row.productName,
+      productName,
+      row.productModel,
+      row.productSpec,
+      row.salesperson,
+    ]
+      .join(" ")
+      .toLowerCase();
+    const matchesKeyword = !keyword || text.includes(keyword);
+    const matchesWarehouse = state.salesSpareWarehouse === "all" || row.assignedWarehouse === state.salesSpareWarehouse;
+    const matchesCountry = state.salesSpareCountry === "all" || row.country === state.salesSpareCountry;
+    return matchesKeyword && matchesWarehouse && matchesCountry;
+  });
+}
+
+function groupSalesSpares(sourceRows) {
+  const map = new Map();
+  sourceRows.forEach((row) => {
+    const productName = getSalesSpareProductName(row);
+    const key = [row.assignedWarehouse || "未标注", row.materialCode || "", productName].join("|");
+    if (!map.has(key)) {
+      map.set(key, {
+        key,
+        assignedWarehouse: row.assignedWarehouse || "未标注",
+        materialCode: row.materialCode || "",
+        productName,
+        totalQty: 0,
+        orders: new Set(),
+        latest: "",
+        details: new Map(),
+      });
+    }
+    const item = map.get(key);
+    const qty = parseNumber(row.quantity);
+    item.totalQty += qty;
+    if (row.sourceOrder) item.orders.add(row.sourceOrder);
+    if (row.completedAt && (!item.latest || row.completedAt > item.latest)) item.latest = row.completedAt;
+    const detailKey = [row.sourceOrder || "未标注", row.country || "未标注"].join("|");
+    if (!item.details.has(detailKey)) {
+      item.details.set(detailKey, { sourceOrder: row.sourceOrder || "未标注", country: row.country || "未标注", quantity: 0 });
+    }
+    item.details.get(detailKey).quantity += qty;
+  });
+  return Array.from(map.values()).sort((a, b) => b.totalQty - a.totalQty || a.key.localeCompare(b.key, "zh-CN"));
+}
+
+function renderSalesSpareDetail(groupedRows) {
+  if (!elements.salesSpareDetailPanel) return;
+  const selected = state.salesSpareSelectedKey ? groupedRows.find((row) => row.key === state.salesSpareSelectedKey) || null : null;
+  if (!selected) {
+    state.salesSpareSelectedKey = "";
+    elements.salesSpareDetailPanel.hidden = true;
+    elements.salesSpareDetailCards.innerHTML = "";
+    return;
+  }
+
+  state.salesSpareSelectedKey = selected.key;
+  const detailRows = Array.from(selected.details.values()).sort((a, b) => b.quantity - a.quantity || a.sourceOrder.localeCompare(b.sourceOrder, "zh-CN"));
+  elements.salesSpareDetailTitle.textContent = selected.productName || selected.materialCode || "备件明细";
+  elements.salesSpareDetailMeta.innerHTML = `
+    <span><em>仓库</em><b>${escapeHtml(selected.assignedWarehouse)}</b></span>
+    <span><em>料号</em><b>${escapeHtml(selected.materialCode || "-")}</b></span>
+    <span><em>售卖数量</em><b>${formatQty(selected.totalQty)}</b></span>
+  `;
+  elements.salesSpareDetailCards.innerHTML = detailRows
+    .map(
+      (row) => `
+        <article class="sales-detail-tile">
+          <span>源单据</span>
+          <strong>${escapeHtml(row.sourceOrder)}</strong>
+          <small>${escapeHtml(row.country)} / ${formatQty(row.quantity)} 件</small>
+        </article>
+      `,
+    )
+    .join("");
+  elements.salesSpareDetailPanel.hidden = false;
+}
+
+function renderSalesSpare() {
+  if (!elements.salesSpareTableBody) return;
+  const filteredRows = getSalesSpareFilteredRows();
+  const groupedRows = groupSalesSpares(filteredRows);
+  const totalQty = filteredRows.reduce((sum, row) => sum + parseNumber(row.quantity), 0);
+  const skuCount = new Set(filteredRows.map((row) => row.materialCode).filter(Boolean)).size;
+  const countries = new Set(filteredRows.map((row) => row.country).filter(Boolean)).size;
+
+  elements.salesSpareCount.textContent = `${formatQty(totalQty)} 件 / ${groupedRows.length} 类`;
+  elements.salesSpareStatus.textContent = salesRefreshMessage || (salesGeneratedAt ? `Odoo 数据：${salesGeneratedAt}` : "等待 Odoo 销售数据");
+  elements.salesSpareSummaryGrid.innerHTML = [
+    { label: "备件售卖数量", value: totalQty, note: `源数据 ${filteredRows.length} 行` },
+    { label: "备件种类", value: skuCount, note: "按料号统计" },
+    { label: "国家/地区", value: countries, note: "按客户国家统计" },
+    { label: "源单据数", value: new Set(filteredRows.map((row) => row.sourceOrder).filter(Boolean)).size, note: "去重源单据" },
+  ]
+    .map(
+      (card) => `
+        <article class="summary-card">
+          <span>${escapeHtml(card.label)}</span>
+          <strong>${escapeHtml(formatQty(card.value))}</strong>
+          <small>${escapeHtml(card.note)}</small>
+        </article>
+      `,
+    )
+    .join("");
+
+  renderSalesBars(elements.salesSpareWarehouseBars, salesSumBy(filteredRows, "assignedWarehouse"), "cat");
+  renderSalesSpareDetail(groupedRows);
+
+  elements.salesSpareEmptyState.hidden = groupedRows.length > 0;
+  elements.salesSpareTableBody.innerHTML = groupedRows
+    .map(
+      (row) => `
+        <tr class="clickable-row${state.salesSpareSelectedKey === row.key ? " active" : ""}" data-sales-spare-key="${escapeHtml(row.key)}">
+          <td><span class="project-pill">${escapeHtml(row.assignedWarehouse)}</span></td>
+          <td class="code-cell">${escapeHtml(row.materialCode || "-")}</td>
+          <td>${escapeHtml(row.productName || "-")}</td>
+          <td class="num"><b>${formatQty(row.totalQty)}</b></td>
+          <td class="num">${row.orders.size}</td>
+          <td>${escapeHtml(row.latest || "-")}</td>
+        </tr>
+      `,
+    )
+    .join("");
 }
 
 function getWarehouseLookupValue(row) {
@@ -2094,6 +2655,8 @@ function render() {
   renderReplenishmentControls();
   renderRmaControls();
   renderAfterSalesRefreshControls();
+  renderSalesRefreshControls();
+  renderSalesControls();
   const visibleInventoryRows = getVisibleInventoryRows();
   const filteredRows = getFilteredRows();
   const allWarehouseStats = aggregateRows(visibleInventoryRows, { warehouses, includeEmpty: true });
@@ -2107,6 +2670,8 @@ function render() {
   renderTable(filteredRows);
   renderReplenishment();
   renderRma();
+  renderSalesMachine();
+  renderSalesSpare();
   if (elements.sourceNote) {
     elements.sourceNote.textContent = "";
     elements.sourceNote.hidden = true;
@@ -3539,6 +4104,8 @@ elements.viewTabs.forEach((tab) => {
     if (state.view === "material") elements.keywordInput.focus();
     if (state.view === "replenishment") elements.replenishmentKeywordInput.focus();
     if (state.view === "rma") elements.rmaKeywordInput.focus();
+    if (state.view === "salesMachine") elements.salesMachineKeywordInput.focus();
+    if (state.view === "salesSpare") elements.salesSpareKeywordInput.focus();
   });
 });
 
@@ -3730,6 +4297,95 @@ elements.rmaResetButton.addEventListener("click", () => {
 });
 
 elements.rmaRefreshButton?.addEventListener("click", refreshAfterSalesFromSource);
+
+elements.salesRefreshButton?.addEventListener("click", openSalesRefreshDialog);
+elements.salesRefreshCloseButton?.addEventListener("click", closeSalesRefreshDialog);
+elements.salesRefreshCancelButton?.addEventListener("click", closeSalesRefreshDialog);
+elements.salesRefreshDialog?.addEventListener("click", (event) => {
+  if (event.target === elements.salesRefreshDialog) closeSalesRefreshDialog();
+});
+elements.salesRefreshConfirmButton?.addEventListener("click", refreshSalesFromOdoo);
+elements.salesOdooSecret?.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") refreshSalesFromOdoo();
+});
+
+elements.salesMachineKeywordInput?.addEventListener("input", (event) => {
+  state.salesMachineKeyword = event.target.value;
+  save();
+  render();
+});
+
+elements.salesMachineWarehouseSelect?.addEventListener("change", (event) => {
+  state.salesMachineWarehouse = event.target.value;
+  save();
+  render();
+});
+
+elements.salesMachineCategorySelect?.addEventListener("change", (event) => {
+  state.salesMachineCategory = event.target.value;
+  save();
+  render();
+});
+
+elements.salesMachineCountrySelect?.addEventListener("change", (event) => {
+  state.salesMachineCountry = event.target.value;
+  save();
+  render();
+});
+
+elements.salesMachineSerialSelect?.addEventListener("change", (event) => {
+  state.salesMachineSerial = event.target.value;
+  save();
+  render();
+});
+
+elements.salesMachineResetButton?.addEventListener("click", () => {
+  state.salesMachineKeyword = "";
+  state.salesMachineWarehouse = "all";
+  state.salesMachineCategory = "all";
+  state.salesMachineCountry = "all";
+  state.salesMachineSerial = "all";
+  save();
+  render();
+});
+
+elements.salesSpareKeywordInput?.addEventListener("input", (event) => {
+  state.salesSpareKeyword = event.target.value;
+  state.salesSpareSelectedKey = "";
+  save();
+  render();
+});
+
+elements.salesSpareWarehouseSelect?.addEventListener("change", (event) => {
+  state.salesSpareWarehouse = event.target.value;
+  state.salesSpareSelectedKey = "";
+  save();
+  render();
+});
+
+elements.salesSpareCountrySelect?.addEventListener("change", (event) => {
+  state.salesSpareCountry = event.target.value;
+  state.salesSpareSelectedKey = "";
+  save();
+  render();
+});
+
+elements.salesSpareResetButton?.addEventListener("click", () => {
+  state.salesSpareKeyword = "";
+  state.salesSpareWarehouse = "all";
+  state.salesSpareCountry = "all";
+  state.salesSpareSelectedKey = "";
+  save();
+  render();
+});
+
+elements.salesSpareTableBody?.addEventListener("click", (event) => {
+  const row = event.target.closest("[data-sales-spare-key]");
+  if (!row) return;
+  state.salesSpareSelectedKey = row.dataset.salesSpareKey;
+  save();
+  render();
+});
 
 elements.importButton.addEventListener("click", () => {
   importInventoryFromArea(elements.importArea, elements.importStatus);
