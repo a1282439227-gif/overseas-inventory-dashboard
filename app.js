@@ -1140,6 +1140,7 @@ const excelRows = [
 const views = ["overview", "material", "replenishment", "rma", "salesMachine", "salesSpare"];
 const inventoryData = window.inventoryData || {};
 const inventoryRows = Array.isArray(window.inventoryRows) ? window.inventoryRows : [];
+const sellableSpareData = window.sellableSpareData || { items: [] };
 const hasSyncedInventoryRows = inventoryRows.length > 0;
 const afterSalesData = window.afterSalesData || { replenishmentOrders: [], rmaOrders: [] };
 const salesData = window.salesDashboardData || { machineRows: [], spareRows: [], summary: {}, generatedAt: "" };
@@ -1147,8 +1148,11 @@ const dashboardRefreshConfig = window.dashboardRefreshConfig || {};
 const afterSalesRefreshEndpoint = String(dashboardRefreshConfig.afterSalesEndpoint || "").trim();
 const afterSalesRefreshToken = String(dashboardRefreshConfig.refreshToken || "").trim();
 const SALES_REFRESH_ENDPOINT = "http://127.0.0.1:8766/refresh-odoo-dashboard";
+const INVENTORY_DATA_LOCAL_URL = "http://127.0.0.1:8766/data-inventory.js";
+const SELLABLE_SPARE_DATA_LOCAL_URL = "http://127.0.0.1:8766/data-sellable-spares.js";
 const SALES_DATA_LOCAL_URL = "http://127.0.0.1:8766/data-sales.js";
 const RMA_PRODUCT_LINE_KEYWORD = "畜牧";
+let inventoryGeneratedAt = String(inventoryData.generatedAt || "");
 let afterSalesGeneratedAt = String(afterSalesData.generatedAt || "");
 let afterSalesRefreshMessage = "";
 let afterSalesRefreshBusy = false;
@@ -1165,6 +1169,8 @@ let salesSummary = salesData.summary || {};
 let salesMaterialNameByCode = salesData.materialNameByCode && typeof salesData.materialNameByCode === "object"
   ? { ...salesData.materialNameByCode }
   : {};
+let sellableSpareItems = Array.isArray(sellableSpareData.items) ? [...sellableSpareData.items] : [];
+let sellableSpareByCode = new Map(sellableSpareItems.map((item) => [String(item.materialCode || "").trim().toLowerCase(), item]).filter(([code]) => code));
 const baseRows = (inventoryRows.length ? inventoryRows : excelRows).map(normalizeRow);
 
 let rows = [];
@@ -1598,6 +1604,18 @@ function getSavedAfterSalesGeneratedAt(saved) {
   return sourceGeneratedAt ? String(sourceGeneratedAt.afterSales || "") : "";
 }
 
+function getSavedInventoryGeneratedAt(saved) {
+  const sourceGeneratedAt = saved && saved.sourceGeneratedAt;
+  return sourceGeneratedAt ? String(sourceGeneratedAt.inventory || "") : "";
+}
+
+function shouldUseSavedInventoryRows(saved) {
+  if (!saved?.dataOverrides?.inventory || !Array.isArray(saved.rows) || !saved.rows.length) return false;
+  if (!inventoryGeneratedAt) return true;
+  const savedGeneratedAt = getSavedInventoryGeneratedAt(saved);
+  return Boolean(savedGeneratedAt && savedGeneratedAt >= inventoryGeneratedAt);
+}
+
 function shouldUseSavedAfterSalesData(saved) {
   const overrides = (saved && saved.dataOverrides) || {};
   if (!overrides.replenishment && !overrides.rma) return true;
@@ -1633,11 +1651,13 @@ function resetAfterSalesFilters() {
 function load() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    const useSavedInventoryRows = shouldUseSavedInventoryRows(saved);
     const useSavedAfterSalesData = shouldUseSavedAfterSalesData(saved);
     dataOverrides = {
       ...dataOverrides,
       ...(saved.dataOverrides || {}),
     };
+    if (!useSavedInventoryRows) dataOverrides.inventory = false;
     if (shouldUseSavedSalesData(saved)) {
       applyLatestSalesData(saved.salesData, { preserveOverride: true });
     } else {
@@ -1647,7 +1667,7 @@ function load() {
       dataOverrides.replenishment = false;
       dataOverrides.rma = false;
     }
-    rows = dataOverrides.inventory && Array.isArray(saved.rows) && saved.rows.length ? saved.rows.map(normalizeRow) : baseRows;
+    rows = useSavedInventoryRows ? saved.rows.map(normalizeRow) : baseRows;
     if (dataOverrides.replenishment && Array.isArray(saved.replenishmentOrders)) {
       replaceCollection(replenishmentOrders, saved.replenishmentOrders.map(normalizeReplenishmentOrder));
     }
@@ -1670,6 +1690,7 @@ function save() {
     state,
     dataOverrides,
     sourceGeneratedAt: {
+      inventory: inventoryGeneratedAt,
       afterSales: afterSalesGeneratedAt,
       sales: salesGeneratedAt,
     },
@@ -1964,6 +1985,68 @@ function resetSalesFilters() {
   state.salesSpareSelectedKey = "";
 }
 
+function rebuildSellableSpareCatalog(items = sellableSpareItems) {
+  sellableSpareItems = Array.isArray(items) ? [...items] : [];
+  sellableSpareByCode = new Map(
+    sellableSpareItems
+      .map((item) => [String(item.materialCode || "").trim().toLowerCase(), item])
+      .filter(([code]) => code),
+  );
+}
+
+function getInventoryGeneratedAt(data) {
+  return String(data?.metadata?.generatedAt || data?.generatedAt || "");
+}
+
+function applyLatestInventoryData(data, options = {}) {
+  const nextRows = Array.isArray(data?.rows) ? data.rows : [];
+  inventoryGeneratedAt = getInventoryGeneratedAt(data);
+  window.inventoryData = data?.metadata || {};
+  window.inventoryRows = nextRows;
+  rows = nextRows.map(normalizeRow);
+  if (!options.preserveOverride) dataOverrides.inventory = true;
+  return {
+    generatedAt: inventoryGeneratedAt,
+    rows: rows.length,
+    skuCount: new Set(rows.map((row) => row.materialCode).filter(Boolean)).size,
+  };
+}
+
+function parseInventoryDataScript(scriptText) {
+  const text = String(scriptText || "").replace(/^\uFEFF/, "");
+  const metadataMatch = text.match(/window\.inventoryData\s*=\s*([\s\S]*?);\s*window\.inventoryRows\s*=/);
+  const rowsMatch = text.match(/window\.inventoryRows\s*=\s*([\s\S]*?);\s*$/);
+  if (!metadataMatch || !rowsMatch) throw new Error("库存数据文件格式不正确");
+  return {
+    metadata: JSON.parse(metadataMatch[1]),
+    rows: JSON.parse(rowsMatch[1]),
+  };
+}
+
+async function fetchInventoryDataFromLocalService() {
+  const url = new URL(INVENTORY_DATA_LOCAL_URL);
+  url.searchParams.set("refresh", String(Date.now()));
+  const response = await fetch(url.toString(), { cache: "no-store" });
+  if (!response.ok) throw new Error(`库存数据文件返回 ${response.status}`);
+  return parseInventoryDataScript(await response.text());
+}
+
+function parseSellableSpareDataScript(scriptText) {
+  const jsonText = String(scriptText || "")
+    .replace(/^\uFEFF/, "")
+    .replace(/^\s*window\.sellableSpareData\s*=\s*/, "")
+    .replace(/;\s*$/, "");
+  return JSON.parse(jsonText);
+}
+
+async function fetchSellableSpareDataFromLocalService() {
+  const url = new URL(SELLABLE_SPARE_DATA_LOCAL_URL);
+  url.searchParams.set("refresh", String(Date.now()));
+  const response = await fetch(url.toString(), { cache: "no-store" });
+  if (!response.ok) throw new Error(`可售备件清单返回 ${response.status}`);
+  return parseSellableSpareDataScript(await response.text());
+}
+
 function applyLatestSalesData(data, options = {}) {
   const nextMachineRows = salesRows(data?.machineRows);
   const nextSpareRows = salesRows(data?.spareRows);
@@ -2014,7 +2097,7 @@ function setSalesRefreshStatus(message, isError = false) {
 function openSalesRefreshDialog() {
   if (!elements.salesRefreshDialog) return;
   elements.salesRefreshDialog.hidden = false;
-  setSalesRefreshStatus("输入 Odoo 密码或 API Key 后开始刷新。");
+  setSalesRefreshStatus("输入 Odoo 密码或 API Key 后，将刷新库存和销售数据。");
   window.setTimeout(() => elements.salesOdooSecret?.focus(), 0);
 }
 
@@ -2048,11 +2131,18 @@ async function refreshSalesFromOdoo() {
     if (!response.ok || payload.ok === false) {
       throw new Error(payload.message || `刷新失败：HTTP ${response.status}`);
     }
-    setSalesRefreshStatus("Odoo 已刷新，正在载入最新销售数据...");
-    const latestData = await fetchSalesDataFromLocalService();
-    const result = applyLatestSalesData(latestData);
+    setSalesRefreshStatus("Odoo 已刷新，正在载入最新库存和销售数据...");
+    const [latestInventoryData, latestSellableSpareData, latestSalesData] = await Promise.all([
+      fetchInventoryDataFromLocalService(),
+      fetchSellableSpareDataFromLocalService(),
+      fetchSalesDataFromLocalService(),
+    ]);
+    rebuildSellableSpareCatalog(latestSellableSpareData.items || []);
+    const inventoryResult = applyLatestInventoryData(latestInventoryData);
+    const salesResult = applyLatestSalesData(latestSalesData);
+    resetFilters();
     resetSalesFilters();
-    salesRefreshMessage = `销售数据已刷新：${result.generatedAt || "-"} / 整机 ${result.machineRows} 条 / 备件 ${result.spareRows} 条`;
+    salesRefreshMessage = `Odoo 已刷新：库存 ${inventoryResult.rows} 条 / SKU ${inventoryResult.skuCount} 个；销售整机 ${salesResult.machineRows} 条 / 销售备件 ${salesResult.spareRows} 条`;
     if (elements.salesOdooSecret) elements.salesOdooSecret.value = "";
     setSalesRefreshStatus(salesRefreshMessage);
     save();
@@ -2350,6 +2440,12 @@ function normalizeRow(row) {
     model: String(row.model || "").trim(),
     productId: String(row.productId || "").trim(),
     imageUrl: String(row.imageUrl || row.image || "").trim(),
+    sellableSpare: Boolean(row.sellableSpare),
+    sourceMaterialCode: String(row.sourceMaterialCode || "").trim(),
+    odooVersion: String(row.odooVersion || "").trim(),
+    englishName: String(row.englishName || "").trim(),
+    unitUsage: String(row.unitUsage || "").trim(),
+    sellableRemark: String(row.sellableRemark || "").trim(),
     updatedAt: row.updatedAt || new Date().toISOString(),
   };
 }
@@ -2709,11 +2805,51 @@ function normalizeSearchCode(value) {
   return String(value || "").trim().replace(/\s+/g, "").toLowerCase();
 }
 
+function createSellableCatalogLookupRow(item) {
+  const warehouse = warehouses[0] || { id: "frankfurt", name: "法兰克福仓" };
+  return normalizeRow({
+    warehouseId: warehouse.id,
+    warehouseName: warehouse.name,
+    project: "R1916",
+    materialCode: item.materialCode,
+    materialName: item.materialName,
+    category: "",
+    productLine: item.productLine,
+    location: "",
+    unit: "个",
+    onHandQty: 0,
+    reservedQty: 0,
+    frozenQty: 0,
+    supplierOwnedQty: 0,
+    inventoryAmount: 0,
+    sellableSpare: true,
+    sourceMaterialCode: item.sourceMaterialCode,
+    odooVersion: item.odooVersion,
+    englishName: item.englishName,
+  });
+}
+
 function getMaterialLookupMatches() {
   const keyword = normalizeSearchCode(state.keyword);
   if (!keyword) return [];
 
-  return getMaterialInventoryRows().filter((row) => row.materialCode.toLowerCase().includes(keyword));
+  const inventoryMatches = getMaterialInventoryRows().filter((row) => row.materialCode.toLowerCase().includes(keyword));
+  if (inventoryMatches.length) return inventoryMatches;
+
+  return sellableSpareItems
+    .filter((item) => {
+      const text = [
+        item.materialCode,
+        item.sourceMaterialCode,
+        item.materialName,
+        item.englishName,
+        item.productLine,
+      ]
+        .join(" ")
+        .toLowerCase();
+      return text.includes(keyword);
+    })
+    .map(createSellableCatalogLookupRow);
 }
 
 function renderMaterialLookup() {
@@ -3998,10 +4134,10 @@ function restoreInventoryFromSource(statusElement) {
 
 async function copyOdooUpdateCommand() {
   const command =
-    'powershell -NoProfile -ExecutionPolicy Bypass -File .\\sync-dashboard-data.ps1 -OdooLogin anna.jiang@sveav.com -PromptOdooPassword';
+    'powershell -NoProfile -ExecutionPolicy Bypass -File .\\sync-sellable-spare-inventory.ps1 -OdooLogin anna.jiang@sveav.com -PromptOdooPassword';
   try {
     await navigator.clipboard.writeText(command);
-    setImportStatus(elements.overviewImportStatus, "Odoo 更新命令已复制");
+    setImportStatus(elements.overviewImportStatus, "Odoo 可售备件库存更新命令已复制");
   } catch {
     setImportStatus(elements.overviewImportStatus, command);
   }

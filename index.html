@@ -689,14 +689,14 @@
     <div class="modal-backdrop" id="salesRefreshDialog" hidden>
       <div class="refresh-dialog" role="dialog" aria-modal="true" aria-labelledby="salesRefreshTitle">
         <div class="dialog-head">
-          <h2 id="salesRefreshTitle">刷新 Odoo 销售数据</h2>
+          <h2 id="salesRefreshTitle">刷新 Odoo 数据</h2>
           <button class="icon-btn" id="salesRefreshCloseButton" type="button" title="关闭" aria-label="关闭">×</button>
         </div>
         <label class="field" for="salesOdooSecret">
           <span>Odoo 密码 / API Key</span>
           <input id="salesOdooSecret" type="password" autocomplete="current-password" placeholder="输入 Odoo 密码或 API Key">
         </label>
-        <p class="refresh-status" id="salesRefreshStatus">输入后点击开始刷新，将从本机 Odoo 刷新服务获取最新销售数据。</p>
+        <p class="refresh-status" id="salesRefreshStatus">输入后点击开始刷新，将从本机 Odoo 刷新服务获取最新库存和销售数据。</p>
         <div class="dialog-actions">
           <button class="secondary" id="salesRefreshCancelButton" type="button">取消</button>
           <button id="salesRefreshConfirmButton" type="button">开始刷新</button>
@@ -705,10 +705,11 @@
     </div>
 
     <script src="./dashboard-config.js?v=20260720-cloud-refresh"></script>
-    <script src="./data-inventory.js?v=20260717-refresh-api"></script>
+    <script src="./data-inventory.js?v=20260723-odoo-stock"></script>
+    <script src="./data-sellable-spares.js?v=20260723-odoo-stock"></script>
     <script src="./data-orders.js?v=20260721-182638"></script>
     <script src="./data-sales.js?v=20260723-sales-merge"></script>
     <script src="./vendor/xlsx.full.min.js"></script>
-    <script src="./app.js?v=20260723-sales-merge"></script>
+    <script src="./app.js?v=20260723-odoo-stock"></script>
   </body>
 </html>
