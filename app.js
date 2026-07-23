@@ -1171,6 +1171,7 @@ let salesMaterialNameByCode = salesData.materialNameByCode && typeof salesData.m
   : {};
 let sellableSpareItems = Array.isArray(sellableSpareData.items) ? [...sellableSpareData.items] : [];
 let sellableSpareByCode = new Map(sellableSpareItems.map((item) => [String(item.materialCode || "").trim().toLowerCase(), item]).filter(([code]) => code));
+let sellableSpareByAlias = new Map();
 const baseRows = (inventoryRows.length ? inventoryRows : excelRows).map(normalizeRow);
 
 let rows = [];
@@ -1985,6 +1986,22 @@ function resetSalesFilters() {
   state.salesSpareSelectedKey = "";
 }
 
+function sellableItemAliases(item) {
+  const aliases = [
+    item?.materialCode,
+    item?.sourceMaterialCode,
+    item?.matchGroupCode,
+    ...(Array.isArray(item?.matchMaterialCodes) ? item.matchMaterialCodes : []),
+  ];
+  return Array.from(
+    new Set(
+      aliases
+        .map((value) => normalizeSearchCode(value))
+        .filter(Boolean),
+    ),
+  );
+}
+
 function rebuildSellableSpareCatalog(items = sellableSpareItems) {
   sellableSpareItems = Array.isArray(items) ? [...items] : [];
   sellableSpareByCode = new Map(
@@ -1992,6 +2009,12 @@ function rebuildSellableSpareCatalog(items = sellableSpareItems) {
       .map((item) => [String(item.materialCode || "").trim().toLowerCase(), item])
       .filter(([code]) => code),
   );
+  sellableSpareByAlias = new Map();
+  sellableSpareItems.forEach((item) => {
+    sellableItemAliases(item).forEach((alias) => {
+      if (!sellableSpareByAlias.has(alias)) sellableSpareByAlias.set(alias, item);
+    });
+  });
 }
 
 function getInventoryGeneratedAt(data) {
@@ -2441,6 +2464,13 @@ function normalizeRow(row) {
     productId: String(row.productId || "").trim(),
     imageUrl: String(row.imageUrl || row.image || "").trim(),
     sellableSpare: Boolean(row.sellableSpare),
+    stockMaterialCode: String(row.stockMaterialCode || row.materialCode || "").trim(),
+    sellableMaterialCode: String(row.sellableMaterialCode || row.canonicalMaterialCode || "").trim(),
+    canonicalMaterialCode: String(row.canonicalMaterialCode || row.sellableMaterialCode || "").trim(),
+    materialGroupCode: String(row.materialGroupCode || row.sourceMaterialCode || row.canonicalMaterialCode || row.sellableMaterialCode || "").trim(),
+    materialAliases: Array.isArray(row.materialAliases)
+      ? row.materialAliases.map((value) => String(value || "").trim()).filter(Boolean)
+      : String(row.materialAliases || "").split(/[,\s]+/).map((value) => value.trim()).filter(Boolean),
     sourceMaterialCode: String(row.sourceMaterialCode || "").trim(),
     odooVersion: String(row.odooVersion || "").trim(),
     englishName: String(row.englishName || "").trim(),
@@ -2581,6 +2611,7 @@ function inventoryAmount(row) {
 }
 
 function isInInventoryProjectScope(row) {
+  if (row.sellableSpare) return true;
   return inventoryProjectScope.has(String(row.project || "").trim());
 }
 
@@ -2675,6 +2706,7 @@ function getFilteredRows() {
         row.location,
         row.spec,
         row.model,
+        ...getMaterialLookupCodes(row),
       ]
         .join(" ")
         .toLowerCase();
@@ -2728,7 +2760,7 @@ function aggregateRows(sourceRows, options = {}) {
   sourceRows.forEach((row) => {
     const item = base.get(row.warehouseId);
     if (!item) return;
-    item.materialCodes.add(row.materialCode);
+    item.materialCodes.add(getInventorySkuKey(row));
     item.projects.add(row.project);
     item.productLines.add(row.productLine);
     item.onHandQty += row.onHandQty;
@@ -2805,6 +2837,33 @@ function normalizeSearchCode(value) {
   return String(value || "").trim().replace(/\s+/g, "").toLowerCase();
 }
 
+function getInventorySkuKey(row) {
+  return row.materialGroupCode || row.canonicalMaterialCode || row.sellableMaterialCode || row.sourceMaterialCode || row.materialCode;
+}
+
+function getMaterialLookupCodes(row) {
+  return Array.from(
+    new Set(
+      [
+        row.materialCode,
+        row.stockMaterialCode,
+        row.sellableMaterialCode,
+        row.canonicalMaterialCode,
+        row.materialGroupCode,
+        row.sourceMaterialCode,
+        ...(Array.isArray(row.materialAliases) ? row.materialAliases : []),
+      ]
+        .map((value) => String(value || "").trim())
+        .filter(Boolean),
+    ),
+  );
+}
+
+function materialMatchesKeyword(row, keyword) {
+  if (!keyword) return true;
+  return getMaterialLookupCodes(row).some((code) => normalizeSearchCode(code).includes(keyword));
+}
+
 function createSellableCatalogLookupRow(item) {
   const warehouse = warehouses[0] || { id: "frankfurt", name: "法兰克福仓" };
   return normalizeRow({
@@ -2823,6 +2882,10 @@ function createSellableCatalogLookupRow(item) {
     supplierOwnedQty: 0,
     inventoryAmount: 0,
     sellableSpare: true,
+    sellableMaterialCode: item.materialCode,
+    canonicalMaterialCode: item.materialCode,
+    materialGroupCode: item.matchGroupCode || item.sourceMaterialCode,
+    materialAliases: sellableItemAliases(item),
     sourceMaterialCode: item.sourceMaterialCode,
     odooVersion: item.odooVersion,
     englishName: item.englishName,
@@ -2833,7 +2896,7 @@ function getMaterialLookupMatches() {
   const keyword = normalizeSearchCode(state.keyword);
   if (!keyword) return [];
 
-  const inventoryMatches = getMaterialInventoryRows().filter((row) => row.materialCode.toLowerCase().includes(keyword));
+  const inventoryMatches = getMaterialInventoryRows().filter((row) => materialMatchesKeyword(row, keyword));
   if (inventoryMatches.length) return inventoryMatches;
 
   return sellableSpareItems
@@ -2841,6 +2904,8 @@ function getMaterialLookupMatches() {
       const text = [
         item.materialCode,
         item.sourceMaterialCode,
+        item.matchGroupCode,
+        ...(Array.isArray(item.matchMaterialCodes) ? item.matchMaterialCodes : []),
         item.materialName,
         item.englishName,
         item.productLine,
@@ -2861,9 +2926,10 @@ function renderMaterialLookup() {
   }
 
   const keyword = normalizeSearchCode(state.keyword);
-  const exactRows = matches.filter((row) => row.materialCode.toLowerCase() === keyword);
+  const exactRows = matches.filter((row) => getMaterialLookupCodes(row).some((code) => normalizeSearchCode(code) === keyword));
   const lookupRows = exactRows.length ? exactRows : matches;
-  const codes = Array.from(new Set(lookupRows.map((row) => row.materialCode))).sort((a, b) => a.localeCompare(b, "zh-CN"));
+  const codes = Array.from(new Set(lookupRows.flatMap(getMaterialLookupCodes))).sort((a, b) => a.localeCompare(b, "zh-CN"));
+  const displayCode = state.keyword.trim() || codes[0] || "";
   const names = Array.from(new Set(lookupRows.map((row) => row.materialName).filter(Boolean))).slice(0, 3);
   const coveredWarehouseCount = new Set(lookupRows.map((row) => row.warehouseId)).size;
   const totalOnHand = lookupRows.reduce((sum, row) => sum + row.onHandQty, 0);
@@ -2871,7 +2937,7 @@ function renderMaterialLookup() {
   const totalAmount = lookupRows.reduce((sum, row) => sum + inventoryAmount(row), 0);
 
   elements.materialLookupSection.hidden = false;
-  elements.materialLookupTitle.textContent = exactRows.length ? `物料编码查询：${codes[0]}` : `物料编码查询：${state.keyword.trim()}`;
+  elements.materialLookupTitle.textContent = exactRows.length ? `物料编码查询：${displayCode}` : `物料编码查询：${state.keyword.trim()}`;
   elements.materialLookupMeta.textContent = `${names.join(" / ") || "匹配物料"}；匹配 ${lookupRows.length} 条明细，覆盖 ${coveredWarehouseCount} 个仓库。下方按全部仓库展示，未存放的仓库显示为 0。`;
   elements.materialLookupCount.textContent = `现存 ${formatQty(totalOnHand)} / 可用 ${formatQty(totalAvailable)} / 金额 ${formatMoney(totalAmount)}`;
 
@@ -3029,7 +3095,7 @@ function uniqueValues(sourceRows, key) {
 function renderSummary(filteredRows) {
   const activeWarehouseTotal = warehouses.length;
   const warehouseCount = activeWarehouseTotal;
-  const skuCount = new Set(filteredRows.map((row) => row.materialCode)).size;
+  const skuCount = new Set(filteredRows.map(getInventorySkuKey)).size;
   const totalOnHand = filteredRows.reduce((sum, row) => sum + row.onHandQty, 0);
   const totalAvailable = filteredRows.reduce((sum, row) => sum + availableQty(row), 0);
   const totalAmount = filteredRows.reduce((sum, row) => sum + inventoryAmount(row), 0);
@@ -3098,7 +3164,7 @@ function renderWarehouses(stats) {
 function renderOverviewDetail(overviewRows) {
   const activeWarehouse = warehouses.find((warehouse) => warehouse.id === state.warehouse);
   const warehouseNames = new Set(overviewRows.map((row) => row.warehouseId));
-  const skuCount = new Set(overviewRows.map((row) => row.materialCode)).size;
+  const skuCount = new Set(overviewRows.map(getInventorySkuKey)).size;
   const available = overviewRows.reduce((sum, row) => sum + availableQty(row), 0);
 
   const quickFilterLabel = state.overviewQuickFilter === "lowStock" ? "低库存备件" : "库存明细";
@@ -3168,9 +3234,10 @@ function renderInsights() {
 function buildSharedStockItems() {
   const byMaterial = new Map();
   getVisibleInventoryRows().forEach((row) => {
-    const list = byMaterial.get(row.materialCode) || [];
+    const key = getInventorySkuKey(row);
+    const list = byMaterial.get(key) || [];
     list.push(row);
-    byMaterial.set(row.materialCode, list);
+    byMaterial.set(key, list);
   });
 
   const items = [];
@@ -4590,6 +4657,7 @@ elements.rmaRestoreButton.addEventListener("click", () => {
   restoreRmaFromSource(elements.rmaImportStatus);
 });
 
+rebuildSellableSpareCatalog();
 load();
 setupResizableColumns(elements.rmaOrderTable, `${STORAGE_KEY}-rma-order-columns`, { minWidth: 16 });
 setupResizableColumns(elements.rmaDetailTable, `${STORAGE_KEY}-rma-detail-columns`);
