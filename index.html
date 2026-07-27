@@ -693,10 +693,10 @@
           <button class="icon-btn" id="salesRefreshCloseButton" type="button" title="关闭" aria-label="关闭">×</button>
         </div>
         <label class="field" for="salesOdooSecret">
-          <span>Odoo 密码 / API Key</span>
-          <input id="salesOdooSecret" type="password" autocomplete="current-password" placeholder="输入 Odoo 密码或 API Key">
+          <span>Odoo 登录密码（可选）</span>
+          <input id="salesOdooSecret" type="password" autocomplete="current-password" placeholder="本机已保存时可留空">
         </label>
-        <p class="refresh-status" id="salesRefreshStatus">输入后点击开始刷新，将从本机 Odoo 刷新服务获取最新库存和销售数据。</p>
+        <p class="refresh-status" id="salesRefreshStatus">可直接点击开始刷新，将从本机 Odoo 刷新服务获取最新库存和销售数据。</p>
         <div class="dialog-actions">
           <button class="secondary" id="salesRefreshCancelButton" type="button">取消</button>
           <button id="salesRefreshConfirmButton" type="button">开始刷新</button>
@@ -710,6 +710,6 @@
     <script src="./data-orders.js?v=20260724-odoo-stocking"></script>
     <script src="./data-sales.js?v=20260723-sales-merge"></script>
     <script src="./vendor/xlsx.full.min.js"></script>
-    <script src="./app.js?v=20260723-refresh-async2"></script>
+    <script src="./app.js?v=20260727-odoo-saved-secret"></script>
   </body>
 </html>

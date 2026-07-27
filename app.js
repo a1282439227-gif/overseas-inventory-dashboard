@@ -2211,7 +2211,7 @@ function setSalesRefreshStatus(message, isError = false) {
 function openSalesRefreshDialog() {
   if (!elements.salesRefreshDialog) return;
   elements.salesRefreshDialog.hidden = false;
-  setSalesRefreshStatus("输入 Odoo 密码或 API Key 后，将刷新库存和销售数据。");
+  setSalesRefreshStatus("可直接开始刷新；本机未保存登录信息时，再输入 Odoo 登录密码。");
   window.setTimeout(() => elements.salesOdooSecret?.focus(), 0);
 }
 
@@ -2225,10 +2225,6 @@ function closeSalesRefreshDialog() {
 async function refreshSalesFromOdoo() {
   if (salesRefreshBusy) return;
   const secret = String(elements.salesOdooSecret?.value || "").trim();
-  if (!secret) {
-    setSalesRefreshStatus("请输入 Odoo 密码或 API Key。", true);
-    return;
-  }
 
   salesRefreshBusy = true;
   salesRefreshMessage = "正在连接本地 Odoo 刷新服务...";
@@ -2269,7 +2265,7 @@ async function refreshSalesFromOdoo() {
     const detail = String(error?.message || "").trim();
     salesRefreshMessage = detail
       ? `刷新失败：${detail}`
-      : "刷新失败：请确认本机 Odoo 看板服务已启动，并使用正确的 Odoo 密码或 API Key。";
+      : "刷新失败：请确认本机 Odoo 看板服务已启动，并保存了正确的 Odoo 登录信息。";
     setSalesRefreshStatus(salesRefreshMessage, true);
   } finally {
     salesRefreshBusy = false;
