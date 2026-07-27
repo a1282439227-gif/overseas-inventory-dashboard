@@ -1173,6 +1173,7 @@ let salesMaterialNameByCode = salesData.materialNameByCode && typeof salesData.m
 let sellableSpareItems = Array.isArray(sellableSpareData.items) ? [...sellableSpareData.items] : [];
 let sellableSpareByCode = new Map(sellableSpareItems.map((item) => [String(item.materialCode || "").trim().toLowerCase(), item]).filter(([code]) => code));
 let sellableSpareByAlias = new Map();
+let inventoryProductMetaByCode = buildInventoryProductMetaMap(inventoryData);
 const baseRows = (inventoryRows.length ? inventoryRows : excelRows).map(normalizeRow);
 
 let rows = [];
@@ -2025,6 +2026,44 @@ function rebuildSellableSpareCatalog(items = sellableSpareItems) {
   });
 }
 
+function buildInventoryProductMetaMap(data = {}) {
+  const map = new Map();
+  const metaRows = Array.isArray(data?.productMetaRows)
+    ? data.productMetaRows
+    : Array.isArray(data?.metadata?.productMetaRows)
+      ? data.metadata.productMetaRows
+      : [];
+  metaRows.forEach((row) => {
+    const normalized = {
+      materialCode: normalizeMaterialCodeDisplay(row.materialCode),
+      materialName: String(row.materialName || "").trim(),
+      productId: String(row.productId || "").trim(),
+      productTemplateId: String(row.productTemplateId || row.templateId || "").trim(),
+      imageUrl: String(row.imageUrl || row.image || "").trim(),
+      unit: String(row.unit || "").trim(),
+      unitCost: parseNumber(row.unitCost || row.standardPrice || row.cost || row.price),
+      priceSource: String(row.priceSource || "").trim(),
+      priceStartPlace: String(row.priceStartPlace || "").trim(),
+    };
+    if (!normalized.materialCode) return;
+    const key = normalizeSearchCode(normalized.materialCode);
+    const existing = map.get(key);
+    if (!existing || (!existing.imageUrl && normalized.imageUrl)) {
+      map.set(key, normalized);
+    }
+  });
+  return map;
+}
+
+function getProductMetaForSellableItem(item) {
+  const aliases = sellableItemAliases(item);
+  for (const alias of aliases) {
+    const meta = inventoryProductMetaByCode.get(alias);
+    if (meta) return meta;
+  }
+  return null;
+}
+
 function getInventoryGeneratedAt(data) {
   return String(data?.metadata?.generatedAt || data?.generatedAt || "");
 }
@@ -2037,6 +2076,7 @@ function applyLatestInventoryData(data, options = {}) {
   inventoryGeneratedAt = getInventoryGeneratedAt(data);
   window.inventoryData = data?.metadata || {};
   window.inventoryRows = nextRows;
+  inventoryProductMetaByCode = buildInventoryProductMetaMap(window.inventoryData);
   rows = nextRows.map(normalizeRow);
   if (!options.preserveOverride) dataOverrides.inventory = true;
   return {
@@ -2538,7 +2578,7 @@ function normalizeRow(row) {
     warehouseId: warehouse.id,
     warehouseName: String(row.warehouseName || row.warehouse || warehouse.name).trim(),
     project: normalizeProject(row.project),
-    materialCode: String(row.materialCode || "").trim(),
+    materialCode: normalizeMaterialCodeDisplay(row.materialCode),
     materialName: String(row.materialName || "").trim(),
     category: String(row.category || "").trim(),
     productLine: String(row.productLine || "").trim(),
@@ -2555,16 +2595,17 @@ function normalizeRow(row) {
     spec: String(row.spec || "").trim(),
     model: String(row.model || "").trim(),
     productId: String(row.productId || "").trim(),
+    productTemplateId: String(row.productTemplateId || row.templateId || "").trim(),
     imageUrl: String(row.imageUrl || row.image || "").trim(),
     sellableSpare: Boolean(row.sellableSpare),
-    stockMaterialCode: String(row.stockMaterialCode || row.materialCode || "").trim(),
-    sellableMaterialCode: String(row.sellableMaterialCode || row.canonicalMaterialCode || "").trim(),
-    canonicalMaterialCode: String(row.canonicalMaterialCode || row.sellableMaterialCode || "").trim(),
-    materialGroupCode: String(row.materialGroupCode || row.sourceMaterialCode || row.canonicalMaterialCode || row.sellableMaterialCode || "").trim(),
+    stockMaterialCode: normalizeMaterialCodeDisplay(row.stockMaterialCode || row.materialCode),
+    sellableMaterialCode: normalizeMaterialCodeDisplay(row.sellableMaterialCode || row.canonicalMaterialCode),
+    canonicalMaterialCode: normalizeMaterialCodeDisplay(row.canonicalMaterialCode || row.sellableMaterialCode),
+    materialGroupCode: normalizeMaterialCodeDisplay(row.materialGroupCode || row.sourceMaterialCode || row.canonicalMaterialCode || row.sellableMaterialCode),
     materialAliases: Array.isArray(row.materialAliases)
-      ? row.materialAliases.map((value) => String(value || "").trim()).filter(Boolean)
-      : String(row.materialAliases || "").split(/[,\s]+/).map((value) => value.trim()).filter(Boolean),
-    sourceMaterialCode: String(row.sourceMaterialCode || "").trim(),
+      ? row.materialAliases.map((value) => normalizeMaterialCodeDisplay(value)).filter(Boolean)
+      : String(row.materialAliases || "").split(/[,\s]+/).map((value) => normalizeMaterialCodeDisplay(value)).filter(Boolean),
+    sourceMaterialCode: normalizeMaterialCodeDisplay(row.sourceMaterialCode),
     odooVersion: String(row.odooVersion || "").trim(),
     englishName: String(row.englishName || "").trim(),
     unitUsage: String(row.unitUsage || "").trim(),
@@ -2578,7 +2619,7 @@ function normalizeReplenishmentOrder(order) {
   const warehouse = findWarehouse(warehouseLookup);
   return {
     orderNo: String(order.orderNo || "").trim(),
-    materialCode: String(order.materialCode || "").trim(),
+    materialCode: normalizeMaterialCodeDisplay(order.materialCode),
     materialName: String(order.materialName || "").trim(),
     qty: parseNumber(order.qty),
     warehouseId: warehouse.id,
@@ -2930,6 +2971,10 @@ function normalizeSearchCode(value) {
   return String(value || "").trim().replace(/\s+/g, "").toLowerCase();
 }
 
+function normalizeMaterialCodeDisplay(value) {
+  return String(value || "").trim().replace(/\s+/g, "").toUpperCase();
+}
+
 function getInventorySkuKey(row) {
   return row.materialGroupCode || row.canonicalMaterialCode || row.sellableMaterialCode || row.sourceMaterialCode || row.materialCode;
 }
@@ -2946,7 +2991,7 @@ function getMaterialLookupCodes(row) {
         row.sourceMaterialCode,
         ...(Array.isArray(row.materialAliases) ? row.materialAliases : []),
       ]
-        .map((value) => String(value || "").trim())
+        .map((value) => normalizeMaterialCodeDisplay(value))
         .filter(Boolean),
     ),
   );
@@ -2959,21 +3004,28 @@ function materialMatchesKeyword(row, keyword) {
 
 function createSellableCatalogLookupRow(item) {
   const warehouse = warehouses[0] || { id: "frankfurt", name: "法兰克福仓" };
+  const productMeta = getProductMetaForSellableItem(item) || {};
   return normalizeRow({
     warehouseId: warehouse.id,
     warehouseName: warehouse.name,
     project: "R1916",
     materialCode: item.materialCode,
-    materialName: item.materialName,
+    materialName: item.materialName || productMeta.materialName,
     category: "",
     productLine: item.productLine,
     location: "",
-    unit: "个",
+    unit: productMeta.unit || "个",
     onHandQty: 0,
     reservedQty: 0,
     frozenQty: 0,
     supplierOwnedQty: 0,
     inventoryAmount: 0,
+    unitCost: productMeta.unitCost || 0,
+    productId: productMeta.productId || "",
+    productTemplateId: productMeta.productTemplateId || "",
+    imageUrl: productMeta.imageUrl || "",
+    priceSource: productMeta.priceSource || "",
+    priceStartPlace: productMeta.priceStartPlace || "",
     sellableSpare: true,
     sellableMaterialCode: item.materialCode,
     canonicalMaterialCode: item.materialCode,
@@ -3022,7 +3074,7 @@ function renderMaterialLookup() {
   const exactRows = matches.filter((row) => getMaterialLookupCodes(row).some((code) => normalizeSearchCode(code) === keyword));
   const lookupRows = exactRows.length ? exactRows : matches;
   const codes = Array.from(new Set(lookupRows.flatMap(getMaterialLookupCodes))).sort((a, b) => a.localeCompare(b, "zh-CN"));
-  const displayCode = state.keyword.trim() || codes[0] || "";
+  const displayCode = normalizeMaterialCodeDisplay(state.keyword.trim() || codes[0] || "");
   const names = Array.from(new Set(lookupRows.map((row) => row.materialName).filter(Boolean))).slice(0, 3);
   const coveredWarehouseCount = new Set(lookupRows.map((row) => row.warehouseId)).size;
   const totalOnHand = lookupRows.reduce((sum, row) => sum + row.onHandQty, 0);
@@ -3035,7 +3087,7 @@ function renderMaterialLookup() {
   elements.materialLookupCount.textContent = `现存 ${formatQty(totalOnHand)} / 可用 ${formatQty(totalAvailable)} / 金额 ${formatMoney(totalAmount)}`;
 
   elements.materialLookupGrid.innerHTML = [
-    buildMaterialImageCard(lookupRows, codes[0], names[0]),
+    buildMaterialImageCard(lookupRows, displayCode || codes[0], names[0]),
     ...getActiveWarehouses(lookupRows)
     .map((warehouse) => {
       const warehouseRows = lookupRows.filter((row) => row.warehouseId === warehouse.id);
@@ -3112,7 +3164,8 @@ function getMaterialTransitInfo(materialCodes, warehouseId) {
 
 function buildMaterialImageCard(lookupRows, materialCode, materialName) {
   const imageUrl = lookupRows.map((row) => row.imageUrl).find(Boolean);
-  const initials = String(materialName || materialCode || "SKU").slice(0, 2).toUpperCase();
+  const displayCode = normalizeMaterialCodeDisplay(materialCode);
+  const initials = String(materialName || displayCode || "SKU").slice(0, 2).toUpperCase();
   return `
     <article class="material-image-card">
       <div class="material-image-frame">
@@ -3122,7 +3175,7 @@ function buildMaterialImageCard(lookupRows, materialCode, materialName) {
             : `<span>${escapeHtml(initials)}</span>`
         }
       </div>
-      <strong>${escapeHtml(materialCode || "-")}</strong>
+      <strong>${escapeHtml(displayCode || "-")}</strong>
       <small>${escapeHtml(materialName || "暂无产品图片")}</small>
     </article>
   `;
