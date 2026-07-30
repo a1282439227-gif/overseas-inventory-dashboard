@@ -1687,11 +1687,15 @@ function load() {
     state = { ...state, ...(saved.state || {}) };
     if (!useSavedAfterSalesData) resetAfterSalesFilters();
     if (!views.includes(state.view)) state.view = "overview";
+    state.view = "overview";
     if (!SUPPORTED_TRANSLATION_LANGUAGES.has(state.language)) state.language = "zh-CN";
     if (!["all", "lowStock"].includes(state.overviewQuickFilter)) state.overviewQuickFilter = "all";
+    const activeWarehouseIds = new Set(getActiveWarehouses(rows).map((warehouse) => warehouse.id));
+    if (state.warehouse !== "all" && !activeWarehouseIds.has(state.warehouse)) state.warehouse = "all";
     if (!getRmaQuickFilters([]).some((filter) => filter.id === state.rmaQuickFilter)) state.rmaQuickFilter = "all";
   } catch {
     rows = baseRows;
+    state.view = "overview";
   }
 }
 
@@ -2921,7 +2925,7 @@ function render() {
   renderSalesControls();
   const visibleInventoryRows = getVisibleInventoryRows();
   const filteredRows = getFilteredRows();
-  const allWarehouseStats = aggregateRows(visibleInventoryRows, { warehouses, includeEmpty: true });
+  const allWarehouseStats = aggregateRows(visibleInventoryRows, { warehouses: getActiveWarehouses(visibleInventoryRows), includeEmpty: true });
   const overviewRows = getOverviewRows();
   renderSummary(overviewRows);
   renderMaterialLookup();
@@ -2961,7 +2965,7 @@ function renderView() {
 
 function getOverviewRows() {
   const sourceRows = getVisibleInventoryRows();
-  const selectedOverseasWarehouse = warehouses.some((warehouse) => warehouse.id === state.warehouse);
+  const selectedOverseasWarehouse = getActiveWarehouses(sourceRows).some((warehouse) => warehouse.id === state.warehouse);
   const warehouseRows = state.warehouse === "all" || !selectedOverseasWarehouse ? sourceRows : sourceRows.filter((row) => row.warehouseId === state.warehouse);
   const filteredRows = state.overviewQuickFilter === "lowStock" ? warehouseRows.filter((row) => row.onHandQty < 5) : warehouseRows;
   return [...filteredRows].sort(sortRows);
@@ -3239,7 +3243,7 @@ function uniqueValues(sourceRows, key) {
 }
 
 function renderSummary(filteredRows) {
-  const activeWarehouseTotal = warehouses.length;
+  const activeWarehouseTotal = getActiveWarehouses(getMaterialInventoryRows()).length;
   const warehouseCount = activeWarehouseTotal;
   const skuCount = new Set(filteredRows.map(getInventorySkuKey)).size;
   const totalOnHand = filteredRows.reduce((sum, row) => sum + row.onHandQty, 0);
