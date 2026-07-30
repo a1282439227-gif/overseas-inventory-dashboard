@@ -1,5 +1,5 @@
 window.inventoryData = {
-    "generatedAt":  "2026-07-30 17:47:01",
+    "generatedAt":  "2026-07-30 17:49:26",
     "source":  "Odoo stock.quant + sellable spare Excel list",
     "database":  "odoo_se",
     "inventorySource":  "Odoo",
