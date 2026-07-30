@@ -1612,18 +1612,43 @@ function getSavedInventoryGeneratedAt(saved) {
   return sourceGeneratedAt ? String(sourceGeneratedAt.inventory || "") : "";
 }
 
+function parseInventoryTimestamp(value) {
+  const text = String(value || "").trim();
+  if (!text) return 0;
+  const match = text.replace(/\//g, "-").match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:[ T](\d{1,2}):(\d{1,2})(?::(\d{1,2}))?)?/);
+  if (match) {
+    const [, year, month, day, hour = "0", minute = "0", second = "0"] = match;
+    return new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minute), Number(second)).getTime();
+  }
+  const parsed = Date.parse(text);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function isInventoryTimestampAtLeast(candidate, baseline) {
+  const candidateTime = parseInventoryTimestamp(candidate);
+  const baselineTime = parseInventoryTimestamp(baseline);
+  if (!baselineTime) return Boolean(candidateTime || candidate);
+  return Boolean(candidateTime && candidateTime >= baselineTime);
+}
+
 function shouldUseSavedInventoryRows(saved) {
   if (!saved?.dataOverrides?.inventory || !Array.isArray(saved.rows) || !saved.rows.length) return false;
   if (isSparseInventorySnapshot(saved.rows)) return false;
   if (!inventoryGeneratedAt) return true;
   const savedGeneratedAt = getSavedInventoryGeneratedAt(saved);
-  return Boolean(savedGeneratedAt && savedGeneratedAt >= inventoryGeneratedAt);
+  return isInventoryTimestampAtLeast(savedGeneratedAt, inventoryGeneratedAt);
 }
 
 function isSparseInventorySnapshot(candidateRows) {
   const count = Array.isArray(candidateRows) ? candidateRows.length : 0;
   if (baseRows.length < 20) return false;
-  return count < Math.max(5, Math.floor(baseRows.length * 0.4));
+  const minRows = Math.max(5, Math.floor(baseRows.length * 0.85));
+  if (count < minRows) return true;
+
+  const majorWarehouses = new Set(["frankfurt", "netherlands", "chicago", "sydney", "fuzhou"]);
+  const baseWarehouses = new Set(baseRows.map((row) => row.warehouseId).filter((id) => majorWarehouses.has(id)));
+  const candidateWarehouses = new Set(candidateRows.map((row) => row.warehouseId).filter((id) => majorWarehouses.has(id)));
+  return Array.from(baseWarehouses).some((warehouseId) => !candidateWarehouses.has(warehouseId));
 }
 
 function shouldUseSavedAfterSalesData(saved) {
