@@ -2774,8 +2774,7 @@ function inventoryAmount(row) {
 }
 
 function isInInventoryProjectScope(row) {
-  if (row.sellableSpare) return true;
-  return inventoryProjectScope.has(String(row.project || "").trim());
+  return inventoryProjectScope.has(String(row.project || "").trim().toUpperCase());
 }
 
 function isOdooOverseasStockStatusRow(row) {
