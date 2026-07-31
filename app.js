@@ -2778,7 +2778,13 @@ function isInInventoryProjectScope(row) {
   return inventoryProjectScope.has(String(row.project || "").trim());
 }
 
+function isOdooOverseasStockStatusRow(row) {
+  return String(row.stockSource || "").includes("overseas.warehouse.stock.status");
+}
+
 function isInInventoryLocationScope(row) {
+  if (isOdooOverseasStockStatusRow(row)) return true;
+
   const location = String(row.location || "").trim();
   if (!location) return false;
   const segments = location
@@ -2806,7 +2812,10 @@ function hasInventory(row) {
 }
 
 function isOverseasWarehouse(row) {
-  return warehouses.some((warehouse) => warehouse.id === row.warehouseId);
+  const warehouseId = String(row.warehouseId || "").trim();
+  if (!warehouseId) return false;
+  if (domesticWarehouses.some((warehouse) => warehouse.id === warehouseId)) return false;
+  return warehouses.some((warehouse) => warehouse.id === warehouseId) || isOdooOverseasStockStatusRow(row);
 }
 
 function getOverviewInventoryRows() {
