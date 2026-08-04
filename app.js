@@ -2127,7 +2127,7 @@ function parseInventoryDataScript(scriptText) {
 }
 
 async function restorePublishedInventoryOnStartup() {
-  if (inventoryRows.length || rows.length) return;
+  if (inventoryRows.length && getOverviewInventoryRows().length) return;
 
   try {
     const url = new URL("data-inventory.js", window.location.href);
