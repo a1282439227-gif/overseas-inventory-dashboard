@@ -2132,10 +2132,7 @@ async function restorePublishedInventoryOnStartup() {
   try {
     const url = new URL("data-inventory.js", window.location.href);
     url.searchParams.set("refresh", String(Date.now()));
-    const response = await fetch(url.toString(), { cache: "no-store" });
-    if (!response.ok) throw new Error(`Inventory data returned ${response.status}`);
-
-    const latestData = parseInventoryDataScript(await response.text());
+    const latestData = await loadPublishedInventoryScript(url);
     const nextRows = Array.isArray(latestData.rows) ? latestData.rows : [];
     if (nextRows.length < 5) throw new Error(`Inventory data is unexpectedly small (${nextRows.length} rows)`);
 
@@ -2149,6 +2146,26 @@ async function restorePublishedInventoryOnStartup() {
   } catch (error) {
     console.warn("Published inventory startup recovery was skipped:", error);
   }
+}
+
+function loadPublishedInventoryScript(url) {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = url.toString();
+    script.onload = () => {
+      script.remove();
+      resolve({
+        metadata: window.inventoryData || {},
+        rows: Array.isArray(window.inventoryRows) ? window.inventoryRows : [],
+      });
+    };
+    script.onerror = () => {
+      script.remove();
+      reject(new Error("Inventory data script could not be loaded"));
+    };
+    document.head.append(script);
+  });
 }
 
 async function fetchInventoryDataFromLocalService() {
