@@ -2958,7 +2958,8 @@ function render() {
   renderSalesControls();
   const visibleInventoryRows = getVisibleInventoryRows();
   const filteredRows = getFilteredRows();
-  const allWarehouseStats = aggregateRows(visibleInventoryRows, { warehouses: getActiveWarehouses(visibleInventoryRows), includeEmpty: true });
+  // Keep the four overseas warehouse cards stable even when Odoo reports no rows for one of them.
+  const allWarehouseStats = aggregateRows(visibleInventoryRows, { warehouses, includeEmpty: true });
   const overviewRows = getOverviewRows();
   renderSummary(overviewRows);
   renderMaterialLookup();
@@ -3276,8 +3277,8 @@ function uniqueValues(sourceRows, key) {
 }
 
 function renderSummary(filteredRows) {
-  const activeWarehouseTotal = getActiveWarehouses(getMaterialInventoryRows()).length;
-  const warehouseCount = activeWarehouseTotal;
+  const activeWarehouseTotal = warehouses.length;
+  const warehouseCount = getActiveWarehouses(getMaterialInventoryRows()).length;
   const skuCount = new Set(filteredRows.map(getInventorySkuKey)).size;
   const totalOnHand = filteredRows.reduce((sum, row) => sum + row.onHandQty, 0);
   const totalAvailable = filteredRows.reduce((sum, row) => sum + availableQty(row), 0);
@@ -3285,7 +3286,7 @@ function renderSummary(filteredRows) {
   const lowStockRows = filteredRows.filter((row) => row.onHandQty < 5).length;
 
   const cards = [
-    { label: "覆盖海外仓", value: `${warehouseCount} / ${activeWarehouseTotal}`, note: "固定展示 4 个海外仓" },
+    { label: "覆盖海外仓", value: `${warehouseCount} / ${activeWarehouseTotal}`, note: "有库存数据的海外仓 / 固定展示 4 个海外仓" },
     { label: "物料 SKU", value: `${skuCount}`, note: getProjects().join(" / ") },
     { label: "现存总量", value: formatQty(totalOnHand), note: "包含预留数量" },
     { label: "可用库存", value: formatQty(totalAvailable), note: "现存减预留减冻结" },

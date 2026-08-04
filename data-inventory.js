@@ -1,11 +1,11 @@
 window.inventoryData = {
-    "generatedAt":  "2026-08-04 10:00:40",
+    "generatedAt":  "2026-08-04 11:06:48",
     "source":  "Odoo overseas warehouse stock status + sellable spare Excel list",
     "database":  "odoo_se",
     "inventorySource":  "Odoo",
     "sellableSpareSource":  "畜牧可售备件清单.xlsx",
     "sellableSpareGeneratedAt":  "2026-07-23 18:49:12",
-    "odooProductMetaAt":  "2026-08-04 10:00:39",
+    "odooProductMetaAt":  "2026-08-04 11:06:47",
     "odooProductMetaCount":  212,
     "productMetaRows":  [
                             {
@@ -2337,7 +2337,7 @@ window.inventoryData = {
                                 "materialName":  "[360000100J0260B] Gyroscope Sensor",
                                 "project":  "R1916",
                                 "category":  "All",
-                                "productLine":  "",
+                                "productLine":  "畜牧-配件-FJ01",
                                 "unit":  "个",
                                 "unitCost":  146,
                                 "productId":  "13298",
