@@ -2127,9 +2127,13 @@ function parseInventoryDataScript(scriptText) {
 }
 
 async function restorePublishedInventoryOnStartup() {
-  if (inventoryRows.length && getOverviewInventoryRows().length) return;
+  if (inventoryRows.length && getOverviewInventoryRows().length) {
+    document.documentElement.dataset.inventoryRecovery = "not-needed";
+    return;
+  }
 
   try {
+    document.documentElement.dataset.inventoryRecovery = "loading";
     const url = new URL("data-inventory.js", window.location.href);
     url.searchParams.set("refresh", String(Date.now()));
     const latestData = await loadPublishedInventoryScript(url);
@@ -2142,8 +2146,10 @@ async function restorePublishedInventoryOnStartup() {
     inventoryProductMetaByCode = buildInventoryProductMetaMap(window.inventoryData);
     rows = nextRows.map(normalizeRow);
     dataOverrides.inventory = false;
+    document.documentElement.dataset.inventoryRecovery = `loaded-${rows.length}`;
     render();
   } catch (error) {
+    document.documentElement.dataset.inventoryRecovery = "failed";
     console.warn("Published inventory startup recovery was skipped:", error);
   }
 }
