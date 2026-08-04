@@ -2126,6 +2126,31 @@ function parseInventoryDataScript(scriptText) {
   };
 }
 
+async function restorePublishedInventoryOnStartup() {
+  if (inventoryRows.length || rows.length) return;
+
+  try {
+    const url = new URL("data-inventory.js", window.location.href);
+    url.searchParams.set("refresh", String(Date.now()));
+    const response = await fetch(url.toString(), { cache: "no-store" });
+    if (!response.ok) throw new Error(`Inventory data returned ${response.status}`);
+
+    const latestData = parseInventoryDataScript(await response.text());
+    const nextRows = Array.isArray(latestData.rows) ? latestData.rows : [];
+    if (nextRows.length < 5) throw new Error(`Inventory data is unexpectedly small (${nextRows.length} rows)`);
+
+    inventoryGeneratedAt = getInventoryGeneratedAt(latestData);
+    window.inventoryData = latestData.metadata || {};
+    window.inventoryRows = nextRows;
+    inventoryProductMetaByCode = buildInventoryProductMetaMap(window.inventoryData);
+    rows = nextRows.map(normalizeRow);
+    dataOverrides.inventory = false;
+    render();
+  } catch (error) {
+    console.warn("Published inventory startup recovery was skipped:", error);
+  }
+}
+
 async function fetchInventoryDataFromLocalService() {
   const url = new URL(INVENTORY_DATA_LOCAL_URL);
   url.searchParams.set("refresh", String(Date.now()));
@@ -3278,7 +3303,7 @@ function uniqueValues(sourceRows, key) {
 
 function renderSummary(filteredRows) {
   const activeWarehouseTotal = warehouses.length;
-  const warehouseCount = getActiveWarehouses(getMaterialInventoryRows()).length;
+  const warehouseCount = new Set(getOverviewInventoryRows().map((row) => row.warehouseId)).size;
   const skuCount = new Set(filteredRows.map(getInventorySkuKey)).size;
   const totalOnHand = filteredRows.reduce((sum, row) => sum + row.onHandQty, 0);
   const totalAvailable = filteredRows.reduce((sum, row) => sum + availableQty(row), 0);
@@ -4846,4 +4871,5 @@ load();
 setupResizableColumns(elements.rmaOrderTable, `${STORAGE_KEY}-rma-order-columns`, { minWidth: 16 });
 setupResizableColumns(elements.rmaDetailTable, `${STORAGE_KEY}-rma-detail-columns`);
 render();
+restorePublishedInventoryOnStartup();
 refreshAfterSalesOnStartup();
