@@ -26,6 +26,7 @@
 body {
   margin: 0;
   min-width: 320px;
+  overflow-x: hidden;
   background: var(--bg);
   color: var(--text);
   font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", Arial, sans-serif;
@@ -1680,5 +1681,356 @@ th {
     left: 54% !important;
     top: var(--mobile-y) !important;
     width: min(260px, calc(100vw - 96px));
+  }
+}
+
+/* Responsive comfort pass */
+html {
+  scrollbar-gutter: stable;
+}
+
+.app-shell {
+  width: min(1480px, 100%);
+}
+
+.topbar,
+.view-panel {
+  gap: 18px;
+}
+
+.title-block {
+  min-height: 220px;
+}
+
+.summary-grid {
+  grid-template-columns: repeat(auto-fit, minmax(178px, 1fr));
+}
+
+.summary-card strong,
+.sales-detail-tile strong,
+.warehouse-name,
+.material-image-card strong,
+.material-image-card small,
+.page-heading h2,
+.page-heading span,
+.section-title h2,
+.section-title span {
+  overflow-wrap: anywhere;
+}
+
+.summary-card strong {
+  white-space: normal;
+}
+
+.view-tabs {
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+.view-tab {
+  flex: 0 0 auto;
+}
+
+.table-wrap {
+  border-top: 1px solid rgba(217, 224, 232, 0.72);
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+@media (min-width: 1241px) {
+  .title-actions {
+    max-width: 52%;
+  }
+}
+
+@media (max-width: 1180px) {
+  .control-panel,
+  .order-filter-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .button-row.controls,
+  .order-filter-panel .button-row {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+
+  .material-lookup-grid {
+    grid-template-columns: minmax(180px, 0.75fr) repeat(2, minmax(0, 1fr));
+  }
+
+  .warehouse-list,
+  .replenishment-warehouse-grid,
+  .sales-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .app-shell {
+    padding: 16px;
+  }
+
+  .title-block,
+  .page-heading,
+  .control-panel,
+  .order-filter-panel,
+  .material-lookup-section,
+  .warehouse-section,
+  .network-section,
+  .insight-section,
+  .detail-section,
+  .import-section,
+  .replenishment-section,
+  .rma-section,
+  .replenishment-card,
+  .sales-panel {
+    box-shadow: 0 10px 24px rgba(23, 32, 42, 0.06);
+  }
+
+  .dashboard-grid,
+  .overview-support-grid,
+  .material-lookup-grid,
+  .import-grid,
+  .sales-chart-grid,
+  .sales-spare-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  body {
+    background: #eef2f5;
+  }
+
+  .app-shell {
+    padding: 10px;
+  }
+
+  .topbar,
+  .summary-grid,
+  .view-tabs,
+  .view-panel {
+    margin-bottom: 12px;
+  }
+
+  .title-block {
+    min-height: 0;
+    padding: 16px;
+  }
+
+  .brand-heading {
+    min-height: 104px;
+  }
+
+  .title-actions {
+    width: 100%;
+    gap: 8px;
+  }
+
+  .language-picker {
+    flex: 1 1 168px;
+    justify-content: space-between;
+    min-width: 0;
+    border-radius: 8px;
+  }
+
+  .language-picker select {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .title-refresh-button {
+    flex: 1 1 118px;
+    border-radius: 8px;
+  }
+
+  h1 {
+    font-size: 25px;
+  }
+
+  h2 {
+    font-size: 16px;
+  }
+
+  .source-note,
+  .field,
+  th,
+  td {
+    font-size: 12px;
+  }
+
+  .summary-card {
+    min-height: 92px;
+    padding: 12px;
+  }
+
+  .summary-card strong {
+    margin-top: 8px;
+    font-size: 22px;
+  }
+
+  .summary-card small {
+    margin-top: 6px;
+  }
+
+  .view-tabs {
+    gap: 7px;
+    margin-left: -10px;
+    margin-right: -10px;
+    padding: 0 10px 6px;
+  }
+
+  .view-tab {
+    min-width: auto;
+    min-height: 38px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+
+  .page-heading,
+  .control-panel,
+  .order-filter-panel,
+  .section-title,
+  .material-lookup-grid,
+  .warehouse-list,
+  .import-grid {
+    padding: 12px;
+  }
+
+  .page-heading {
+    gap: 8px;
+  }
+
+  .page-heading-actions,
+  .button-row,
+  .dialog-actions {
+    gap: 8px;
+  }
+
+  .page-heading-actions button,
+  .button-row.controls button,
+  .dialog-actions button {
+    flex: 1 1 120px;
+  }
+
+  .control-panel,
+  .order-filter-panel,
+  .material-lookup-grid,
+  .warehouse-list,
+  .replenishment-warehouse-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .material-qty-grid,
+  .sales-summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .material-image-card {
+    min-height: 0;
+  }
+
+  .material-image-frame {
+    max-height: 220px;
+  }
+
+  .warehouse-card,
+  .material-warehouse-card,
+  .replenishment-card,
+  .sales-panel {
+    padding: 12px;
+  }
+
+  .table-wrap {
+    max-height: min(68vh, 520px);
+    margin-left: -1px;
+    margin-right: -1px;
+  }
+
+  table {
+    min-width: 760px;
+  }
+
+  .overview-detail-section table,
+  .replenishment-section table {
+    min-width: 880px;
+  }
+
+  .rma-section table {
+    min-width: 760px;
+  }
+
+  th,
+  td {
+    padding: 10px;
+  }
+
+  .bar-row {
+    grid-template-columns: minmax(84px, 1fr) minmax(96px, 1.35fr) minmax(36px, auto);
+    gap: 8px;
+  }
+
+  .modal-backdrop {
+    align-items: end;
+    padding: 10px;
+  }
+
+  .refresh-dialog {
+    width: 100%;
+    max-height: calc(100dvh - 20px);
+    overflow: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .material-qty-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-heading-actions,
+  .button-row,
+  .dialog-actions,
+  .file-import-box {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .title-actions {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .language-picker,
+  .title-refresh-button {
+    flex: 1 1 136px;
+    width: auto;
+    min-height: 40px;
+  }
+
+  .file-picker,
+  .page-heading-actions button,
+  .button-row button,
+  .dialog-actions button {
+    width: 100%;
+  }
+
+  .brand-logo-image {
+    width: min(220px, 82vw);
+  }
+
+  h1 {
+    font-size: 23px;
+  }
+}
+
+@media (max-width: 360px) {
+  .summary-grid,
+  .sales-summary-grid {
+    grid-template-columns: 1fr;
   }
 }
