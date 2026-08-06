@@ -1,11 +1,11 @@
 window.inventoryData = {
-    "generatedAt":  "2026-08-06 09:07:00",
+    "generatedAt":  "2026-08-06 10:08:28",
     "source":  "Odoo overseas warehouse stock status + sellable spare Excel list",
     "database":  "odoo_se",
     "inventorySource":  "Odoo",
     "sellableSpareSource":  "畜牧可售备件清单.xlsx",
     "sellableSpareGeneratedAt":  "2026-07-23 18:49:12",
-    "odooProductMetaAt":  "2026-08-06 09:07:00",
+    "odooProductMetaAt":  "2026-08-06 10:08:27",
     "odooProductMetaCount":  212,
     "productMetaRows":  [
                             {
@@ -3094,11 +3094,11 @@ window.inventoryData = {
                                  "S080040001700",
                                  "S080040002000"
                              ],
-    "fuzhouNcInventoryAt":  "2026-08-06 09:07:04",
+    "fuzhouNcInventoryAt":  "2026-08-06 10:08:32",
     "fuzhouNcInventoryRows":  140,
     "rowCount":  191,
-    "totalOnHandQty":  86825,
-    "totalInventoryAmount":  448422.58
+    "totalOnHandQty":  86790,
+    "totalInventoryAmount":  433232.58
 };
 
 window.inventoryRows = [
@@ -6281,12 +6281,12 @@ window.inventoryRows = [
         "productLine":  "推料机器人配件",
         "location":  "NC 原材料仓",
         "unit":  "个",
-        "onHandQty":  435,
+        "onHandQty":  404,
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
         "unitCost":  490,
-        "inventoryAmount":  213150,
+        "inventoryAmount":  197960,
         "spec":  "",
         "model":  "",
         "productId":  "",
@@ -8281,7 +8281,7 @@ window.inventoryRows = [
         "productLine":  "推料机器人配件",
         "location":  "NC 原材料仓",
         "unit":  "个",
-        "onHandQty":  1746,
+        "onHandQty":  1742,
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
