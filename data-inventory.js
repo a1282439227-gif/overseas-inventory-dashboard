@@ -1,11 +1,11 @@
 window.inventoryData = {
-    "generatedAt":  "2026-08-10 09:35:08",
+    "generatedAt":  "2026-08-10 09:59:25",
     "source":  "Odoo overseas warehouse stock status + sellable spare Excel list",
     "database":  "odoo_se",
     "inventorySource":  "Odoo",
     "sellableSpareSource":  "畜牧可售备件清单.xlsx",
     "sellableSpareGeneratedAt":  "2026-07-23 18:49:12",
-    "odooProductMetaAt":  "2026-08-10 09:35:07",
+    "odooProductMetaAt":  "2026-08-10 09:59:24",
     "odooProductMetaCount":  212,
     "productMetaRows":  [
                             {
@@ -2339,7 +2339,7 @@ window.inventoryData = {
                                 "category":  "All",
                                 "productLine":  "畜牧-配件-FJ01",
                                 "unit":  "个",
-                                "unitCost":  137,
+                                "unitCost":  146,
                                 "productId":  "13298",
                                 "templateId":  "13311",
                                 "imageUrl":  "https://odoo-se.fjdac.com/web/image/773078",
@@ -3093,10 +3093,10 @@ window.inventoryData = {
                                  "S080040001700",
                                  "S080040002000"
                              ],
-    "fuzhouNcInventoryAt":  "2026-08-10 09:35:11",
+    "fuzhouNcInventoryAt":  "2026-08-10 09:59:28",
     "fuzhouNcInventoryRows":  140,
     "rowCount":  192,
-    "totalOnHandQty":  83295,
+    "totalOnHandQty":  83285,
     "totalInventoryAmount":  432507.58
 };
 
@@ -8646,7 +8646,7 @@ window.inventoryRows = [
         "productLine":  "推料机器人配件",
         "location":  "NC 库存",
         "unit":  "个",
-        "onHandQty":  48,
+        "onHandQty":  38,
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
