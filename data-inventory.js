@@ -1,11 +1,11 @@
 window.inventoryData = {
-    "generatedAt":  "2026-08-10 09:59:25",
+    "generatedAt":  "2026-08-10 10:02:13",
     "source":  "Odoo overseas warehouse stock status + sellable spare Excel list",
     "database":  "odoo_se",
     "inventorySource":  "Odoo",
     "sellableSpareSource":  "畜牧可售备件清单.xlsx",
     "sellableSpareGeneratedAt":  "2026-07-23 18:49:12",
-    "odooProductMetaAt":  "2026-08-10 09:59:24",
+    "odooProductMetaAt":  "2026-08-10 10:02:13",
     "odooProductMetaCount":  212,
     "productMetaRows":  [
                             {
@@ -3093,7 +3093,7 @@ window.inventoryData = {
                                  "S080040001700",
                                  "S080040002000"
                              ],
-    "fuzhouNcInventoryAt":  "2026-08-10 09:59:28",
+    "fuzhouNcInventoryAt":  "2026-08-10 10:02:20",
     "fuzhouNcInventoryRows":  140,
     "rowCount":  192,
     "totalOnHandQty":  83285,
