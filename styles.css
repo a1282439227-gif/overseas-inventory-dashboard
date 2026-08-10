@@ -1160,6 +1160,20 @@ th {
   white-space: nowrap;
 }
 
+.material-candidate-row {
+  cursor: pointer;
+}
+
+.material-candidate-row:hover td,
+.material-candidate-row:focus td {
+  background: #f3faf6;
+}
+
+.material-candidate-row:focus {
+  outline: 2px solid rgba(47, 125, 98, 0.32);
+  outline-offset: -2px;
+}
+
 .spec-cell {
   max-width: 300px;
   color: var(--muted);

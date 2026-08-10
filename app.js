@@ -1187,6 +1187,7 @@ let state = {
   view: "overview",
   language: "zh-CN",
   keyword: "",
+  selectedMaterialCode: "",
   warehouse: "all",
   project: "all",
   status: "all",
@@ -2905,27 +2906,13 @@ function getProjects() {
   return Array.from(new Set(getMaterialInventoryRows().map((row) => row.project).filter(Boolean))).sort((a, b) => a.localeCompare(b, "zh-CN"));
 }
 
-function getFilteredRows() {
-  const keyword = state.keyword.trim().toLowerCase();
+function getFilteredRows(materialSearch = null) {
+  const keyword = normalizeSearchCode(state.keyword);
+  const sourceRows = materialSearch?.selectedCandidate ? materialSearch.lookupRows : getMaterialInventoryRows();
 
-  return getMaterialInventoryRows()
+  return sourceRows
     .filter((row) => {
-      const warehouse = getWarehouseName(row.warehouseId);
-      const text = [
-        warehouse,
-        row.project,
-        row.materialCode,
-        row.materialName,
-        row.category,
-        row.productLine,
-        row.location,
-        row.spec,
-        row.model,
-        ...getMaterialLookupCodes(row),
-      ]
-        .join(" ")
-        .toLowerCase();
-      const matchesKeyword = !keyword || text.includes(keyword);
+      const matchesKeyword = materialSearch?.selectedCandidate ? true : !keyword || materialMatchesKeyword(row, keyword);
       const matchesWarehouse = state.warehouse === "all" || row.warehouseId === state.warehouse;
       const matchesProject = state.project === "all" || row.project === state.project;
       const matchesStatus = state.status === "all" || rowStatus(row) === state.status;
@@ -3000,18 +2987,19 @@ function render() {
   renderAfterSalesRefreshControls();
   renderSalesRefreshControls();
   renderSalesControls();
+  const materialSearch = getMaterialSearchState();
   const visibleInventoryRows = getVisibleInventoryRows();
-  const filteredRows = getFilteredRows();
+  const filteredRows = getFilteredRows(materialSearch);
   // Keep the four overseas warehouse cards stable even when Odoo reports no rows for one of them.
   const allWarehouseStats = aggregateRows(visibleInventoryRows, { warehouses, includeEmpty: true });
   const overviewRows = getOverviewRows();
   renderSummary(overviewRows);
-  renderMaterialLookup();
+  renderMaterialLookup(materialSearch);
   renderWarehouses(allWarehouseStats);
   renderOverviewDetail(overviewRows);
   renderNetwork(allWarehouseStats);
   renderInsights();
-  renderTable(filteredRows);
+  renderTable(filteredRows, materialSearch);
   renderReplenishment();
   renderRma();
   renderSalesMachine();
@@ -3061,6 +3049,19 @@ function getInventorySkuKey(row) {
   return row.materialGroupCode || row.canonicalMaterialCode || row.sellableMaterialCode || row.sourceMaterialCode || row.materialCode;
 }
 
+function expandMaterialCodeAliases(value) {
+  const code = normalizeMaterialCodeDisplay(value);
+  if (!code) return [];
+  const aliases = [code];
+  if (/^[A-Z0-9*-]+[A-Z]$/.test(code) && /\d/.test(code.slice(0, -1))) {
+    aliases.push(code.slice(0, -1));
+  }
+  if (/J[A-Z]$/.test(code)) {
+    aliases.push(code.replace(/J[A-Z]$/, ""));
+  }
+  return Array.from(new Set(aliases.filter(Boolean)));
+}
+
 function getMaterialLookupCodes(row) {
   return Array.from(
     new Set(
@@ -3073,7 +3074,7 @@ function getMaterialLookupCodes(row) {
         row.sourceMaterialCode,
         ...(Array.isArray(row.materialAliases) ? row.materialAliases : []),
       ]
-        .map((value) => normalizeMaterialCodeDisplay(value))
+        .flatMap((value) => expandMaterialCodeAliases(value))
         .filter(Boolean),
     ),
   );
@@ -3081,7 +3082,201 @@ function getMaterialLookupCodes(row) {
 
 function materialMatchesKeyword(row, keyword) {
   if (!keyword) return true;
-  return getMaterialLookupCodes(row).some((code) => normalizeSearchCode(code).includes(keyword));
+  return normalizeSearchCode(
+    [
+      ...getMaterialLookupCodes(row),
+      getWarehouseName(row.warehouseId),
+      row.project,
+      row.materialName,
+      row.englishName,
+      row.category,
+      row.productLine,
+      row.location,
+      row.spec,
+      row.model,
+    ].join(" "),
+  ).includes(keyword);
+}
+
+function stripMaterialCodePrefix(value) {
+  return String(value || "").trim().replace(/^\[[^\]]+\]\s*/, "");
+}
+
+function getSellableItemDisplayCodes(item) {
+  return Array.from(
+    new Set(
+      [
+        item?.materialCode,
+        item?.sourceMaterialCode,
+        item?.matchGroupCode,
+        ...(Array.isArray(item?.matchMaterialCodes) ? item.matchMaterialCodes : []),
+      ]
+        .flatMap((value) => expandMaterialCodeAliases(value))
+        .filter(Boolean),
+    ),
+  );
+}
+
+function sellableItemMatchesKeyword(item, keyword) {
+  if (!keyword) return true;
+  return normalizeSearchCode(
+    [
+      ...getSellableItemDisplayCodes(item),
+      item?.materialName,
+      item?.englishName,
+      item?.productLine,
+      item?.remark,
+    ].join(" "),
+  ).includes(keyword);
+}
+
+function getSellableItemByCodes(codes) {
+  for (const code of codes) {
+    const item = sellableSpareByAlias.get(normalizeSearchCode(code)) || sellableSpareByCode.get(String(code || "").trim().toLowerCase());
+    if (item) return item;
+  }
+  return null;
+}
+
+function rememberMaterialAlias(candidate, value) {
+  expandMaterialCodeAliases(value).forEach((alias) => {
+    const key = normalizeSearchCode(alias);
+    if (!key) return;
+    candidate.aliasKeys.add(key);
+    candidate.aliases.add(alias);
+  });
+}
+
+function createMaterialCandidate(key) {
+  return {
+    key,
+    materialCode: "",
+    materialName: "",
+    englishName: "",
+    productLine: "",
+    category: "",
+    catalogItem: null,
+    rows: [],
+    aliases: new Set(),
+    aliasKeys: new Set(),
+  };
+}
+
+function getMaterialCandidateKeyFromItem(item) {
+  return normalizeMaterialCodeDisplay(item?.matchGroupCode || item?.sourceMaterialCode || item?.materialCode);
+}
+
+function getMaterialCandidateKeyFromRow(row) {
+  const item = getSellableItemByCodes(getMaterialLookupCodes(row));
+  if (item) return getMaterialCandidateKeyFromItem(item);
+  return normalizeMaterialCodeDisplay(getInventorySkuKey(row) || row.materialCode);
+}
+
+function getOrCreateMaterialCandidate(map, key) {
+  const candidateKey = key || `candidate-${map.size + 1}`;
+  if (!map.has(candidateKey)) map.set(candidateKey, createMaterialCandidate(candidateKey));
+  return map.get(candidateKey);
+}
+
+function applySellableItemToCandidate(candidate, item) {
+  if (!item) return;
+  candidate.catalogItem = candidate.catalogItem || item;
+  candidate.materialCode = normalizeMaterialCodeDisplay(item.materialCode) || candidate.materialCode;
+  candidate.materialName = String(item.materialName || "").trim() || candidate.materialName;
+  candidate.englishName = String(item.englishName || "").trim() || candidate.englishName;
+  candidate.productLine = String(item.productLine || "").trim() || candidate.productLine;
+  getSellableItemDisplayCodes(item).forEach((code) => rememberMaterialAlias(candidate, code));
+}
+
+function applyInventoryRowToCandidate(candidate, row) {
+  const linkedItem = getSellableItemByCodes(getMaterialLookupCodes(row));
+  if (linkedItem) applySellableItemToCandidate(candidate, linkedItem);
+  candidate.rows.push(row);
+  candidate.materialCode = candidate.materialCode || normalizeMaterialCodeDisplay(row.sellableMaterialCode || row.canonicalMaterialCode || row.materialCode);
+  candidate.materialName = candidate.materialName || stripMaterialCodePrefix(row.materialName);
+  candidate.englishName = candidate.englishName || row.englishName;
+  candidate.productLine = candidate.productLine || row.productLine;
+  candidate.category = candidate.category || row.category;
+  getMaterialLookupCodes(row).forEach((code) => rememberMaterialAlias(candidate, code));
+}
+
+function getMaterialLookupCandidates(keyword) {
+  const candidatesByKey = new Map();
+
+  sellableSpareItems.forEach((item) => {
+    if (!sellableItemMatchesKeyword(item, keyword)) return;
+    const candidate = getOrCreateMaterialCandidate(candidatesByKey, getMaterialCandidateKeyFromItem(item));
+    applySellableItemToCandidate(candidate, item);
+  });
+
+  getMaterialInventoryRows().forEach((row) => {
+    if (!materialMatchesKeyword(row, keyword)) return;
+    const candidate = getOrCreateMaterialCandidate(candidatesByKey, getMaterialCandidateKeyFromRow(row));
+    applyInventoryRowToCandidate(candidate, row);
+  });
+
+  return Array.from(candidatesByKey.values()).sort((a, b) => {
+    const stockDiff = getRowsForMaterialCandidate(b).reduce((sum, row) => sum + row.onHandQty, 0) - getRowsForMaterialCandidate(a).reduce((sum, row) => sum + row.onHandQty, 0);
+    if (stockDiff) return stockDiff;
+    return (a.materialName || a.materialCode).localeCompare(b.materialName || b.materialCode, "zh-CN");
+  });
+}
+
+function materialCandidateMatchesExact(candidate, keyword) {
+  if (!keyword) return false;
+  if (candidate.aliasKeys.has(keyword)) return true;
+  return [
+    candidate.materialName,
+    candidate.englishName,
+    candidate.materialCode,
+  ].some((value) => normalizeSearchCode(value) === keyword);
+}
+
+function getRowsForMaterialCandidate(candidate) {
+  if (!candidate) return [];
+  const aliasKeys = candidate.aliasKeys.size ? candidate.aliasKeys : new Set([normalizeSearchCode(candidate.materialCode)]);
+  const inventoryMatches = getMaterialInventoryRows().filter((row) => getMaterialLookupCodes(row).some((code) => aliasKeys.has(normalizeSearchCode(code))));
+  if (inventoryMatches.length) return inventoryMatches;
+  if (candidate.catalogItem) return [createSellableCatalogLookupRow(candidate.catalogItem)];
+  return candidate.rows;
+}
+
+function getMaterialCandidateCodes(candidate, lookupRows = []) {
+  return Array.from(
+    new Set(
+      [
+        candidate?.materialCode,
+        ...(candidate ? Array.from(candidate.aliases) : []),
+        ...lookupRows.flatMap(getMaterialLookupCodes),
+      ]
+        .flatMap((value) => expandMaterialCodeAliases(value))
+        .filter(Boolean),
+    ),
+  );
+}
+
+function getMaterialSearchState() {
+  const keyword = normalizeSearchCode(state.keyword);
+  const selectedCode = normalizeSearchCode(state.selectedMaterialCode);
+  if (!keyword && !selectedCode) {
+    return { keyword, candidates: [], selectedCandidate: null, lookupRows: [], candidateMode: false };
+  }
+
+  const candidates = getMaterialLookupCandidates(selectedCode || keyword);
+  const exactCandidates = candidates.filter((candidate) => materialCandidateMatchesExact(candidate, keyword));
+  const selectedCandidate =
+    candidates.find((candidate) => selectedCode && candidate.aliasKeys.has(selectedCode)) ||
+    (exactCandidates.length === 1 ? exactCandidates[0] : null) ||
+    (candidates.length === 1 ? candidates[0] : null);
+  const lookupRows = selectedCandidate ? getRowsForMaterialCandidate(selectedCandidate) : [];
+
+  return {
+    keyword,
+    candidates,
+    selectedCandidate,
+    lookupRows,
+    candidateMode: Boolean(keyword && !selectedCandidate && candidates.length > 1),
+  };
 }
 
 function createSellableCatalogLookupRow(item) {
@@ -3120,52 +3315,39 @@ function createSellableCatalogLookupRow(item) {
 }
 
 function getMaterialLookupMatches() {
-  const keyword = normalizeSearchCode(state.keyword);
-  if (!keyword) return [];
-
-  const inventoryMatches = getMaterialInventoryRows().filter((row) => materialMatchesKeyword(row, keyword));
-  if (inventoryMatches.length) return inventoryMatches;
-
-  return sellableSpareItems
-    .filter((item) => {
-      const text = [
-        item.materialCode,
-        item.sourceMaterialCode,
-        item.matchGroupCode,
-        ...(Array.isArray(item.matchMaterialCodes) ? item.matchMaterialCodes : []),
-        item.materialName,
-        item.englishName,
-        item.productLine,
-      ]
-        .join(" ")
-        .toLowerCase();
-      return text.includes(keyword);
-    })
-    .map(createSellableCatalogLookupRow);
+  return getMaterialSearchState().lookupRows;
 }
 
-function renderMaterialLookup() {
-  const matches = getMaterialLookupMatches();
-  if (!matches.length) {
+function renderMaterialLookup(materialSearch = null) {
+  const search = materialSearch || getMaterialSearchState();
+  const candidate = search.selectedCandidate;
+  const lookupRows = search.lookupRows;
+  if (!candidate || !lookupRows.length) {
     elements.materialLookupSection.hidden = true;
     elements.materialLookupGrid.innerHTML = "";
     return;
   }
 
-  const keyword = normalizeSearchCode(state.keyword);
-  const exactRows = matches.filter((row) => getMaterialLookupCodes(row).some((code) => normalizeSearchCode(code) === keyword));
-  const lookupRows = exactRows.length ? exactRows : matches;
-  const codes = Array.from(new Set(lookupRows.flatMap(getMaterialLookupCodes))).sort((a, b) => a.localeCompare(b, "zh-CN"));
-  const displayCode = normalizeMaterialCodeDisplay(state.keyword.trim() || codes[0] || "");
-  const names = Array.from(new Set(lookupRows.map((row) => row.materialName).filter(Boolean))).slice(0, 3);
+  const codes = getMaterialCandidateCodes(candidate, lookupRows).sort((a, b) => a.localeCompare(b, "zh-CN"));
+  const displayCode = normalizeMaterialCodeDisplay(candidate.materialCode || codes[0] || state.keyword.trim());
+  const names = Array.from(
+    new Set(
+      [
+        candidate.materialName,
+        ...lookupRows.map((row) => stripMaterialCodePrefix(row.materialName)),
+      ]
+        .map((value) => String(value || "").trim())
+        .filter(Boolean),
+    ),
+  ).slice(0, 3);
   const coveredWarehouseCount = new Set(lookupRows.map((row) => row.warehouseId)).size;
   const totalOnHand = lookupRows.reduce((sum, row) => sum + row.onHandQty, 0);
   const totalAvailable = lookupRows.reduce((sum, row) => sum + availableQty(row), 0);
   const totalAmount = lookupRows.reduce((sum, row) => sum + inventoryAmount(row), 0);
 
   elements.materialLookupSection.hidden = false;
-  elements.materialLookupTitle.textContent = exactRows.length ? `物料编码查询：${displayCode}` : `物料编码查询：${state.keyword.trim()}`;
-  elements.materialLookupMeta.textContent = `${names.join(" / ") || "匹配物料"}；匹配 ${lookupRows.length} 条明细，覆盖 ${coveredWarehouseCount} 个仓库。下方按全部仓库展示，未存放的仓库显示为 0。`;
+  elements.materialLookupTitle.textContent = `物料编码查询：${displayCode || "-"}`;
+  elements.materialLookupMeta.textContent = `${names.join(" / ") || "匹配物料"}；匹配 ${lookupRows.length} 条明细，覆盖 ${coveredWarehouseCount} 个仓库。`;
   elements.materialLookupCount.textContent = `现存 ${formatQty(totalOnHand)} / 可用 ${formatQty(totalAvailable)} / 金额 ${formatMoney(totalAmount)}`;
 
   elements.materialLookupGrid.innerHTML = [
@@ -3482,7 +3664,14 @@ function buildSharedStockItems() {
   return items.sort((a, b) => b.availableQty - a.availableQty);
 }
 
-function renderTable(filteredRows) {
+function renderTable(filteredRows, materialSearch = null) {
+  if (materialSearch?.candidateMode) {
+    elements.rowCount.textContent = `${materialSearch.candidates.length} 个候选`;
+    elements.emptyState.hidden = materialSearch.candidates.length > 0;
+    elements.stockTableBody.innerHTML = buildMaterialCandidateRowsHtml(materialSearch.candidates);
+    return;
+  }
+
   elements.rowCount.textContent = `${filteredRows.length} 条`;
   elements.emptyState.hidden = filteredRows.length > 0;
   elements.stockTableBody.innerHTML = buildMaterialRowsHtml(filteredRows);
@@ -3527,6 +3716,37 @@ function buildMaterialRowsHtml(sourceRows) {
           <td class="num">${formatQty(row.frozenQty)}</td>
           <td class="num">${formatQty(availableQty(row))}</td>
           <td><span class="status-tag tag-${status}">${statusLabel(status)}</span></td>
+        </tr>
+      `;
+    })
+    .join("");
+}
+
+function buildMaterialCandidateRowsHtml(candidates) {
+  return candidates
+    .map((candidate) => {
+      const lookupRows = getRowsForMaterialCandidate(candidate);
+      const totalOnHand = lookupRows.reduce((sum, row) => sum + row.onHandQty, 0);
+      const totalReserved = lookupRows.reduce((sum, row) => sum + row.reservedQty, 0);
+      const totalFrozen = lookupRows.reduce((sum, row) => sum + row.frozenQty, 0);
+      const totalAvailable = totalOnHand - totalReserved - totalFrozen;
+      const status = totalAvailable > 0 ? "normal" : "shortage";
+      const warehouseNames = Array.from(new Set(lookupRows.map((row) => getWarehouseName(row.warehouseId)).filter(Boolean))).join(" / ") || "-";
+      const code = normalizeMaterialCodeDisplay(candidate.materialCode || Array.from(candidate.aliases)[0] || "");
+      const name = candidate.materialName || stripMaterialCodePrefix(lookupRows[0]?.materialName) || "-";
+      const productLine = candidate.productLine || candidate.category || lookupRows[0]?.productLine || "-";
+      return `
+        <tr class="material-candidate-row" data-material-candidate-code="${escapeHtml(code)}" data-material-candidate-name="${escapeHtml(name)}" tabindex="0" aria-label="${escapeHtml(code)} ${escapeHtml(name)}">
+          <td><span class="project-pill">R1916</span></td>
+          <td>${escapeHtml(warehouseNames)}</td>
+          <td class="code-cell">${escapeHtml(code || "-")}</td>
+          <td>${escapeHtml(name)}</td>
+          <td>${escapeHtml(productLine)}</td>
+          <td class="num">${formatQty(totalOnHand)}</td>
+          <td class="num">${formatQty(totalReserved)}</td>
+          <td class="num">${formatQty(totalFrozen)}</td>
+          <td class="num">${formatQty(totalAvailable)}</td>
+          <td><span class="status-tag tag-${status}">${totalAvailable > 0 ? "有库存" : "待关注"}</span></td>
         </tr>
       `;
     })
@@ -4499,7 +4719,7 @@ function restoreRmaFromSource(statusElement) {
 }
 
 function resetFilters() {
-  state = { ...state, keyword: "", warehouse: "all", project: "all", status: "all", sort: "availableAsc", overviewQuickFilter: "all" };
+  state = { ...state, keyword: "", selectedMaterialCode: "", warehouse: "all", project: "all", status: "all", sort: "availableAsc", overviewQuickFilter: "all" };
 }
 
 function resetReplenishmentFilters() {
@@ -4527,6 +4747,20 @@ function escapeHtml(value) {
     .replace(/'/g, "&#039;");
 }
 
+function selectMaterialCandidateFromTarget(target) {
+  const element = target instanceof Element ? target : target?.parentElement;
+  const row = element?.closest?.("[data-material-candidate-code]");
+  if (!row) return false;
+  const code = normalizeMaterialCodeDisplay(row.dataset.materialCandidateCode || "");
+  const name = String(row.dataset.materialCandidateName || "").trim();
+  if (!code) return false;
+  state.selectedMaterialCode = code;
+  state.keyword = name || code;
+  save();
+  render();
+  return true;
+}
+
 elements.viewTabs.forEach((tab) => {
   tab.addEventListener("click", () => {
     state.view = tab.dataset.view;
@@ -4542,8 +4776,18 @@ elements.viewTabs.forEach((tab) => {
 
 elements.keywordInput.addEventListener("input", (event) => {
   state.keyword = event.target.value;
+  state.selectedMaterialCode = "";
   save();
   render();
+});
+
+elements.stockTableBody.addEventListener("click", (event) => {
+  selectMaterialCandidateFromTarget(event.target);
+});
+
+elements.stockTableBody.addEventListener("keydown", (event) => {
+  if (!["Enter", " "].includes(event.key)) return;
+  if (selectMaterialCandidateFromTarget(event.target)) event.preventDefault();
 });
 
 elements.warehouseSelect.addEventListener("change", (event) => {
