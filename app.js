@@ -2819,6 +2819,8 @@ function inventoryAmount(row) {
 }
 
 function isInInventoryProjectScope(row) {
+  if (row?.sellableSpare) return true;
+  if (getSellableItemByCodes(getMaterialLookupCodes(row))) return true;
   return inventoryProjectScope.has(String(row.project || "").trim().toUpperCase());
 }
 
