@@ -4277,8 +4277,8 @@ function renderRmaDetail(group) {
           <td>${buildTrackingLinks(row.trackingNo)}</td>
           <td>${escapeHtml(row.unitPrice || "-")}</td>
           <td>${escapeHtml(row.totalUsd || "-")}</td>
-          <td class="reason-cell">${escapeHtml(row.specialNote || "-")}</td>
-          <td class="reason-cell">${escapeHtml(row.reason || "-")}</td>
+          <td class="reason-cell" title="${escapeHtml(row.specialNote || "-")}"><span class="clip-text">${escapeHtml(row.specialNote || "-")}</span></td>
+          <td class="reason-cell" title="${escapeHtml(row.reason || "-")}"><span class="clip-text">${escapeHtml(row.reason || "-")}</span></td>
         </tr>
       `,
     )
@@ -5338,7 +5338,7 @@ elements.rmaRestoreButton.addEventListener("click", () => {
 rebuildSellableSpareCatalog();
 load();
 setupResizableColumns(elements.rmaOrderTable, `${STORAGE_KEY}-rma-order-columns`, { minWidth: 16 });
-setupResizableColumns(elements.rmaDetailTable, `${STORAGE_KEY}-rma-detail-columns`);
+setupResizableColumns(elements.rmaDetailTable, `${STORAGE_KEY}-rma-detail-columns-v2`, { minWidth: 16 });
 render();
 restorePublishedInventoryOnStartup();
 refreshAfterSalesOnStartup();

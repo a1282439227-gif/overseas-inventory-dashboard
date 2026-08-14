@@ -1085,13 +1085,45 @@ table {
   white-space: nowrap;
 }
 
-.rma-detail-section .reason-cell {
-  max-width: none;
+.rma-detail-section .track-link-list {
+  flex-wrap: nowrap;
+}
+
+#rmaDetailTable th,
+#rmaDetailTable td {
+  height: 50px;
+  overflow: hidden;
+  text-overflow: clip;
+  vertical-align: top;
+}
+
+#rmaDetailTable .status-tag,
+#rmaDetailTable .track-link {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: clip;
+}
+
+#rmaDetailTable .track-link-list {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+#rmaDetailTable .reason-cell {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: clip;
   white-space: nowrap;
 }
 
-.rma-detail-section .track-link-list {
-  flex-wrap: nowrap;
+#rmaDetailTable .clip-text {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: clip;
+  white-space: nowrap;
 }
 
 th,
