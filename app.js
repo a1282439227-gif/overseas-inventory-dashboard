@@ -4288,52 +4288,102 @@ function renderRmaDetail(group) {
 function setupResizableColumns(table, storageKey, options = {}) {
   if (!table) return;
   const minWidth = options.minWidth || 64;
+  const maxWidth = options.maxWidth || 1200;
+  const autoWidths = Array.isArray(options.autoWidths) ? options.autoWidths : [];
   const columns = Array.from(table.querySelectorAll("col"));
   const headers = Array.from(table.querySelectorAll("thead th"));
   if (!columns.length || columns.length !== headers.length) return;
 
+  const readColumnWidth = (column, fallback = minWidth) => {
+    const styledWidth = Number.parseFloat(column.style.width || "");
+    if (Number.isFinite(styledWidth) && styledWidth > 0) return styledWidth;
+    const measuredWidth = column.getBoundingClientRect().width;
+    return Number.isFinite(measuredWidth) && measuredWidth > 0 ? measuredWidth : fallback;
+  };
+  const clampColumnWidth = (width) => Math.min(maxWidth, Math.max(minWidth, Math.round(width)));
+  const defaultWidths = columns.map((column) => clampColumnWidth(readColumnWidth(column)));
+  const fitTableToColumns = () => {
+    if (!options.fitToColumns) return;
+    const totalWidth = columns.reduce((sum, column, index) => {
+      return sum + readColumnWidth(column, defaultWidths[index] || minWidth);
+    }, 0);
+    table.style.width = `${Math.round(totalWidth)}px`;
+  };
+  const saveWidths = () => {
+    const widths = columns.map((column, index) => clampColumnWidth(readColumnWidth(column, defaultWidths[index] || minWidth)));
+    localStorage.setItem(storageKey, JSON.stringify(widths));
+  };
+
   try {
     const savedWidths = JSON.parse(localStorage.getItem(storageKey) || "[]");
     savedWidths.forEach((width, index) => {
-      if (Number.isFinite(width) && columns[index]) columns[index].style.width = `${width}px`;
+      if (Number.isFinite(width) && columns[index]) columns[index].style.width = `${clampColumnWidth(width)}px`;
     });
   } catch {
     localStorage.removeItem(storageKey);
   }
+  fitTableToColumns();
 
   headers.forEach((header, index) => {
     header.classList.add("resizable-heading");
     const handle = document.createElement("span");
     handle.className = "column-resize-handle";
     handle.setAttribute("aria-hidden", "true");
+    handle.title = "拖动调整列宽，双击自动收窄";
 
-    handle.addEventListener("pointerdown", (event) => {
+    handle.addEventListener("dblclick", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const targetWidth = autoWidths[index] || defaultWidths[index] || minWidth;
+      columns[index].style.width = `${clampColumnWidth(targetWidth)}px`;
+      fitTableToColumns();
+      saveWidths();
+    });
+
+    const beginResize = (event, moveEventName, finishEventNames, capturePointer = false) => {
       event.preventDefault();
       event.stopPropagation();
       const startX = event.clientX;
       const startWidth = columns[index].getBoundingClientRect().width || header.getBoundingClientRect().width;
       const pointerId = event.pointerId;
-      handle.setPointerCapture(pointerId);
+      if (capturePointer && Number.isFinite(pointerId)) {
+        try {
+          handle.setPointerCapture(pointerId);
+        } catch {
+          // Window-level listeners below keep the drag working even without pointer capture.
+        }
+      }
       document.body.classList.add("is-resizing-column");
 
       const handleMove = (moveEvent) => {
-        const nextWidth = Math.max(minWidth, Math.round(startWidth + moveEvent.clientX - startX));
+        const nextWidth = clampColumnWidth(startWidth + moveEvent.clientX - startX);
         columns[index].style.width = `${nextWidth}px`;
+        fitTableToColumns();
       };
 
       const finishResize = () => {
-        if (handle.hasPointerCapture(pointerId)) handle.releasePointerCapture(pointerId);
-        handle.removeEventListener("pointermove", handleMove);
-        handle.removeEventListener("pointerup", finishResize);
-        handle.removeEventListener("pointercancel", finishResize);
+        if (capturePointer && Number.isFinite(pointerId) && handle.hasPointerCapture(pointerId)) {
+          handle.releasePointerCapture(pointerId);
+        }
+        window.removeEventListener(moveEventName, handleMove);
+        finishEventNames.forEach((finishEventName) => window.removeEventListener(finishEventName, finishResize));
         document.body.classList.remove("is-resizing-column");
-        const widths = columns.map((column) => Math.round(column.getBoundingClientRect().width));
-        localStorage.setItem(storageKey, JSON.stringify(widths));
+        fitTableToColumns();
+        saveWidths();
       };
 
-      handle.addEventListener("pointermove", handleMove);
-      handle.addEventListener("pointerup", finishResize);
-      handle.addEventListener("pointercancel", finishResize);
+      window.addEventListener(moveEventName, handleMove);
+      finishEventNames.forEach((finishEventName) => window.addEventListener(finishEventName, finishResize));
+    };
+
+    handle.addEventListener("mousedown", (event) => {
+      if (event.button !== 0) return;
+      beginResize(event, "mousemove", ["mouseup"]);
+    });
+
+    handle.addEventListener("pointerdown", (event) => {
+      if (event.pointerType === "mouse") return;
+      beginResize(event, "pointermove", ["pointerup", "pointercancel"], true);
     });
 
     header.appendChild(handle);
@@ -5338,7 +5388,12 @@ elements.rmaRestoreButton.addEventListener("click", () => {
 rebuildSellableSpareCatalog();
 load();
 setupResizableColumns(elements.rmaOrderTable, `${STORAGE_KEY}-rma-order-columns`, { minWidth: 16 });
-setupResizableColumns(elements.rmaDetailTable, `${STORAGE_KEY}-rma-detail-columns-v2`, { minWidth: 16 });
+setupResizableColumns(elements.rmaDetailTable, `${STORAGE_KEY}-rma-detail-columns-v3`, {
+  autoWidths: [130, 150, 70, 92, 170, 64, 86, 120, 180],
+  fitToColumns: true,
+  maxWidth: 520,
+  minWidth: 16,
+});
 render();
 restorePublishedInventoryOnStartup();
 refreshAfterSalesOnStartup();

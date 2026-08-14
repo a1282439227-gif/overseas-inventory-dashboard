@@ -1080,6 +1080,12 @@ table {
   table-layout: fixed;
 }
 
+#rmaDetailTable {
+  width: 1450px;
+  min-width: 860px;
+  table-layout: fixed;
+}
+
 .rma-detail-section th,
 .rma-detail-section td {
   white-space: nowrap;
@@ -1152,9 +1158,9 @@ th {
 .column-resize-handle {
   position: absolute;
   top: 0;
-  right: -3px;
+  right: 0;
   z-index: 2;
-  width: 8px;
+  width: 14px;
   height: 100%;
   cursor: col-resize;
   touch-action: none;
