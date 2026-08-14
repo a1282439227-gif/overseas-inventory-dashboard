@@ -66,6 +66,66 @@ const BUSINESS_TRANSLATION_CORRECTIONS = {
   ],
 };
 
+const COUNTRY_REGION_CODE_ENTRIES = [
+  ["阿根廷", "AR"],
+  ["爱沙尼亚", "EE"],
+  ["奥地利", "AT"],
+  ["澳大利亚", "AU"],
+  ["巴西", "BR"],
+  ["保加利亚", "BG"],
+  ["比利时", "BE"],
+  ["波兰", "PL"],
+  ["丹麦", "DK"],
+  ["德国", "DE"],
+  ["法国", "FR"],
+  ["芬兰", "FI"],
+  ["哈萨克", "KZ"],
+  ["荷兰", "NL"],
+  ["加拿大", "CA"],
+  ["捷克共和国", "CZ"],
+  ["克罗地亚", "HR"],
+  ["拉脱维亚", "LV"],
+  ["立陶宛", "LT"],
+  ["卢森堡", "LU"],
+  ["罗马尼亚", "RO"],
+  ["美国", "US"],
+  ["墨西哥", "MX"],
+  ["挪威", "NO"],
+  ["葡萄牙", "PT"],
+  ["日本", "JP"],
+  ["瑞典", "SE"],
+  ["瑞士", "CH"],
+  ["斯洛伐克", "SK"],
+  ["斯洛文尼亚", "SI"],
+  ["土耳其", "TR"],
+  ["乌克兰", "UA"],
+  ["乌拉圭", "UY"],
+  ["西班牙", "ES"],
+  ["希腊", "GR"],
+  ["新西兰", "NZ"],
+  ["匈牙利", "HU"],
+  ["意大利", "IT"],
+  ["英国", "GB"],
+  ["中国", "CN"],
+  ["中国台湾", "TW"],
+  ["Argentina", "AR"],
+  ["Japan", "JP"],
+];
+
+const COUNTRY_SEARCH_ALIAS_ENTRIES = [
+  ["阿根廷", ["Argentina", "Argentine Republic"]],
+  ["哈萨克", ["Kazakhstan"]],
+  ["捷克共和国", ["Czech Republic", "Czechia"]],
+  ["美国", ["United States", "USA", "US", "America"]],
+  ["英国", ["United Kingdom", "UK", "Great Britain", "Britain"]],
+  ["中国台湾", ["Taiwan", "Taiwan, China"]],
+  ["荷兰", ["Netherlands", "Holland"]],
+  ["土耳其", ["Turkey", "Türkiye", "Turkiye"]],
+  ["新西兰", ["New Zealand"]],
+  ["斯洛伐克", ["Slovakia"]],
+  ["斯洛文尼亚", ["Slovenia"]],
+];
+
 const warehouses = [
   {
     id: "frankfurt",
@@ -1438,6 +1498,78 @@ function getStoredTranslation(language, text) {
   return cached ? polishBusinessTranslation(language, text, cached) : "";
 }
 
+function normalizeSearchText(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ");
+}
+
+function normalizeCompactSearchText(value) {
+  return normalizeSearchText(value).replace(/\s+/g, "");
+}
+
+function getCurrentSearchLanguage() {
+  return typeof state !== "undefined" && SUPPORTED_TRANSLATION_LANGUAGES.has(state.language) ? state.language : "zh-CN";
+}
+
+function sameSearchText(a, b) {
+  return normalizeBusinessTranslationKey(a) === normalizeBusinessTranslationKey(b) || normalizeSearchText(a) === normalizeSearchText(b);
+}
+
+function getCountryRegionCode(value) {
+  const match = COUNTRY_REGION_CODE_ENTRIES.find(([name]) => sameSearchText(name, value));
+  return match ? match[1] : "";
+}
+
+function getManualSearchAliases(value) {
+  const aliases = [];
+  COUNTRY_SEARCH_ALIAS_ENTRIES.forEach(([name, values]) => {
+    if (sameSearchText(name, value) || values.some((alias) => sameSearchText(alias, value))) {
+      aliases.push(name, ...values);
+    }
+  });
+  return aliases;
+}
+
+function getRegionDisplayName(regionCode, language) {
+  if (!regionCode || typeof Intl === "undefined" || !Intl.DisplayNames) return "";
+  try {
+    return new Intl.DisplayNames([normalizeGoogleTargetLanguage(language)], { type: "region" }).of(regionCode) || "";
+  } catch {
+    return "";
+  }
+}
+
+function getLocalizedSearchAliases(value) {
+  const source = String(value || "").trim();
+  if (!source) return [];
+
+  const aliases = new Set([source, ...getManualSearchAliases(source)]);
+  const languages = new Set([getCurrentSearchLanguage(), "en"]);
+  languages.forEach((language) => {
+    const translated = getStoredTranslation(language, source);
+    if (translated) aliases.add(translated);
+  });
+
+  const regionCode = getCountryRegionCode(source);
+  if (regionCode) {
+    languages.forEach((language) => {
+      const localizedName = getRegionDisplayName(regionCode, language);
+      if (localizedName) aliases.add(localizedName);
+    });
+  }
+
+  return Array.from(aliases);
+}
+
+function buildLocalizedSearchText(values, options = {}) {
+  const text = values.flatMap((value) => getLocalizedSearchAliases(value)).join(" ");
+  return options.compact ? normalizeCompactSearchText(text) : normalizeSearchText(text);
+}
+
 function setTranslationStatus(message, type = "normal") {
   if (elements.translationStatus) elements.translationStatus.textContent = message;
   elements.languagePicker?.classList.toggle("is-busy", type === "busy");
@@ -2492,10 +2624,10 @@ function renderSalesControls() {
 }
 
 function getSalesMachineFilteredRows() {
-  const keyword = String(state.salesMachineKeyword || "").trim().toLowerCase();
+  const keyword = normalizeSearchText(state.salesMachineKeyword);
   return salesMachineRows.filter((row) => {
     const productName = getSalesProductName(row);
-    const text = [
+    const text = buildLocalizedSearchText([
       row.assignedWarehouse,
       row.category,
       row.sourceOrder,
@@ -2508,9 +2640,7 @@ function getSalesMachineFilteredRows() {
       row.productName,
       productName,
       row.saleType,
-    ]
-      .join(" ")
-      .toLowerCase();
+    ]);
     const matchesKeyword = !keyword || text.includes(keyword);
     const matchesWarehouse = state.salesMachineWarehouse === "all" || row.assignedWarehouse === state.salesMachineWarehouse;
     const matchesCategory = state.salesMachineCategory === "all" || row.category === state.salesMachineCategory;
@@ -2574,10 +2704,10 @@ function renderSalesMachine() {
 }
 
 function getSalesSpareFilteredRows() {
-  const keyword = String(state.salesSpareKeyword || "").trim().toLowerCase();
+  const keyword = normalizeSearchText(state.salesSpareKeyword);
   return salesSpareRows.filter((row) => {
     const productName = getSalesSpareProductName(row);
-    const text = [
+    const text = buildLocalizedSearchText([
       row.assignedWarehouse,
       row.sourceOrder,
       row.shipment,
@@ -2589,9 +2719,7 @@ function getSalesSpareFilteredRows() {
       row.productModel,
       row.productSpec,
       row.salesperson,
-    ]
-      .join(" ")
-      .toLowerCase();
+    ]);
     const matchesKeyword = !keyword || text.includes(keyword);
     const matchesWarehouse = state.salesSpareWarehouse === "all" || row.assignedWarehouse === state.salesSpareWarehouse;
     const matchesCountry = state.salesSpareCountry === "all" || row.country === state.salesSpareCountry;
@@ -3162,7 +3290,7 @@ function getMaterialLookupCodes(row) {
 
 function materialMatchesKeyword(row, keyword) {
   if (!keyword) return true;
-  return normalizeSearchCode(
+  return buildLocalizedSearchText(
     [
       ...getMaterialLookupCodes(row),
       getWarehouseName(row.warehouseId),
@@ -3174,7 +3302,8 @@ function materialMatchesKeyword(row, keyword) {
       row.location,
       row.spec,
       row.model,
-    ].join(" "),
+    ],
+    { compact: true },
   ).includes(keyword);
 }
 
@@ -3199,14 +3328,15 @@ function getSellableItemDisplayCodes(item) {
 
 function sellableItemMatchesKeyword(item, keyword) {
   if (!keyword) return true;
-  return normalizeSearchCode(
+  return buildLocalizedSearchText(
     [
       ...getSellableItemDisplayCodes(item),
       item?.materialName,
       item?.englishName,
       item?.productLine,
       item?.remark,
-    ].join(" "),
+    ],
+    { compact: true },
   ).includes(keyword);
 }
 
@@ -3893,9 +4023,9 @@ function renderReplenishment() {
 }
 
 function getReplenishmentFilteredRows() {
-  const keyword = state.replenishmentKeyword.trim().toLowerCase();
+  const keyword = normalizeSearchText(state.replenishmentKeyword);
   return replenishmentOrders.filter((order) => {
-    const text = [
+    const text = buildLocalizedSearchText([
       getWarehouseName(order.warehouseId),
       order.warehouseText,
       order.orderNo,
@@ -3906,9 +4036,7 @@ function getReplenishmentFilteredRows() {
       order.shippedDate,
       order.expectedArrival,
       order.leadTime,
-    ]
-      .join(" ")
-      .toLowerCase();
+    ]);
     const matchesKeyword = !keyword || text.includes(keyword);
     const matchesWarehouse = state.replenishmentWarehouse === "all" || order.warehouseId === state.replenishmentWarehouse;
     const matchesStatus = state.replenishmentStatus === "all" || order.status === state.replenishmentStatus;
@@ -3961,7 +4089,7 @@ function renderRma() {
 
 function getRmaFilteredGroups(options = {}) {
   const groups = buildRmaGroups(rmaOrders);
-  const keyword = state.rmaKeyword.trim().toLowerCase();
+  const keyword = normalizeSearchText(state.rmaKeyword);
   const filtered = groups.filter((group) => {
     const matchesKeyword = !keyword || group.searchText.includes(keyword);
     const matchesStatus = state.rmaStatus === "all" || group.statuses.includes(state.rmaStatus);
@@ -4089,7 +4217,7 @@ function buildRmaGroups(sourceRows) {
     group.shippedDates.sort((a, b) => parseRmaDateMs(b) - parseRmaDateMs(a) || String(b).localeCompare(String(a), "zh-CN"));
     group.lines.sort((a, b) => parseRmaDateMs(b.shippedDate) - parseRmaDateMs(a.shippedDate) || String(a.materialCode).localeCompare(String(b.materialCode), "zh-CN"));
     group.skuCount = new Set(group.lines.map((line) => line.materialCode).filter(Boolean)).size;
-    group.searchText = [
+    group.searchText = buildLocalizedSearchText([
       group.rmaNo,
       group.serviceNos.join(" "),
       group.countries.join(" "),
@@ -4109,9 +4237,7 @@ function buildRmaGroups(sourceRows) {
         line.reason,
         line.badPartSuggestion,
       ]),
-    ]
-      .join(" ")
-      .toLowerCase();
+    ]);
     return group;
   }).sort(compareRmaGroupsByServiceNoDesc);
 }
