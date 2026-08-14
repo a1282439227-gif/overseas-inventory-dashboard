@@ -20,6 +20,52 @@ const SUPPORTED_TRANSLATION_LANGUAGES = new Set([
   "tr",
 ]);
 
+const BUSINESS_TRANSLATIONS = {
+  en: new Map([
+    ["已出库", "Dispatched"],
+    ["已完成", "Completed"],
+    ["待签收", "Awaiting delivery"],
+    ["没库存，拆单", "No stock, split order"],
+    ["联系快递", "Arrange courier"],
+    ["待备货", "Pending stock prep"],
+    ["待生产入库", "Pending production receipt"],
+    ["待联系快递", "Courier to arrange"],
+    ["运输中", "In transit"],
+    ["已入库", "Received"],
+    ["未入库", "Not received"],
+    ["待确认", "Pending confirmation"],
+    ["有库存", "In stock"],
+    ["待关注", "Needs attention"],
+    ["缺货", "Out of stock"],
+    ["无库存", "No stock"],
+    ["已出库（包含已完成）", "Dispatched (incl. completed)"],
+    ["点击查看已出库订单", "View dispatched orders"],
+    ["点击查看待备货订单", "View stock-prep orders"],
+    ["点击查看待入库订单", "View pending-receipt orders"],
+    ["RMA订单查询", "RMA Order Search"],
+    ["RMA订单列表", "RMA Orders"],
+    ["RMA产品明细", "RMA Product Details"],
+    ["RM订单号", "RM Order No."],
+    ["服务单号", "Service No."],
+    ["发出日期", "Dispatch Date"],
+    ["物流订单", "Tracking No."],
+    ["FAE人员", "FAE"],
+  ]),
+};
+
+const BUSINESS_TRANSLATION_CORRECTIONS = {
+  en: [
+    {
+      sourceIncludes: "已出库",
+      replacements: [
+        [/\bOut of stock\b/gi, "Dispatched"],
+        [/\bOut-of-stock\b/gi, "Dispatched"],
+        [/\bStockout\b/gi, "Dispatched"],
+      ],
+    },
+  ],
+};
+
 const warehouses = [
   {
     id: "frankfurt",
@@ -1360,6 +1406,38 @@ function saveTranslationCache() {
   localStorage.setItem(TRANSLATE_CACHE_STORAGE_KEY, JSON.stringify(Object.fromEntries(capped)));
 }
 
+function normalizeBusinessTranslationKey(text) {
+  return String(text || "").replace(/\s+/g, " ").trim();
+}
+
+function getBusinessTranslation(language, text) {
+  const glossary = BUSINESS_TRANSLATIONS[language];
+  if (!glossary) return "";
+  return glossary.get(normalizeBusinessTranslationKey(text)) || "";
+}
+
+function polishBusinessTranslation(language, sourceText, translatedText) {
+  const businessTranslation = getBusinessTranslation(language, sourceText);
+  if (businessTranslation) return businessTranslation;
+
+  const corrections = BUSINESS_TRANSLATION_CORRECTIONS[language] || [];
+  let result = String(translatedText || sourceText || "");
+  corrections.forEach((correction) => {
+    if (!String(sourceText || "").includes(correction.sourceIncludes)) return;
+    correction.replacements.forEach(([pattern, replacement]) => {
+      result = result.replace(pattern, replacement);
+    });
+  });
+  return result;
+}
+
+function getStoredTranslation(language, text) {
+  const businessTranslation = getBusinessTranslation(language, text);
+  if (businessTranslation) return businessTranslation;
+  const cached = translationCache[getTranslationCacheKey(language, text)];
+  return cached ? polishBusinessTranslation(language, text, cached) : "";
+}
+
 function setTranslationStatus(message, type = "normal") {
   if (elements.translationStatus) elements.translationStatus.textContent = message;
   elements.languagePicker?.classList.toggle("is-busy", type === "busy");
@@ -1563,11 +1641,11 @@ async function applyPageLanguage(language) {
   const runId = ++translationRunId;
   const entries = collectTranslatableEntries();
   const uniqueTexts = Array.from(new Set(entries.map((item) => item.text)));
-  const missingTexts = uniqueTexts.filter((text) => !translationCache[getTranslationCacheKey(language, text)]);
+  const missingTexts = uniqueTexts.filter((text) => !getStoredTranslation(language, text));
 
   try {
     entries.forEach((entry) => {
-      const translated = translationCache[getTranslationCacheKey(language, entry.text)];
+      const translated = getStoredTranslation(language, entry.text);
       if (translated) entry.apply(translated);
     });
 
@@ -1578,7 +1656,7 @@ async function applyPageLanguage(language) {
       setTranslationStatus(`翻译中 ${Math.min(translatedCount + batch.length, missingTexts.length)}/${missingTexts.length}`, "busy");
       const translations = await translateTextBatch(batch, language);
       batch.forEach((text, batchIndex) => {
-        translationCache[getTranslationCacheKey(language, text)] = translations[batchIndex] || text;
+        translationCache[getTranslationCacheKey(language, text)] = polishBusinessTranslation(language, text, translations[batchIndex] || text);
       });
       saveTranslationCache();
       if (runId !== translationRunId) return;
@@ -1586,13 +1664,13 @@ async function applyPageLanguage(language) {
 
       entries.forEach((entry) => {
         if (!batch.includes(entry.text)) return;
-        const translated = translationCache[getTranslationCacheKey(language, entry.text)];
+        const translated = getStoredTranslation(language, entry.text);
         if (translated) entry.apply(translated);
       });
     }
 
     entries.forEach((entry) => {
-      const translated = translationCache[getTranslationCacheKey(language, entry.text)];
+      const translated = getStoredTranslation(language, entry.text);
       if (translated) entry.apply(translated);
     });
     document.documentElement.lang = language;
