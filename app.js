@@ -3465,6 +3465,40 @@ function getMaterialCandidateCodes(candidate, lookupRows = []) {
   );
 }
 
+function getReplenishmentOrderLookupCodes(order) {
+  const orderCodes = expandMaterialCodeAliases(order?.materialCode);
+  const linkedItem = getSellableItemByCodes(orderCodes);
+  return Array.from(
+    new Set(
+      [
+        ...orderCodes,
+        ...(linkedItem ? getSellableItemDisplayCodes(linkedItem) : []),
+      ]
+        .flatMap((value) => expandMaterialCodeAliases(value))
+        .filter(Boolean),
+    ),
+  );
+}
+
+function getMaterialTransitOrders(materialCodes, warehouseId = "") {
+  const codeSet = new Set(
+    materialCodes
+      .flatMap((code) => expandMaterialCodeAliases(code))
+      .map((code) => normalizeSearchCode(code))
+      .filter(Boolean),
+  );
+  if (!codeSet.size) return [];
+
+  return replenishmentOrders.filter((order) => {
+    if (warehouseId && order.warehouseId !== warehouseId) return false;
+    if (!getReplenishmentOrderLookupCodes(order).some((code) => codeSet.has(normalizeSearchCode(code)))) return false;
+    const statusText = `${order.status || ""} ${inboundLabel(order.inboundFlag)}`;
+    if (String(order.inboundFlag || "").trim() === "1") return false;
+    if (/已入库|已完成|完成/.test(statusText)) return false;
+    return true;
+  });
+}
+
 function getMaterialSearchState() {
   const keyword = normalizeSearchCode(state.keyword);
   const selectedCode = normalizeSearchCode(state.selectedMaterialCode);
@@ -3554,11 +3588,12 @@ function renderMaterialLookup(materialSearch = null) {
   const totalOnHand = lookupRows.reduce((sum, row) => sum + row.onHandQty, 0);
   const totalAvailable = lookupRows.reduce((sum, row) => sum + availableQty(row), 0);
   const totalAmount = lookupRows.reduce((sum, row) => sum + inventoryAmount(row), 0);
+  const totalTransit = getMaterialTransitOrders(codes).reduce((sum, order) => sum + parseNumber(order.qty), 0);
 
   elements.materialLookupSection.hidden = false;
   elements.materialLookupTitle.textContent = `物料编码查询：${displayCode || "-"}`;
   elements.materialLookupMeta.textContent = `${names.join(" / ") || "匹配物料"}；匹配 ${lookupRows.length} 条明细，覆盖 ${coveredWarehouseCount} 个仓库。`;
-  elements.materialLookupCount.textContent = `现存 ${formatQty(totalOnHand)} / 可用 ${formatQty(totalAvailable)} / 金额 ${formatMoney(totalAmount)}`;
+  elements.materialLookupCount.textContent = `现存 ${formatQty(totalOnHand)} / 可用 ${formatQty(totalAvailable)} / 在途 ${formatQty(totalTransit)} / 金额 ${formatMoney(totalAmount)}`;
 
   elements.materialLookupGrid.innerHTML = [
     buildMaterialImageCard(lookupRows, displayCode || codes[0], names[0]),
@@ -3609,30 +3644,31 @@ function renderMaterialLookup(materialSearch = null) {
 }
 
 function getMaterialTransitInfo(materialCodes, warehouseId) {
-  const codeSet = new Set(materialCodes.map((code) => String(code || "").trim().toLowerCase()).filter(Boolean));
-  if (!codeSet.size) return null;
-
-  const openOrders = replenishmentOrders.filter((order) => {
-    if (order.warehouseId !== warehouseId) return false;
-    if (!codeSet.has(String(order.materialCode || "").trim().toLowerCase())) return false;
-    const statusText = `${order.status || ""} ${inboundLabel(order.inboundFlag)}`;
-    if (String(order.inboundFlag || "").trim() === "1") return false;
-    if (/已入库|已完成|完成/.test(statusText)) return false;
-    return true;
-  });
+  const openOrders = getMaterialTransitOrders(materialCodes, warehouseId);
   if (!openOrders.length) return null;
 
   const qty = openOrders.reduce((sum, order) => sum + parseNumber(order.qty), 0);
   const orderNos = Array.from(new Set(openOrders.map((order) => order.orderNo).filter(Boolean)));
   const statuses = Array.from(new Set(openOrders.map((order) => order.status).filter(Boolean)));
   const arrivals = Array.from(new Set(openOrders.map((order) => order.expectedArrival).filter(Boolean))).slice(0, 2);
+  const codeQty = new Map();
+  openOrders.forEach((order) => {
+    const code = normalizeMaterialCodeDisplay(order.materialCode);
+    if (!code) return;
+    codeQty.set(code, (codeQty.get(code) || 0) + parseNumber(order.qty));
+  });
+  const codeSummary = Array.from(codeQty.entries())
+    .map(([code, codeTotal]) => `${code} ${formatQty(codeTotal)}`)
+    .slice(0, 3)
+    .join(" / ");
   const summaryParts = [];
+  if (codeSummary) summaryParts.push(codeSummary);
   summaryParts.push(`${orderNos.length || openOrders.length} 个订单`);
   if (statuses.length) summaryParts.push(statuses.slice(0, 2).join(" / "));
   if (arrivals.length) summaryParts.push(`预计 ${arrivals.join(" / ")}`);
   return {
     qty,
-    summary: summaryParts.join("，"),
+    summary: summaryParts.join("；"),
   };
 }
 
@@ -3940,11 +3976,22 @@ function buildMaterialCandidateRowsHtml(candidates) {
       const totalReserved = lookupRows.reduce((sum, row) => sum + row.reservedQty, 0);
       const totalFrozen = lookupRows.reduce((sum, row) => sum + row.frozenQty, 0);
       const totalAvailable = totalOnHand - totalReserved - totalFrozen;
-      const status = totalAvailable > 0 ? "normal" : "shortage";
-      const warehouseNames = Array.from(new Set(lookupRows.map((row) => getWarehouseName(row.warehouseId)).filter(Boolean))).join(" / ") || "-";
+      const candidateCodes = getMaterialCandidateCodes(candidate, lookupRows);
+      const transitOrders = getMaterialTransitOrders(candidateCodes);
+      const totalTransit = transitOrders.reduce((sum, order) => sum + parseNumber(order.qty), 0);
+      const status = totalAvailable > 0 ? "normal" : totalTransit > 0 ? "reserved" : "shortage";
+      const warehouseNames = Array.from(
+        new Set(
+          [
+            ...lookupRows.map((row) => getWarehouseName(row.warehouseId)),
+            ...transitOrders.map((order) => getWarehouseName(order.warehouseId)),
+          ].filter(Boolean),
+        ),
+      ).join(" / ") || "-";
       const code = normalizeMaterialCodeDisplay(candidate.materialCode || Array.from(candidate.aliases)[0] || "");
       const name = candidate.materialName || stripMaterialCodePrefix(lookupRows[0]?.materialName) || "-";
       const productLine = candidate.productLine || candidate.category || lookupRows[0]?.productLine || "-";
+      const statusText = totalAvailable > 0 ? "有库存" : totalTransit > 0 ? `在途 ${formatQty(totalTransit)}` : "待关注";
       return `
         <tr class="material-candidate-row" data-material-candidate-code="${escapeHtml(code)}" data-material-candidate-name="${escapeHtml(name)}" tabindex="0" aria-label="${escapeHtml(code)} ${escapeHtml(name)}">
           <td><span class="project-pill">R1916</span></td>
@@ -3956,7 +4003,7 @@ function buildMaterialCandidateRowsHtml(candidates) {
           <td class="num">${formatQty(totalReserved)}</td>
           <td class="num">${formatQty(totalFrozen)}</td>
           <td class="num">${formatQty(totalAvailable)}</td>
-          <td><span class="status-tag tag-${status}">${totalAvailable > 0 ? "有库存" : "待关注"}</span></td>
+          <td><span class="status-tag tag-${status}">${escapeHtml(statusText)}</span></td>
         </tr>
       `;
     })
