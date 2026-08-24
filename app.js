@@ -1266,6 +1266,10 @@ let salesGeneratedAt = String(salesData.generatedAt || salesData.summary?.genera
 let salesRefreshMessage = "";
 let salesRefreshBusy = false;
 let backgroundOdooReloadTimer = 0;
+let materialSearchRenderTimer = 0;
+let deferredSaveTimer = 0;
+const MATERIAL_SEARCH_RENDER_DELAY_MS = 120;
+const DEFERRED_SAVE_DELAY_MS = 300;
 const baseReplenishmentOrders = (afterSalesData.replenishmentOrders || []).map(normalizeReplenishmentOrder);
 const baseRmaOrders = (afterSalesData.rmaOrders || []).map(normalizeRmaOrder).filter(isAnimalRmaOrder);
 const replenishmentOrders = [...baseReplenishmentOrders];
@@ -1958,6 +1962,31 @@ function save() {
     };
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+}
+
+function scheduleSave(delay = DEFERRED_SAVE_DELAY_MS) {
+  window.clearTimeout(deferredSaveTimer);
+  deferredSaveTimer = window.setTimeout(() => {
+    deferredSaveTimer = 0;
+    save();
+  }, delay);
+}
+
+function flushScheduledSave() {
+  if (!deferredSaveTimer) return;
+  window.clearTimeout(deferredSaveTimer);
+  deferredSaveTimer = 0;
+  save();
+}
+
+function scheduleMaterialSearchRender() {
+  window.clearTimeout(materialSearchRenderTimer);
+  materialSearchRenderTimer = window.setTimeout(() => {
+    materialSearchRenderTimer = 0;
+    if (state.view !== "material") return;
+    renderMaterialPage({ controls: false });
+    scheduleLanguageRender();
+  }, MATERIAL_SEARCH_RENDER_DELAY_MS);
 }
 
 function replaceCollection(target, incomingRows) {
@@ -3215,35 +3244,67 @@ function aggregateRows(sourceRows, options = {}) {
 
 function render() {
   renderView();
-  renderControls();
-  renderReplenishmentControls();
-  renderRmaControls();
-  renderAfterSalesRefreshControls();
   renderSalesRefreshControls();
-  renderSalesControls();
-  const materialSearch = getMaterialSearchState();
-  const visibleInventoryRows = getVisibleInventoryRows();
-  const filteredRows = getFilteredRows(materialSearch);
-  // Keep the four overseas warehouse cards stable even when Odoo reports no rows for one of them.
-  const allWarehouseStats = aggregateRows(visibleInventoryRows, { warehouses, includeEmpty: true });
-  const overviewRows = getOverviewRows();
-  renderSummary(overviewRows);
-  renderMaterialLookup(materialSearch);
-  renderWarehouses(allWarehouseStats);
-  renderOverviewDetail(overviewRows);
-  renderNetwork(allWarehouseStats);
-  renderInsights();
-  renderTable(filteredRows, materialSearch);
-  renderReplenishment();
-  renderRma();
-  renderSalesMachine();
-  renderSalesSpare();
+  renderActivePage();
   if (elements.sourceNote) {
     elements.sourceNote.textContent = "";
     elements.sourceNote.hidden = true;
   }
   if (elements.languageSelect) elements.languageSelect.value = state.language;
   scheduleLanguageRender();
+}
+
+function renderActivePage() {
+  if (state.view === "overview") {
+    renderOverviewPage();
+    return;
+  }
+  if (state.view === "material") {
+    renderMaterialPage();
+    return;
+  }
+  if (state.view === "replenishment") {
+    renderAfterSalesRefreshControls();
+    renderReplenishmentControls();
+    renderReplenishment();
+    return;
+  }
+  if (state.view === "rma") {
+    renderAfterSalesRefreshControls();
+    renderRmaControls();
+    renderRma();
+    return;
+  }
+  if (state.view === "salesMachine") {
+    renderSalesControls();
+    renderSalesMachine();
+    return;
+  }
+  if (state.view === "salesSpare") {
+    renderSalesControls();
+    renderSalesSpare();
+  }
+}
+
+function renderOverviewPage() {
+  const visibleInventoryRows = getVisibleInventoryRows();
+  const allWarehouseStats = aggregateRows(visibleInventoryRows, { warehouses, includeEmpty: true });
+  const overviewRows = getOverviewRows();
+  renderSummary(overviewRows);
+  renderWarehouses(allWarehouseStats);
+  renderOverviewDetail(overviewRows);
+  renderNetwork(allWarehouseStats);
+  renderInsights();
+}
+
+function renderMaterialPage(options = {}) {
+  const materialSearch = getMaterialSearchState();
+  const filteredRows = getFilteredRows(materialSearch);
+  if (options.controls !== false) {
+    renderControls();
+  }
+  renderMaterialLookup(materialSearch);
+  renderTable(filteredRows, materialSearch);
 }
 
 function renderView() {
@@ -4001,7 +4062,7 @@ function buildMaterialCandidateRowsHtml(candidates) {
       const totalOnHand = lookupRows.reduce((sum, row) => sum + row.onHandQty, 0);
       const totalReserved = lookupRows.reduce((sum, row) => sum + row.reservedQty, 0);
       const totalFrozen = lookupRows.reduce((sum, row) => sum + row.frozenQty, 0);
-      const totalAvailable = totalOnHand - totalReserved - totalFrozen;
+      const totalAvailable = lookupRows.reduce((sum, row) => sum + availableQty(row), 0);
       const candidateCodes = getMaterialCandidateCodes(candidate, lookupRows);
       const transitOrders = getMaterialTransitOrders(candidateCodes);
       const totalTransit = transitOrders.reduce((sum, order) => sum + parseNumber(order.qty), 0);
@@ -5106,9 +5167,11 @@ elements.viewTabs.forEach((tab) => {
 elements.keywordInput.addEventListener("input", (event) => {
   state.keyword = event.target.value;
   state.selectedMaterialCode = "";
-  save();
-  render();
+  scheduleSave();
+  scheduleMaterialSearchRender();
 });
+
+elements.keywordInput.addEventListener("blur", flushScheduledSave);
 
 elements.stockTableBody.addEventListener("click", (event) => {
   selectMaterialCandidateFromTarget(event.target);
