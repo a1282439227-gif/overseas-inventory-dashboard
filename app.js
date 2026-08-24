@@ -2865,6 +2865,10 @@ function normalizeRow(row) {
     onHandQty: parseNumber(row.onHandQty),
     reservedQty: parseNumber(row.reservedQty),
     frozenQty: parseNumber(row.frozenQty),
+    availableQty: Object.prototype.hasOwnProperty.call(row, "availableQty") ? parseNumber(row.availableQty) : null,
+    currentMonthDemandQty: parseNumber(row.currentMonthDemandQty),
+    totalDemandQty: parseNumber(row.totalDemandQty),
+    demandSupplyGapQty: parseNumber(row.demandSupplyGapQty),
     supplierOwnedQty: parseNumber(row.supplierOwnedQty),
     unitCost: parseNumber(row.unitCost || row.standardPrice || row.cost || row.price),
     inventoryAmount: parseNumber(row.inventoryAmount || row.amount || row.value),
@@ -2886,6 +2890,7 @@ function normalizeRow(row) {
     sourceMaterialCode: normalizeMaterialCodeDisplay(row.sourceMaterialCode),
     odooVersion: String(row.odooVersion || "").trim(),
     stockSource: String(row.stockSource || "").trim(),
+    availabilitySource: String(row.availabilitySource || "").trim(),
     stockStatusUpdatedAt: String(row.stockStatusUpdatedAt || "").trim(),
     englishName: String(row.englishName || "").trim(),
     unitUsage: String(row.unitUsage || "").trim(),
@@ -3017,7 +3022,10 @@ function parseNumber(value) {
 }
 
 function availableQty(row) {
-  return row.onHandQty - row.reservedQty - row.frozenQty;
+  if (Number.isFinite(row.availableQty)) {
+    return Math.max(0, row.availableQty);
+  }
+  return Math.max(0, row.onHandQty - row.reservedQty - row.frozenQty);
 }
 
 function inventoryAmount(row) {
@@ -3060,7 +3068,26 @@ function getVisibleInventoryRows() {
 }
 
 function hasInventory(row) {
-  return row.onHandQty > 0 || row.reservedQty > 0 || row.frozenQty > 0 || availableQty(row) > 0;
+  return (
+    row.onHandQty > 0 ||
+    row.reservedQty > 0 ||
+    row.frozenQty > 0 ||
+    availableQty(row) > 0 ||
+    row.currentMonthDemandQty > 0 ||
+    row.totalDemandQty > 0 ||
+    row.demandSupplyGapQty > 0
+  );
+}
+
+function hasNoAvailableStock(row) {
+  if (row.demandSupplyGapQty > 0) return true;
+  const hasStockOrDemand =
+    row.onHandQty > 0 ||
+    row.reservedQty > 0 ||
+    row.frozenQty > 0 ||
+    row.currentMonthDemandQty > 0 ||
+    row.totalDemandQty > 0;
+  return hasStockOrDemand && availableQty(row) <= 0;
 }
 
 function isOverseasWarehouse(row) {
@@ -3079,8 +3106,7 @@ function getMaterialInventoryRows() {
 }
 
 function rowStatus(row) {
-  const available = availableQty(row);
-  if (available <= 0) return "shortage";
+  if (hasNoAvailableStock(row)) return "shortage";
   if (row.frozenQty > 0) return "frozen";
   if (row.reservedQty > 0) return "reserved";
   return "normal";
@@ -3603,11 +3629,11 @@ function renderMaterialLookup(materialSearch = null) {
       const onHand = warehouseRows.reduce((sum, row) => sum + row.onHandQty, 0);
       const reserved = warehouseRows.reduce((sum, row) => sum + row.reservedQty, 0);
       const frozen = warehouseRows.reduce((sum, row) => sum + row.frozenQty, 0);
-      const available = onHand - reserved - frozen;
+      const available = warehouseRows.reduce((sum, row) => sum + availableQty(row), 0);
       const amount = warehouseRows.reduce((sum, row) => sum + inventoryAmount(row), 0);
       const locations = Array.from(new Set(warehouseRows.map((row) => row.location).filter(Boolean))).join("、") || "无库存";
       const projects = Array.from(new Set(warehouseRows.map((row) => row.project).filter(Boolean))).join(" / ") || "-";
-      const hasStockClass = onHand > 0 || reserved > 0 || frozen > 0 ? " has-stock" : "";
+      const hasStockClass = onHand > 0 || reserved > 0 || frozen > 0 || available > 0 ? " has-stock" : "";
       const transitInfo = warehouse.id === "fuzhou" ? null : getMaterialTransitInfo(codes, warehouse.id);
 
       return `
