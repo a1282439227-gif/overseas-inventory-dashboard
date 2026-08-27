@@ -1,11 +1,11 @@
 window.inventoryData = {
-    "generatedAt":  "2026-08-27 09:08:49",
+    "generatedAt":  "2026-08-27 10:00:49",
     "source":  "Odoo overseas warehouse stock + Fuzhou inventory age + sellable spare Excel list",
     "database":  "odoo_se",
     "inventorySource":  "Odoo",
     "sellableSpareSource":  "畜牧可售备件清单.xlsx",
     "sellableSpareGeneratedAt":  "2026-07-23 18:49:12",
-    "odooProductMetaAt":  "2026-08-27 09:08:47",
+    "odooProductMetaAt":  "2026-08-27 10:00:47",
     "odooProductMetaCount":  213,
     "productMetaRows":  [
                             {
