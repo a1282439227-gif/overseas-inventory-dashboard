@@ -1,27 +1,13 @@
 window.inventoryData = {
-    "generatedAt":  "2026-08-27 10:00:49",
+    "generatedAt":  "2026-08-28 08:49:58",
     "source":  "Odoo overseas warehouse stock + Fuzhou inventory age + sellable spare Excel list",
     "database":  "odoo_se",
     "inventorySource":  "Odoo",
     "sellableSpareSource":  "畜牧可售备件清单.xlsx",
     "sellableSpareGeneratedAt":  "2026-07-23 18:49:12",
-    "odooProductMetaAt":  "2026-08-27 10:00:47",
-    "odooProductMetaCount":  213,
+    "odooProductMetaAt":  "2026-08-28 08:49:56",
+    "odooProductMetaCount":  214,
     "productMetaRows":  [
-                            {
-                                "materialCode":  "1S0112000J0260B",
-                                "materialName":  "[1S0112000J0260B] Ultrasonic Rangefinder",
-                                "project":  "R1916",
-                                "category":  "All",
-                                "productLine":  "推料机器人配件",
-                                "unit":  "个",
-                                "unitCost":  114,
-                                "productId":  "7282",
-                                "templateId":  "7295",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/583024",
-                                "priceSource":  "畜牧USD价格表 (USD)",
-                                "priceStartPlace":  "Fuzhou"
-                            },
                             {
                                 "materialCode":  "Q0039067",
                                 "materialName":  "[Q0039067] Easy Control",
@@ -51,16 +37,16 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "1S0140000J0260B",
-                                "materialName":  "[1S0140000J0260B] Vision box assembly",
+                                "materialCode":  "NS0100010J0020B",
+                                "materialName":  "[NS0100010J0020B] screw",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
                                 "unitCost":  0,
-                                "productId":  "7527",
-                                "templateId":  "7540",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/7527/image_1920",
+                                "productId":  "6951",
+                                "templateId":  "6964",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/583267",
                                 "priceSource":  "",
                                 "priceStartPlace":  ""
                             },
@@ -93,32 +79,32 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "NS0100010J0020B",
-                                "materialName":  "[NS0100010J0020B] screw",
+                                "materialCode":  "1S0112000J0260B",
+                                "materialName":  "[1S0112000J0260B] Ultrasonic Rangefinder",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  0,
-                                "productId":  "6951",
-                                "templateId":  "6964",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/583267",
-                                "priceSource":  "",
-                                "priceStartPlace":  ""
+                                "unitCost":  114,
+                                "productId":  "7282",
+                                "templateId":  "7295",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/583024",
+                                "priceSource":  "畜牧USD价格表 (USD)",
+                                "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "210310004J0020B",
-                                "materialName":  "[210310004J0020B] 行走驱动电机",
+                                "materialCode":  "21110001FJ0020D",
+                                "materialName":  "[21110001FJ0020D] magnet",
                                 "project":  "R1916",
                                 "category":  "All",
-                                "productLine":  "",
+                                "productLine":  "智能割草机配件",
                                 "unit":  "个",
-                                "unitCost":  0,
-                                "productId":  "6148",
-                                "templateId":  "6148",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/6148/image_1920",
-                                "priceSource":  "",
-                                "priceStartPlace":  ""
+                                "unitCost":  0.42,
+                                "productId":  "6877",
+                                "templateId":  "6890",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/6877/image_1920",
+                                "priceSource":  "畜牧USD价格表 (USD)",
+                                "priceStartPlace":  "Fuzhou"
                             },
                             {
                                 "materialCode":  "310600010J0020C",
@@ -149,16 +135,16 @@ window.inventoryData = {
                                 "priceStartPlace":  ""
                             },
                             {
-                                "materialCode":  "21110001FJ0020D",
-                                "materialName":  "[21110001FJ0020D] magnet",
+                                "materialCode":  "213412004J0020B",
+                                "materialName":  "[213412004J0020B] contactor",
                                 "project":  "R1916",
                                 "category":  "All",
-                                "productLine":  "智能割草机配件",
+                                "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  0.42,
-                                "productId":  "6877",
-                                "templateId":  "6890",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/6877/image_1920",
+                                "unitCost":  21,
+                                "productId":  "6135",
+                                "templateId":  "6135",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/6135/image_1920",
                                 "priceSource":  "畜牧USD价格表 (USD)",
                                 "priceStartPlace":  "Fuzhou"
                             },
@@ -191,18 +177,18 @@ window.inventoryData = {
                                 "priceStartPlace":  ""
                             },
                             {
-                                "materialCode":  "1S0100312J0260A",
-                                "materialName":  "[1S0100312J0260A] Fill Light Bracket Mounting PlateⅡ",
+                                "materialCode":  "210310004J0020B",
+                                "materialName":  "[210310004J0020B] 行走驱动电机",
                                 "project":  "R1916",
                                 "category":  "All",
-                                "productLine":  "畜牧-配件-FJ01",
+                                "productLine":  "",
                                 "unit":  "个",
-                                "unitCost":  2,
-                                "productId":  "8105",
-                                "templateId":  "8118",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/664948",
-                                "priceSource":  "畜牧USD价格表 (USD)",
-                                "priceStartPlace":  "Fuzhou"
+                                "unitCost":  0,
+                                "productId":  "6148",
+                                "templateId":  "6148",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/6148/image_1920",
+                                "priceSource":  "",
+                                "priceStartPlace":  ""
                             },
                             {
                                 "materialCode":  "1S0100080J0260B",
@@ -233,16 +219,16 @@ window.inventoryData = {
                                 "priceStartPlace":  ""
                             },
                             {
-                                "materialCode":  "370000074J0260B",
-                                "materialName":  "[370000074J0260B] harness",
+                                "materialCode":  "1S0100111J0260B",
+                                "materialName":  "[1S0100111J0260B] gasket",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  13.5,
-                                "productId":  "8112",
-                                "templateId":  "8125",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/563107",
+                                "unitCost":  2,
+                                "productId":  "8101",
+                                "templateId":  "8114",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/563113",
                                 "priceSource":  "畜牧USD价格表 (USD)",
                                 "priceStartPlace":  "Fuzhou"
                             },
@@ -275,31 +261,31 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "1S0100111J0260B",
-                                "materialName":  "[1S0100111J0260B] gasket",
+                                "materialCode":  "1S0100312J0260A",
+                                "materialName":  "[1S0100312J0260A] Fill Light Bracket Mounting PlateⅡ",
                                 "project":  "R1916",
                                 "category":  "All",
-                                "productLine":  "推料机器人配件",
+                                "productLine":  "畜牧-配件-FJ01",
                                 "unit":  "个",
                                 "unitCost":  2,
-                                "productId":  "8101",
-                                "templateId":  "8114",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/563113",
+                                "productId":  "8105",
+                                "templateId":  "8118",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/664948",
                                 "priceSource":  "畜牧USD价格表 (USD)",
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "311200029J0020B",
-                                "materialName":  "[311200029J0020B] drive wheel connector",
+                                "materialCode":  "370000034J0260B",
+                                "materialName":  "[370000034J0260B] Mini机自研电池转接线束",
                                 "project":  "R1916",
                                 "category":  "All",
-                                "productLine":  "推料机器人配件",
+                                "productLine":  "畜牧-配件-FJ01",
                                 "unit":  "个",
-                                "unitCost":  22,
-                                "productId":  "7571",
-                                "templateId":  "7584",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/551401",
-                                "priceSource":  "畜牧--售后备件价格表（USD） (USD)",
+                                "unitCost":  26,
+                                "productId":  "8100",
+                                "templateId":  "8113",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/653883",
+                                "priceSource":  "畜牧USD价格表 (USD)",
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
@@ -331,18 +317,18 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "370000034J0260B",
-                                "materialName":  "[370000034J0260B] Mini机自研电池转接线束",
+                                "materialCode":  "1S0140000J0260B",
+                                "materialName":  "[1S0140000J0260B] Vision box assembly",
                                 "project":  "R1916",
                                 "category":  "All",
-                                "productLine":  "畜牧-配件-FJ01",
+                                "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  26,
-                                "productId":  "8100",
-                                "templateId":  "8113",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/653883",
-                                "priceSource":  "畜牧USD价格表 (USD)",
-                                "priceStartPlace":  "Fuzhou"
+                                "unitCost":  0,
+                                "productId":  "7527",
+                                "templateId":  "7540",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/7527/image_1920",
+                                "priceSource":  "",
+                                "priceStartPlace":  ""
                             },
                             {
                                 "materialCode":  "210700360J0260A",
@@ -373,30 +359,30 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "213412004J0020B",
-                                "materialName":  "[213412004J0020B] contactor",
+                                "materialCode":  "311200029J0020B",
+                                "materialName":  "[311200029J0020B] drive wheel connector",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  21,
-                                "productId":  "6135",
-                                "templateId":  "6135",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/6135/image_1920",
-                                "priceSource":  "畜牧USD价格表 (USD)",
+                                "unitCost":  22,
+                                "productId":  "7571",
+                                "templateId":  "7584",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/551401",
+                                "priceSource":  "畜牧--售后备件价格表（USD） (USD)",
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "373600014J0260A",
-                                "materialName":  "[373600014J0260A] Emergency stop button",
+                                "materialCode":  "211100014J0030A",
+                                "materialName":  "[211100014J0030A] gyro",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
                                 "unitCost":  0,
-                                "productId":  "335",
-                                "templateId":  "335",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/335/image_1920",
+                                "productId":  "6130",
+                                "templateId":  "6130",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/6130/image_1920",
                                 "priceSource":  "",
                                 "priceStartPlace":  ""
                             },
@@ -429,18 +415,18 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "NS0100010J0020A",
-                                "materialName":  "[NS0100010J0020A] screw",
+                                "materialCode":  "QCG-CS-003003A",
+                                "materialName":  "[QCG-CS-003003A] Air Ultrasonic Ceramic Transducers",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  0,
-                                "productId":  "4501",
-                                "templateId":  "4501",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/4501/image_1920",
-                                "priceSource":  "",
-                                "priceStartPlace":  ""
+                                "unitCost":  30,
+                                "productId":  "330",
+                                "templateId":  "330",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/330/image_1920",
+                                "priceSource":  "畜牧USD价格表 (USD)",
+                                "priceStartPlace":  "Fuzhou"
                             },
                             {
                                 "materialCode":  "310600010J0020D",
@@ -471,32 +457,32 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "QCG-CS-003003A",
-                                "materialName":  "[QCG-CS-003003A] Air Ultrasonic Ceramic Transducers",
+                                "materialCode":  "373600014J0260A",
+                                "materialName":  "[373600014J0260A] Emergency stop button",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  30,
-                                "productId":  "330",
-                                "templateId":  "330",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/330/image_1920",
-                                "priceSource":  "畜牧USD价格表 (USD)",
-                                "priceStartPlace":  "Fuzhou"
+                                "unitCost":  0,
+                                "productId":  "335",
+                                "templateId":  "335",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/335/image_1920",
+                                "priceSource":  "",
+                                "priceStartPlace":  ""
                             },
                             {
-                                "materialCode":  "QCD-DJ-003005A",
-                                "materialName":  "[QCD-DJ-003005A] Intelligent charger",
+                                "materialCode":  "1S0140000J0260A",
+                                "materialName":  "[1S0140000J0260A] Vision box assembly",
                                 "project":  "R1916",
                                 "category":  "All",
-                                "productLine":  "其他-FJ02-SZ",
+                                "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  185.57,
-                                "productId":  "325",
-                                "templateId":  "325",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/325/image_1920",
-                                "priceSource":  "畜牧USD价格表 (USD)",
-                                "priceStartPlace":  "Fuzhou"
+                                "unitCost":  0,
+                                "productId":  "328",
+                                "templateId":  "328",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/328/image_1920",
+                                "priceSource":  "",
+                                "priceStartPlace":  ""
                             },
                             {
                                 "materialCode":  "QCD-DJ-003004A",
@@ -513,6 +499,20 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
+                                "materialCode":  "280000202J0320B",
+                                "materialName":  "[280000202J0320B] 板销焊合",
+                                "project":  "R1916",
+                                "category":  "All",
+                                "productLine":  "",
+                                "unit":  "个",
+                                "unitCost":  0,
+                                "productId":  "14860",
+                                "templateId":  "14873",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/14860/image_1920",
+                                "priceSource":  "",
+                                "priceStartPlace":  ""
+                            },
+                            {
                                 "materialCode":  "370000024J0350D",
                                 "materialName":  "[370000024J0350D] Lifting main harness",
                                 "project":  "R1916",
@@ -523,20 +523,6 @@ window.inventoryData = {
                                 "productId":  "14791",
                                 "templateId":  "14804",
                                 "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/14791/image_1920",
-                                "priceSource":  "",
-                                "priceStartPlace":  ""
-                            },
-                            {
-                                "materialCode":  "1S0140000J0260A",
-                                "materialName":  "[1S0140000J0260A] Vision box assembly",
-                                "project":  "R1916",
-                                "category":  "All",
-                                "productLine":  "推料机器人配件",
-                                "unit":  "个",
-                                "unitCost":  0,
-                                "productId":  "328",
-                                "templateId":  "328",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/328/image_1920",
                                 "priceSource":  "",
                                 "priceStartPlace":  ""
                             },
@@ -569,16 +555,16 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "211100014J0030B",
-                                "materialName":  "[211100014J0030B] Gyroscope",
+                                "materialCode":  "QCD-DJ-003005A",
+                                "materialName":  "[QCD-DJ-003005A] Intelligent charger",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "其他-FJ02-SZ",
                                 "unit":  "个",
-                                "unitCost":  146,
-                                "productId":  "574",
-                                "templateId":  "574",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/551456",
+                                "unitCost":  185.57,
+                                "productId":  "325",
+                                "templateId":  "325",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/325/image_1920",
                                 "priceSource":  "畜牧USD价格表 (USD)",
                                 "priceStartPlace":  "Fuzhou"
                             },
@@ -611,16 +597,16 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "211100014J0030A",
-                                "materialName":  "[211100014J0030A] gyro",
+                                "materialCode":  "1S0100170J0260A",
+                                "materialName":  "[1S0100170J0260A] Charging plate",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
                                 "unitCost":  0,
-                                "productId":  "6130",
-                                "templateId":  "6130",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/6130/image_1920",
+                                "productId":  "50",
+                                "templateId":  "50",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/50/image_1920",
                                 "priceSource":  "",
                                 "priceStartPlace":  ""
                             },
@@ -653,32 +639,32 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "1S0100170J0260A",
-                                "materialName":  "[1S0100170J0260A] Charging plate",
+                                "materialCode":  "211100014J0030B",
+                                "materialName":  "[211100014J0030B] Gyroscope",
                                 "project":  "R1916",
+                                "category":  "All",
+                                "productLine":  "其他-FJ02-SZ",
+                                "unit":  "个",
+                                "unitCost":  146,
+                                "productId":  "574",
+                                "templateId":  "574",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/551456",
+                                "priceSource":  "畜牧USD价格表 (USD)",
+                                "priceStartPlace":  "Fuzhou"
+                            },
+                            {
+                                "materialCode":  "21110001FJ0020A",
+                                "materialName":  "[21110001FJ0020A] 磁钉",
+                                "project":  "",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
                                 "unitCost":  0,
-                                "productId":  "50",
-                                "templateId":  "50",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/50/image_1920",
+                                "productId":  "4534",
+                                "templateId":  "4534",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/4534/image_1920",
                                 "priceSource":  "",
                                 "priceStartPlace":  ""
-                            },
-                            {
-                                "materialCode":  "1S0100072J0030D",
-                                "materialName":  "[1S0100072J0030D] bracket",
-                                "project":  "R1916",
-                                "category":  "All",
-                                "productLine":  "推料机器人配件",
-                                "unit":  "个",
-                                "unitCost":  1.69,
-                                "productId":  "4505",
-                                "templateId":  "4505",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/4505/image_1920",
-                                "priceSource":  "畜牧USD价格表 (USD)",
-                                "priceStartPlace":  "Fuzhou"
                             },
                             {
                                 "materialCode":  "372210004J0020A",
@@ -709,16 +695,16 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "21110001FJ0020A",
-                                "materialName":  "[21110001FJ0020A] 磁钉",
-                                "project":  "",
+                                "materialCode":  "NS0100010J0020A",
+                                "materialName":  "[NS0100010J0020A] screw",
+                                "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
                                 "unitCost":  0,
-                                "productId":  "4534",
-                                "templateId":  "4534",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/4534/image_1920",
+                                "productId":  "4501",
+                                "templateId":  "4501",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/4501/image_1920",
                                 "priceSource":  "",
                                 "priceStartPlace":  ""
                             },
@@ -747,6 +733,34 @@ window.inventoryData = {
                                 "productId":  "4508",
                                 "templateId":  "4508",
                                 "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/4508/image_1920",
+                                "priceSource":  "畜牧USD价格表 (USD)",
+                                "priceStartPlace":  "Fuzhou"
+                            },
+                            {
+                                "materialCode":  "1S0100072J0030D",
+                                "materialName":  "[1S0100072J0030D] bracket",
+                                "project":  "R1916",
+                                "category":  "All",
+                                "productLine":  "推料机器人配件",
+                                "unit":  "个",
+                                "unitCost":  1.69,
+                                "productId":  "4505",
+                                "templateId":  "4505",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/4505/image_1920",
+                                "priceSource":  "畜牧USD价格表 (USD)",
+                                "priceStartPlace":  "Fuzhou"
+                            },
+                            {
+                                "materialCode":  "370000074J0260B",
+                                "materialName":  "[370000074J0260B] harness",
+                                "project":  "R1916",
+                                "category":  "All",
+                                "productLine":  "推料机器人配件",
+                                "unit":  "个",
+                                "unitCost":  13.5,
+                                "productId":  "8112",
+                                "templateId":  "8125",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/563107",
                                 "priceSource":  "畜牧USD价格表 (USD)",
                                 "priceStartPlace":  "Fuzhou"
                             },
@@ -1493,20 +1507,6 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "1S0100400J0260C",
-                                "materialName":  "[1S0100400J0260C] 锁扣组件",
-                                "project":  "R1916",
-                                "category":  "All",
-                                "productLine":  "",
-                                "unit":  "个",
-                                "unitCost":  0,
-                                "productId":  "14600",
-                                "templateId":  "14613",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/14600/image_1920",
-                                "priceSource":  "",
-                                "priceStartPlace":  ""
-                            },
-                            {
                                 "materialCode":  "280021000J0260D",
                                 "materialName":  "[280021000J0260D] Bracket",
                                 "project":  "R1916",
@@ -1567,7 +1567,7 @@ window.inventoryData = {
                                 "materialName":  "[1S0102000J0260B] camera module",
                                 "project":  "R1916",
                                 "category":  "All",
-                                "productLine":  "",
+                                "productLine":  "畜牧-FJ05",
                                 "unit":  "个",
                                 "unitCost":  0,
                                 "productId":  "11478",
@@ -2249,6 +2249,34 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
+                                "materialCode":  "1R0010000J0320A",
+                                "materialName":  "[1R0010000J0320A] Roller assembly spare parts",
+                                "project":  "R1916",
+                                "category":  "All",
+                                "productLine":  "",
+                                "unit":  "个",
+                                "unitCost":  750,
+                                "productId":  "12354",
+                                "templateId":  "12367",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/631031",
+                                "priceSource":  "畜牧USD价格表 (USD)",
+                                "priceStartPlace":  "Fuzhou"
+                            },
+                            {
+                                "materialCode":  "1S0100400J0260B",
+                                "materialName":  "[1S0100400J0260B] 锁扣组件",
+                                "project":  "R1916",
+                                "category":  "All",
+                                "productLine":  "推料机器人配件",
+                                "unit":  "个",
+                                "unitCost":  0,
+                                "productId":  "13866",
+                                "templateId":  "13879",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/804302",
+                                "priceSource":  "",
+                                "priceStartPlace":  ""
+                            },
+                            {
                                 "materialCode":  "280000372J0260A",
                                 "materialName":  "[280000372J0260A] IMU Mount",
                                 "project":  "R1916",
@@ -2277,16 +2305,16 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "QCG-JG-003013A",
-                                "materialName":  "[QCG-JG-003013A] LIDAR",
+                                "materialCode":  "NS010012DJ0260A",
+                                "materialName":  "[NS010012DJ0260A] Hexagon head pan head screw with spring washer",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  490,
-                                "productId":  "13785",
-                                "templateId":  "13798",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/714040",
+                                "unitCost":  0.05,
+                                "productId":  "14065",
+                                "templateId":  "14078",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/741700",
                                 "priceSource":  "畜牧USD价格表 (USD)",
                                 "priceStartPlace":  "Fuzhou"
                             },
@@ -2319,39 +2347,39 @@ window.inventoryData = {
                                 "priceStartPlace":  ""
                             },
                             {
-                                "materialCode":  "1S0100400J0260B",
-                                "materialName":  "[1S0100400J0260B] 锁扣组件",
+                                "materialCode":  "QCG-JG-003013A",
+                                "materialName":  "[QCG-JG-003013A] LIDAR",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  0,
-                                "productId":  "13866",
-                                "templateId":  "13879",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/804302",
-                                "priceSource":  "",
-                                "priceStartPlace":  ""
+                                "unitCost":  490,
+                                "productId":  "13785",
+                                "templateId":  "13798",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/714040",
+                                "priceSource":  "畜牧USD价格表 (USD)",
+                                "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "1S0103000J0260I",
-                                "materialName":  "[1S0103000J0260I] 3D Kit",
+                                "materialCode":  "1S0140000J0260J",
+                                "materialName":  "[1S0140000J0260J] Vision box assembly",
                                 "project":  "R1916",
                                 "category":  "All",
-                                "productLine":  "",
+                                "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  0,
-                                "productId":  "13760",
-                                "templateId":  "13773",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/13760/image_1920",
-                                "priceSource":  "",
-                                "priceStartPlace":  ""
+                                "unitCost":  257,
+                                "productId":  "13325",
+                                "templateId":  "13338",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/714062",
+                                "priceSource":  "畜牧USD价格表 (USD)",
+                                "priceStartPlace":  "Fuzhou"
                             },
                             {
                                 "materialCode":  "360000100J0260B",
                                 "materialName":  "[360000100J0260B] Gyroscope Sensor",
                                 "project":  "R1916",
                                 "category":  "All",
-                                "productLine":  "畜牧-配件-FJ01",
+                                "productLine":  "其他-FJ02-SZ",
                                 "unit":  "个",
                                 "unitCost":  137,
                                 "productId":  "13298",
@@ -2375,18 +2403,18 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "210700242J0260D",
-                                "materialName":  "[210700242J0260D] rod",
+                                "materialCode":  "1S0103000J0260I",
+                                "materialName":  "[1S0103000J0260I] 3D Kit",
                                 "project":  "R1916",
                                 "category":  "All",
-                                "productLine":  "推料机器人配件",
+                                "productLine":  "",
                                 "unit":  "个",
-                                "unitCost":  9,
-                                "productId":  "13123",
-                                "templateId":  "13136",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/582211",
-                                "priceSource":  "畜牧USD价格表 (USD)",
-                                "priceStartPlace":  "Fuzhou"
+                                "unitCost":  0,
+                                "productId":  "13760",
+                                "templateId":  "13773",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/13760/image_1920",
+                                "priceSource":  "",
+                                "priceStartPlace":  ""
                             },
                             {
                                 "materialCode":  "1S0100102J0260F",
@@ -2417,16 +2445,16 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "1S0140000J0260J",
-                                "materialName":  "[1S0140000J0260J] Vision box assembly",
+                                "materialCode":  "21110002FJ0260A",
+                                "materialName":  "[21110002FJ0260A] 磁钉",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  257,
-                                "productId":  "13325",
-                                "templateId":  "13338",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/714062",
+                                "unitCost":  1.5,
+                                "productId":  "14563",
+                                "templateId":  "14576",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/804326",
                                 "priceSource":  "畜牧USD价格表 (USD)",
                                 "priceStartPlace":  "Fuzhou"
                             },
@@ -2459,16 +2487,16 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "1S0100851J0260B",
-                                "materialName":  "[1S0100851J0260B] Insulating Post",
+                                "materialCode":  "1S0100400J0260C",
+                                "materialName":  "[1S0100400J0260C] 锁扣组件",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "",
                                 "unit":  "个",
                                 "unitCost":  0,
-                                "productId":  "14291",
-                                "templateId":  "14304",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/14291/image_1920",
+                                "productId":  "14600",
+                                "templateId":  "14613",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/14600/image_1920",
                                 "priceSource":  "",
                                 "priceStartPlace":  ""
                             },
@@ -2501,32 +2529,32 @@ window.inventoryData = {
                                 "priceStartPlace":  ""
                             },
                             {
-                                "materialCode":  "21110002FJ0260A",
-                                "materialName":  "[21110002FJ0260A] 磁钉",
+                                "materialCode":  "1S0100851J0260B",
+                                "materialName":  "[1S0100851J0260B] Insulating Post",
+                                "project":  "R1916",
+                                "category":  "All",
+                                "productLine":  "",
+                                "unit":  "个",
+                                "unitCost":  0,
+                                "productId":  "14291",
+                                "templateId":  "14304",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/product.product/14291/image_1920",
+                                "priceSource":  "",
+                                "priceStartPlace":  ""
+                            },
+                            {
+                                "materialCode":  "370000074J0260C",
+                                "materialName":  "[370000074J0260C] harness",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  1.5,
-                                "productId":  "14563",
-                                "templateId":  "14576",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/804326",
-                                "priceSource":  "畜牧USD价格表 (USD)",
-                                "priceStartPlace":  "Fuzhou"
-                            },
-                            {
-                                "materialCode":  "310600011J0260B",
-                                "materialName":  "[310600011J0260B] 轮子",
-                                "project":  "R1916",
-                                "category":  "All",
-                                "productLine":  "其他-FJ02-SZ",
-                                "unit":  "个",
-                                "unitCost":  30,
-                                "productId":  "14264",
-                                "templateId":  "14277",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/773097",
-                                "priceSource":  "畜牧USD价格表 (USD)",
-                                "priceStartPlace":  "Fuzhou"
+                                "unitCost":  0,
+                                "productId":  "14096",
+                                "templateId":  "14109",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/804308",
+                                "priceSource":  "",
+                                "priceStartPlace":  ""
                             },
                             {
                                 "materialCode":  "370000114J0260C",
@@ -2557,16 +2585,16 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "NS010012DJ0260A",
-                                "materialName":  "[NS010012DJ0260A] Hexagon head pan head screw with spring washer",
+                                "materialCode":  "310600011J0260B",
+                                "materialName":  "[310600011J0260B] 轮子",
                                 "project":  "R1916",
                                 "category":  "All",
-                                "productLine":  "推料机器人配件",
+                                "productLine":  "其他-FJ02-SZ",
                                 "unit":  "个",
-                                "unitCost":  0.05,
-                                "productId":  "14065",
-                                "templateId":  "14078",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/741700",
+                                "unitCost":  30,
+                                "productId":  "14264",
+                                "templateId":  "14277",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/773097",
                                 "priceSource":  "畜牧USD价格表 (USD)",
                                 "priceStartPlace":  "Fuzhou"
                             },
@@ -2599,30 +2627,30 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "370000074J0260C",
-                                "materialName":  "[370000074J0260C] harness",
+                                "materialCode":  "210700242J0260D",
+                                "materialName":  "[210700242J0260D] rod",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  0,
-                                "productId":  "14096",
-                                "templateId":  "14109",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/804308",
-                                "priceSource":  "",
-                                "priceStartPlace":  ""
+                                "unitCost":  9,
+                                "productId":  "13123",
+                                "templateId":  "13136",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/582211",
+                                "priceSource":  "畜牧USD价格表 (USD)",
+                                "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "210790002J0260C",
-                                "materialName":  "[210790002J0260C] plate",
+                                "materialCode":  "S060030016200",
+                                "materialName":  "[S060030016200] Deep groove ball bearings",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  19,
-                                "productId":  "13122",
-                                "templateId":  "13135",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/582205",
+                                "unitCost":  1,
+                                "productId":  "12987",
+                                "templateId":  "13000",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/567328",
                                 "priceSource":  "畜牧USD价格表 (USD)",
                                 "priceStartPlace":  "Fuzhou"
                             },
@@ -2655,18 +2683,18 @@ window.inventoryData = {
                                 "priceStartPlace":  ""
                             },
                             {
-                                "materialCode":  "1R0010000J0260D",
-                                "materialName":  "[1R0010000J0260D] drum weldment",
+                                "materialCode":  "QLB-LB-003007A",
+                                "materialName":  "[QLB-LB-003007A] 喇叭",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  0,
-                                "productId":  "12768",
-                                "templateId":  "12781",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/804290",
-                                "priceSource":  "",
-                                "priceStartPlace":  ""
+                                "unitCost":  4,
+                                "productId":  "12999",
+                                "templateId":  "13012",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/565323",
+                                "priceSource":  "畜牧USD价格表 (USD)",
+                                "priceStartPlace":  "Fuzhou"
                             },
                             {
                                 "materialCode":  "1S0100719J0260A",
@@ -2697,30 +2725,30 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "S060030016200",
-                                "materialName":  "[S060030016200] Deep groove ball bearings",
+                                "materialCode":  "1R0010000J0260D",
+                                "materialName":  "[1R0010000J0260D] drum weldment",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  1,
-                                "productId":  "12987",
-                                "templateId":  "13000",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/567328",
-                                "priceSource":  "畜牧USD价格表 (USD)",
-                                "priceStartPlace":  "Fuzhou"
+                                "unitCost":  0,
+                                "productId":  "12768",
+                                "templateId":  "12781",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/804290",
+                                "priceSource":  "",
+                                "priceStartPlace":  ""
                             },
                             {
-                                "materialCode":  "210310004J0020D",
-                                "materialName":  "[210310004J0020D] Wheel motor",
+                                "materialCode":  "370000024J0350B",
+                                "materialName":  "[370000024J0350B] 举升主线束",
                                 "project":  "R1916",
                                 "category":  "All",
-                                "productLine":  "其他-FJ02-SZ",
+                                "productLine":  "畜牧-配件-FJ01",
                                 "unit":  "个",
-                                "unitCost":  248,
-                                "productId":  "12734",
-                                "templateId":  "12747",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/653891",
+                                "unitCost":  251,
+                                "productId":  "12574",
+                                "templateId":  "12587",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/773066",
                                 "priceSource":  "畜牧USD价格表 (USD)",
                                 "priceStartPlace":  "Fuzhou"
                             },
@@ -2753,16 +2781,16 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "1R0010000J0320A",
-                                "materialName":  "[1R0010000J0320A] Roller assembly spare parts",
+                                "materialCode":  "210310004J0020D",
+                                "materialName":  "[210310004J0020D] Wheel motor",
                                 "project":  "R1916",
                                 "category":  "All",
-                                "productLine":  "",
+                                "productLine":  "其他-FJ02-SZ",
                                 "unit":  "个",
-                                "unitCost":  750,
-                                "productId":  "12354",
-                                "templateId":  "12367",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/631031",
+                                "unitCost":  248,
+                                "productId":  "12734",
+                                "templateId":  "12747",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/653891",
                                 "priceSource":  "畜牧USD价格表 (USD)",
                                 "priceStartPlace":  "Fuzhou"
                             },
@@ -2795,18 +2823,18 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "370000024J0350B",
-                                "materialName":  "[370000024J0350B] 举升主线束",
+                                "materialCode":  "311200019J0020C",
+                                "materialName":  "[311200019J0020C] 驱动轴",
                                 "project":  "R1916",
                                 "category":  "All",
-                                "productLine":  "畜牧-配件-FJ01",
+                                "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  251,
-                                "productId":  "12574",
-                                "templateId":  "12587",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/773066",
-                                "priceSource":  "畜牧USD价格表 (USD)",
-                                "priceStartPlace":  "Fuzhou"
+                                "unitCost":  0,
+                                "productId":  "13064",
+                                "templateId":  "13077",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/804296",
+                                "priceSource":  "",
+                                "priceStartPlace":  ""
                             },
                             {
                                 "materialCode":  "1S0140000J0260I",
@@ -2837,16 +2865,16 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "820001000J0260A",
-                                "materialName":  "[820001000J0260A] signage components",
+                                "materialCode":  "210790002J0260C",
+                                "materialName":  "[210790002J0260C] plate",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  105,
-                                "productId":  "13029",
-                                "templateId":  "13042",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/631044",
+                                "unitCost":  19,
+                                "productId":  "13122",
+                                "templateId":  "13135",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/582205",
                                 "priceSource":  "畜牧USD价格表 (USD)",
                                 "priceStartPlace":  "Fuzhou"
                             },
@@ -2879,30 +2907,30 @@ window.inventoryData = {
                                 "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "311200019J0020C",
-                                "materialName":  "[311200019J0020C] 驱动轴",
+                                "materialCode":  "820001000J0260A",
+                                "materialName":  "[820001000J0260A] signage components",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  0,
-                                "productId":  "13064",
-                                "templateId":  "13077",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/804296",
-                                "priceSource":  "",
-                                "priceStartPlace":  ""
+                                "unitCost":  105,
+                                "productId":  "13029",
+                                "templateId":  "13042",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/631044",
+                                "priceSource":  "畜牧USD价格表 (USD)",
+                                "priceStartPlace":  "Fuzhou"
                             },
                             {
-                                "materialCode":  "1S0100400J0260A",
-                                "materialName":  "[1S0100400J0260A] 锁扣组件",
+                                "materialCode":  "S010210802501",
+                                "materialName":  "[S010210802501] Hex Socket Button Head Screw",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  19,
-                                "productId":  "13019",
-                                "templateId":  "13032",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/631038",
+                                "unitCost":  0.2,
+                                "productId":  "13002",
+                                "templateId":  "13015",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/740885",
                                 "priceSource":  "畜牧USD价格表 (USD)",
                                 "priceStartPlace":  "Fuzhou"
                             },
@@ -2935,16 +2963,16 @@ window.inventoryData = {
                                 "priceStartPlace":  ""
                             },
                             {
-                                "materialCode":  "QLB-LB-003007A",
-                                "materialName":  "[QLB-LB-003007A] 喇叭",
+                                "materialCode":  "1S0100400J0260A",
+                                "materialName":  "[1S0100400J0260A] 锁扣组件",
                                 "project":  "R1916",
                                 "category":  "All",
                                 "productLine":  "推料机器人配件",
                                 "unit":  "个",
-                                "unitCost":  4,
-                                "productId":  "12999",
-                                "templateId":  "13012",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/565323",
+                                "unitCost":  19,
+                                "productId":  "13019",
+                                "templateId":  "13032",
+                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/631038",
                                 "priceSource":  "畜牧USD价格表 (USD)",
                                 "priceStartPlace":  "Fuzhou"
                             },
@@ -2975,20 +3003,6 @@ window.inventoryData = {
                                 "imageUrl":  "https://odoo-se.fjdac.com/web/image/565311",
                                 "priceSource":  "",
                                 "priceStartPlace":  ""
-                            },
-                            {
-                                "materialCode":  "S010210802501",
-                                "materialName":  "[S010210802501] Hex Socket Button Head Screw",
-                                "project":  "R1916",
-                                "category":  "All",
-                                "productLine":  "推料机器人配件",
-                                "unit":  "个",
-                                "unitCost":  0.2,
-                                "productId":  "13002",
-                                "templateId":  "13015",
-                                "imageUrl":  "https://odoo-se.fjdac.com/web/image/740885",
-                                "priceSource":  "畜牧USD价格表 (USD)",
-                                "priceStartPlace":  "Fuzhou"
                             }
                         ],
     "sellableMaterialCount":  145,
@@ -2997,8 +3011,8 @@ window.inventoryData = {
     "stockedOdooMaterialCount":  150,
     "missingMaterialCount":  11,
     "rowCount":  204,
-    "totalOnHandQty":  89575.11,
-    "totalInventoryAmount":  1767550.618612,
+    "totalOnHandQty":  89548.11,
+    "totalInventoryAmount":  1663473.116162,
     "projectScope":  [
                          "R1916",
                          "R1917",
@@ -3057,7 +3071,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:02:55",
+        "stockAgeUpdatedAt":  "2026-08-27 18:07:04",
         "project":  "R1916",
         "materialName":  "接触器",
         "productLine":  "推料机器人配件",
@@ -3106,7 +3120,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:05:49",
+        "stockAgeUpdatedAt":  "2026-08-27 18:09:58",
         "project":  "R1917",
         "materialName":  "平垫圈 A级",
         "productLine":  "智能牛体刷配件",
@@ -3157,7 +3171,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:03:02",
+        "stockAgeUpdatedAt":  "2026-08-27 18:07:15",
         "project":  "R1916",
         "materialName":  "急停开关",
         "productLine":  "推料机器人配件",
@@ -3206,7 +3220,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:11:40",
+        "stockAgeUpdatedAt":  "2026-08-27 18:15:29",
         "project":  "R1916",
         "materialName":  "举升机构连接销",
         "productLine":  "推料机器人配件",
@@ -3255,7 +3269,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:02:16",
+        "stockAgeUpdatedAt":  "2026-08-27 18:06:05",
         "project":  "R1916",
         "materialName":  "深沟球轴承",
         "productLine":  "推料机器人配件",
@@ -3303,7 +3317,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 17:58:25",
+        "stockAgeUpdatedAt":  "2026-08-27 17:59:42",
         "project":  "R1916",
         "materialName":  "胶棒天线",
         "productLine":  "推料机器人配件",
@@ -3352,7 +3366,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:06:19",
+        "stockAgeUpdatedAt":  "2026-08-27 18:10:27",
         "project":  "R1916",
         "materialName":  "Mini机超声波线束",
         "productLine":  "推料机器人配件",
@@ -3401,7 +3415,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:04:29",
+        "stockAgeUpdatedAt":  "2026-08-27 18:08:37",
         "project":  "R1916",
         "materialName":  "视觉组件备件（机头）",
         "productLine":  "推料机器人配件",
@@ -3451,7 +3465,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:09:16",
+        "stockAgeUpdatedAt":  "2026-08-27 18:13:17",
         "project":  "R1916",
         "materialName":  "RTK支架密封垫",
         "sellableSpare":  true,
@@ -3502,7 +3516,7 @@ window.inventoryRows = [
                                        "福州成品仓",
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:11:32",
+        "stockAgeUpdatedAt":  "2026-08-27 18:15:22",
         "project":  "R1916",
         "materialName":  "辐板焊合",
         "productLine":  "推料机器人配件",
@@ -3551,7 +3565,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:03:11",
+        "stockAgeUpdatedAt":  "2026-08-27 18:07:25",
         "project":  "R1916",
         "materialName":  "惯导单元总成",
         "productLine":  "推料机器人配件",
@@ -3600,7 +3614,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:11:40",
+        "stockAgeUpdatedAt":  "2026-08-27 18:15:29",
         "project":  "R1916",
         "materialName":  "滑盖",
         "productLine":  "推料机器人配件",
@@ -3652,7 +3666,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:06:57",
+        "stockAgeUpdatedAt":  "2026-08-27 18:11:03",
         "project":  "R1916",
         "materialName":  "锁扣",
         "productLine":  "推料机器人配件",
@@ -3701,7 +3715,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:10:12",
+        "stockAgeUpdatedAt":  "2026-08-27 18:14:09",
         "project":  "R1916",
         "materialName":  "主线束",
         "productLine":  "推料机器人配件",
@@ -3750,7 +3764,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:09:03",
+        "stockAgeUpdatedAt":  "2026-08-27 18:13:03",
         "project":  "R1916",
         "materialName":  "驱动轴",
         "productLine":  "推料机器人配件",
@@ -3799,7 +3813,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:02:48",
+        "stockAgeUpdatedAt":  "2026-08-27 18:06:57",
         "project":  "R1916",
         "materialName":  "Mini机超声波线束",
         "productLine":  "推料机器人配件",
@@ -3848,7 +3862,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:04:39",
+        "stockAgeUpdatedAt":  "2026-08-27 18:08:46",
         "project":  "R1916",
         "materialName":  "激光雷达盖",
         "productLine":  "推料机器人配件",
@@ -3900,7 +3914,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:08:45",
+        "stockAgeUpdatedAt":  "2026-08-27 18:12:46",
         "project":  "R1916",
         "materialName":  "直流变换器",
         "productLine":  "推料机器人配件",
@@ -3953,7 +3967,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:07:38",
+        "stockAgeUpdatedAt":  "2026-08-27 18:11:43",
         "project":  "R1916",
         "materialName":  "绝缘柱",
         "productLine":  "推料机器人配件",
@@ -4002,7 +4016,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:09:49",
+        "stockAgeUpdatedAt":  "2026-08-27 18:13:48",
         "project":  "R1916",
         "materialName":  "顶部支撑焊合",
         "productLine":  "推料机器人配件",
@@ -4028,12 +4042,12 @@ window.inventoryRows = [
         "category":  "成品_智能套件",
         "location":  "福州原材料仓",
         "unit":  "个",
-        "onHandQty":  5,
+        "onHandQty":  1,
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
         "unitCost":  58.11375,
-        "inventoryAmount":  290.56875,
+        "inventoryAmount":  58.11375,
         "spec":  "",
         "model":  "",
         "productId":  "7276",
@@ -4051,7 +4065,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:01:29",
+        "stockAgeUpdatedAt":  "2026-08-27 18:04:57",
         "project":  "R1916",
         "materialName":  "按键板总成",
         "productLine":  "推料机器人配件",
@@ -4099,7 +4113,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:10:21",
+        "stockAgeUpdatedAt":  "2026-08-27 18:14:18",
         "project":  "R1916",
         "materialName":  "套盒前盖板",
         "productLine":  "推料机器人配件",
@@ -4148,7 +4162,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:11:16",
+        "stockAgeUpdatedAt":  "2026-08-27 18:15:08",
         "project":  "R1916",
         "materialName":  "风扇支架焊合",
         "productLine":  "推料机器人配件",
@@ -4174,12 +4188,12 @@ window.inventoryRows = [
         "category":  "零部件及主材_电器件",
         "location":  "福州原材料仓",
         "unit":  "个",
-        "onHandQty":  12,
+        "onHandQty":  18,
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  513.27,
-        "inventoryAmount":  6159.24,
+        "unitCost":  513.275,
+        "inventoryAmount":  9238.9499999999989,
         "spec":  "",
         "model":  "",
         "productId":  "13948",
@@ -4197,7 +4211,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:04:55",
+        "stockAgeUpdatedAt":  "2026-08-27 18:09:05",
         "project":  "R1916",
         "materialName":  "举升主线束",
         "productLine":  "推料机器人配件",
@@ -4249,7 +4263,7 @@ window.inventoryRows = [
                                        "福州成品仓",
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:02:03",
+        "stockAgeUpdatedAt":  "2026-08-27 18:05:52",
         "project":  "R1916",
         "materialName":  "雷达线束",
         "productLine":  "推料机器人配件",
@@ -4298,7 +4312,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:09:49",
+        "stockAgeUpdatedAt":  "2026-08-27 18:13:48",
         "project":  "R1916",
         "materialName":  "视觉模块胶垫",
         "productLine":  "推料机器人配件",
@@ -4347,7 +4361,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:10:12",
+        "stockAgeUpdatedAt":  "2026-08-27 18:14:09",
         "project":  "R1916",
         "materialName":  "（旧版）MID-360激光雷达",
         "productLine":  "推料机器人配件",
@@ -4396,7 +4410,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:07:38",
+        "stockAgeUpdatedAt":  "2026-08-27 18:11:47",
         "project":  "R1916",
         "materialName":  "轴用弹性挡圈-A型",
         "productLine":  "推料机器人配件",
@@ -4444,7 +4458,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:01:22",
+        "stockAgeUpdatedAt":  "2026-08-27 18:04:47",
         "project":  "R1916",
         "materialName":  "深沟球轴承",
         "productLine":  "推料机器人配件",
@@ -4492,7 +4506,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:06:06",
+        "stockAgeUpdatedAt":  "2026-08-27 18:10:13",
         "project":  "R1916",
         "materialName":  "十字槽沉头螺钉",
         "productLine":  "推料机器人配件",
@@ -4543,7 +4557,7 @@ window.inventoryRows = [
                                        "福州成品仓",
                                        "福州半成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:03:19",
+        "stockAgeUpdatedAt":  "2026-08-27 18:07:33",
         "project":  "R1916",
         "materialName":  "万向轮总成",
         "productLine":  "推料机器人配件",
@@ -4592,7 +4606,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:05:49",
+        "stockAgeUpdatedAt":  "2026-08-27 18:09:58",
         "project":  "R1916",
         "materialName":  "不锈钢非标螺母",
         "productLine":  "推料机器人配件",
@@ -4641,7 +4655,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:07:21",
+        "stockAgeUpdatedAt":  "2026-08-27 18:11:26",
         "project":  "R1916",
         "materialName":  "清洁装置支架焊合",
         "productLine":  "推料机器人配件",
@@ -4693,7 +4707,7 @@ window.inventoryRows = [
                                        "福州成品仓",
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:07:43",
+        "stockAgeUpdatedAt":  "2026-08-27 18:11:47",
         "project":  "R1916",
         "materialName":  "63A熔断器",
         "productLine":  "推料机器人配件",
@@ -4742,7 +4756,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:01:54",
+        "stockAgeUpdatedAt":  "2026-08-27 18:05:42",
         "project":  "R1916",
         "materialName":  "滑动销",
         "productLine":  "推料机器人配件",
@@ -4791,7 +4805,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:01:09",
+        "stockAgeUpdatedAt":  "2026-08-27 18:04:26",
         "project":  "R1916",
         "materialName":  "驱动轴",
         "productLine":  "推料机器人配件",
@@ -4817,12 +4831,12 @@ window.inventoryRows = [
         "category":  "零部件及主材_电器件",
         "location":  "福州原材料仓",
         "unit":  "个",
-        "onHandQty":  311,
+        "onHandQty":  331,
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
         "unitCost":  283.95999999999992,
-        "inventoryAmount":  88311.559999999983,
+        "inventoryAmount":  93990.75999999998,
         "spec":  "",
         "model":  "",
         "productId":  "13785",
@@ -4845,7 +4859,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:06:14",
+        "stockAgeUpdatedAt":  "2026-08-27 18:10:22",
         "project":  "R1916",
         "materialName":  "激光雷达",
         "productLine":  "推料机器人配件",
@@ -4897,7 +4911,7 @@ window.inventoryRows = [
                                        "福州成品仓",
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:04:55",
+        "stockAgeUpdatedAt":  "2026-08-27 18:09:05",
         "project":  "R1916",
         "materialName":  "1型六角螺母",
         "productLine":  "推料机器人配件",
@@ -4945,7 +4959,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:03:19",
+        "stockAgeUpdatedAt":  "2026-08-27 18:07:33",
         "project":  "R1916",
         "materialName":  "滑轨",
         "productLine":  "推料机器人配件",
@@ -4997,7 +5011,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:08:36",
+        "stockAgeUpdatedAt":  "2026-08-27 18:12:37",
         "project":  "R1916",
         "materialName":  "盖子密封垫",
         "productLine":  "推料机器人配件",
@@ -5046,7 +5060,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州半成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:07:21",
+        "stockAgeUpdatedAt":  "2026-08-27 18:11:26",
         "project":  "R1916",
         "materialName":  "视觉盒子3.0",
         "productLine":  "推料机器人配件",
@@ -5095,7 +5109,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:05:34",
+        "stockAgeUpdatedAt":  "2026-08-27 18:09:45",
         "project":  "R1916",
         "materialName":  "Mini机A3板顶盖线束S2-2",
         "productLine":  "推料机器人配件",
@@ -5147,7 +5161,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:07:05",
+        "stockAgeUpdatedAt":  "2026-08-27 18:11:09",
         "project":  "R1916",
         "materialName":  "套盒贴花左",
         "productLine":  "推料机器人配件",
@@ -5196,7 +5210,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:11:49",
+        "stockAgeUpdatedAt":  "2026-08-27 18:15:38",
         "project":  "R1916",
         "materialName":  "充电桩底座焊合",
         "productLine":  "推料机器人配件",
@@ -5245,7 +5259,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:03:11",
+        "stockAgeUpdatedAt":  "2026-08-27 18:07:25",
         "project":  "R1916",
         "materialName":  "举升支架焊合",
         "productLine":  "推料机器人配件",
@@ -5297,7 +5311,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:11:40",
+        "stockAgeUpdatedAt":  "2026-08-27 18:15:29",
         "project":  "R1916",
         "materialName":  "雷达座",
         "productLine":  "推料机器人配件",
@@ -5349,7 +5363,7 @@ window.inventoryRows = [
                                        "福州成品仓",
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:02:55",
+        "stockAgeUpdatedAt":  "2026-08-27 18:07:04",
         "project":  "R1916",
         "materialName":  "前盖玻璃片",
         "productLine":  "推料机器人配件",
@@ -5398,7 +5412,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:01:22",
+        "stockAgeUpdatedAt":  "2026-08-27 18:04:47",
         "project":  "R1916",
         "materialName":  "（旧版）陀螺仪",
         "productLine":  "推料机器人配件",
@@ -5447,7 +5461,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:03:11",
+        "stockAgeUpdatedAt":  "2026-08-27 18:07:25",
         "project":  "R1916",
         "materialName":  "内六角螺钉",
         "productLine":  "推料机器人配件",
@@ -5499,7 +5513,7 @@ window.inventoryRows = [
                                        "福州成品仓",
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:05:26",
+        "stockAgeUpdatedAt":  "2026-08-27 18:09:39",
         "project":  "R1916",
         "materialName":  "楔形清洁布",
         "productLine":  "推料机器人配件",
@@ -5548,7 +5562,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:08:55",
+        "stockAgeUpdatedAt":  "2026-08-27 18:12:54",
         "project":  "R1916",
         "materialName":  "补光灯支架",
         "productLine":  "推料机器人配件",
@@ -5597,7 +5611,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:01:54",
+        "stockAgeUpdatedAt":  "2026-08-27 18:05:42",
         "project":  "R1916",
         "materialName":  "电池扣板",
         "productLine":  "推料机器人配件",
@@ -5646,7 +5660,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:07:38",
+        "stockAgeUpdatedAt":  "2026-08-27 18:11:43",
         "project":  "R1916",
         "materialName":  "轮子",
         "productLine":  "推料机器人配件",
@@ -5698,7 +5712,7 @@ window.inventoryRows = [
                                        "福州半成品仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:03:02",
+        "stockAgeUpdatedAt":  "2026-08-27 18:07:15",
         "project":  "R1916",
         "materialName":  "车控盒总成",
         "productLine":  "智能割草机",
@@ -5747,7 +5761,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州半成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:11:49",
+        "stockAgeUpdatedAt":  "2026-08-27 18:15:38",
         "project":  "R1916",
         "materialName":  "激光雷达备件总成",
         "productLine":  "推料机器人配件",
@@ -5796,7 +5810,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州半成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:03:27",
+        "stockAgeUpdatedAt":  "2026-08-27 18:07:41",
         "project":  "R1916",
         "materialName":  "锁扣组件",
         "productLine":  "推料机器人配件",
@@ -5845,7 +5859,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:03:38",
+        "stockAgeUpdatedAt":  "2026-08-27 18:07:53",
         "project":  "R1916",
         "materialName":  "大垫圈 A级",
         "productLine":  "推料机器人配件",
@@ -5893,7 +5907,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:07:30",
+        "stockAgeUpdatedAt":  "2026-08-27 18:11:34",
         "project":  "R1916",
         "materialName":  "充电模块备件总成",
         "productLine":  "推料机器人配件",
@@ -5942,7 +5956,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:05:41",
+        "stockAgeUpdatedAt":  "2026-08-27 18:09:51",
         "project":  "R1916",
         "materialName":  "双目视觉前盖",
         "productLine":  "推料机器人配件",
@@ -5968,12 +5982,12 @@ window.inventoryRows = [
         "category":  "零部件及主材_电器件",
         "location":  "福州原材料仓",
         "unit":  "个",
-        "onHandQty":  181,
+        "onHandQty":  184,
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
         "unitCost":  1039.864286,
-        "inventoryAmount":  188215.43576599998,
+        "inventoryAmount":  191335.028624,
         "spec":  "",
         "model":  "",
         "productId":  "8289",
@@ -5994,7 +6008,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:09:56",
+        "stockAgeUpdatedAt":  "2026-08-27 18:13:54",
         "project":  "R1916",
         "materialName":  "磁导航传感器",
         "productLine":  "推料机器人配件",
@@ -6043,7 +6057,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:05:14",
+        "stockAgeUpdatedAt":  "2026-08-27 18:09:27",
         "project":  "R1917",
         "materialName":  "开口销",
         "productLine":  "智能牛体刷配件",
@@ -6091,7 +6105,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:08:36",
+        "stockAgeUpdatedAt":  "2026-08-27 18:12:37",
         "project":  "R1916",
         "materialName":  "滑槽结构左件",
         "productLine":  "推料机器人配件",
@@ -6142,7 +6156,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:02:42",
+        "stockAgeUpdatedAt":  "2026-08-27 18:06:44",
         "project":  "R1916",
         "materialName":  "出风口",
         "productLine":  "推料机器人配件",
@@ -6191,7 +6205,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:02:42",
+        "stockAgeUpdatedAt":  "2026-08-27 18:06:44",
         "project":  "R1916",
         "materialName":  "包胶磁铁条",
         "productLine":  "推料机器人配件",
@@ -6243,7 +6257,7 @@ window.inventoryRows = [
                                        "福州成品仓",
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:05:49",
+        "stockAgeUpdatedAt":  "2026-08-27 18:09:58",
         "project":  "R1916",
         "materialName":  "套盒贴花右",
         "productLine":  "推料机器人配件",
@@ -6292,7 +6306,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:01:54",
+        "stockAgeUpdatedAt":  "2026-08-27 18:05:42",
         "project":  "R1916",
         "materialName":  "视觉算法板",
         "productLine":  "推料机器人配件",
@@ -6341,7 +6355,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:01:54",
+        "stockAgeUpdatedAt":  "2026-08-27 18:05:42",
         "project":  "R1916",
         "materialName":  "传感器板",
         "productLine":  "推料机器人配件",
@@ -6393,7 +6407,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:08:14",
+        "stockAgeUpdatedAt":  "2026-08-27 18:12:17",
         "project":  "R1916",
         "materialName":  "楔形魔术贴",
         "productLine":  "推料机器人配件",
@@ -6442,7 +6456,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:01:36",
+        "stockAgeUpdatedAt":  "2026-08-27 18:05:10",
         "project":  "R1916",
         "materialName":  "Mini机A3板顶盖线束S2-1",
         "productLine":  "推料机器人配件",
@@ -6491,7 +6505,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:02:48",
+        "stockAgeUpdatedAt":  "2026-08-27 18:06:57",
         "project":  "R1916",
         "materialName":  "细管焊合",
         "productLine":  "推料机器人配件",
@@ -6543,7 +6557,7 @@ window.inventoryRows = [
                                        "福州成品仓",
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:11:09",
+        "stockAgeUpdatedAt":  "2026-08-27 18:15:01",
         "project":  "R1916",
         "materialName":  "清洁布",
         "productLine":  "推料机器人配件",
@@ -6592,7 +6606,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:07:21",
+        "stockAgeUpdatedAt":  "2026-08-27 18:11:26",
         "project":  "R1916",
         "materialName":  "喇叭",
         "productLine":  "推料机器人配件",
@@ -6641,7 +6655,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:03:02",
+        "stockAgeUpdatedAt":  "2026-08-27 18:07:15",
         "project":  "R1916",
         "materialName":  "底部配重装箱",
         "productLine":  "推料机器人配件",
@@ -6693,7 +6707,7 @@ window.inventoryRows = [
                                        "福州成品仓",
                                        "福州半成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:06:57",
+        "stockAgeUpdatedAt":  "2026-08-27 18:11:03",
         "project":  "R1916",
         "materialName":  "超声波测距总成",
         "productLine":  "推料机器人配件",
@@ -6745,7 +6759,7 @@ window.inventoryRows = [
                                        "福州成品仓",
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:04:29",
+        "stockAgeUpdatedAt":  "2026-08-27 18:08:37",
         "project":  "R1916",
         "materialName":  "电推杆",
         "productLine":  "推料机器人配件",
@@ -6797,7 +6811,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:04:39",
+        "stockAgeUpdatedAt":  "2026-08-27 18:08:46",
         "project":  "R1916",
         "materialName":  "夹布胶皮",
         "productLine":  "推料机器人配件",
@@ -6846,7 +6860,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:08:36",
+        "stockAgeUpdatedAt":  "2026-08-27 18:12:37",
         "project":  "R1916",
         "materialName":  "悬臂安装座焊合",
         "productLine":  "推料机器人配件",
@@ -6898,7 +6912,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:02:03",
+        "stockAgeUpdatedAt":  "2026-08-27 18:05:52",
         "project":  "R1916",
         "materialName":  "充电桩极板",
         "productLine":  "推料机器人配件",
@@ -6947,7 +6961,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:05:41",
+        "stockAgeUpdatedAt":  "2026-08-27 18:09:51",
         "project":  "R1916",
         "materialName":  "风扇缓冲垫",
         "productLine":  "推料机器人配件",
@@ -6996,7 +7010,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:03:11",
+        "stockAgeUpdatedAt":  "2026-08-27 18:07:25",
         "project":  "R1916",
         "materialName":  "顶盖备件组合（带包装）",
         "productLine":  "推料机器人配件",
@@ -7048,7 +7062,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:02:48",
+        "stockAgeUpdatedAt":  "2026-08-27 18:06:57",
         "project":  "R1916",
         "materialName":  "补光灯支架安装板Ⅱ",
         "productLine":  "推料机器人配件",
@@ -7100,7 +7114,7 @@ window.inventoryRows = [
                                        "福州成品仓",
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:04:47",
+        "stockAgeUpdatedAt":  "2026-08-27 18:08:54",
         "project":  "R1916",
         "materialName":  "带弹平垫内六角平圆头螺钉",
         "productLine":  "推料机器人配件",
@@ -7149,7 +7163,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州半成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:07:38",
+        "stockAgeUpdatedAt":  "2026-08-27 18:11:43",
         "project":  "R1916",
         "materialName":  "视觉盒子3.0",
         "productLine":  "推料机器人配件",
@@ -7198,7 +7212,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:05:34",
+        "stockAgeUpdatedAt":  "2026-08-27 18:09:45",
         "project":  "R1916",
         "materialName":  "Mini机双路磁导线束",
         "productLine":  "推料机器人配件",
@@ -7250,7 +7264,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:11:32",
+        "stockAgeUpdatedAt":  "2026-08-27 18:15:22",
         "project":  "R1916",
         "materialName":  "绝缘柱",
         "productLine":  "推料机器人配件",
@@ -7299,7 +7313,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州半成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:04:47",
+        "stockAgeUpdatedAt":  "2026-08-27 18:08:54",
         "project":  "R1916",
         "materialName":  "超声波测距总成",
         "productLine":  "推料机器人配件",
@@ -7353,7 +7367,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:08:21",
+        "stockAgeUpdatedAt":  "2026-08-27 18:12:23",
         "project":  "R1916",
         "materialName":  "充电机",
         "productLine":  "推料机器人配件",
@@ -7402,7 +7416,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:11:32",
+        "stockAgeUpdatedAt":  "2026-08-27 18:15:29",
         "project":  "R1916",
         "materialName":  "控制类",
         "productLine":  "推料机器人配件",
@@ -7451,7 +7465,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:04:59",
+        "stockAgeUpdatedAt":  "2026-08-27 18:09:10",
         "project":  "R1916",
         "materialName":  "内六角平圆头螺钉",
         "productLine":  "推料机器人配件",
@@ -7499,7 +7513,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:08:55",
+        "stockAgeUpdatedAt":  "2026-08-27 18:12:54",
         "project":  "R1916",
         "materialName":  "悬臂焊合",
         "productLine":  "推料机器人配件",
@@ -7551,7 +7565,7 @@ window.inventoryRows = [
                                        "福州成品仓",
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:04:12",
+        "stockAgeUpdatedAt":  "2026-08-27 18:08:29",
         "project":  "R1916",
         "materialName":  "套盒",
         "productLine":  "推料机器人配件",
@@ -7605,7 +7619,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:10:04",
+        "stockAgeUpdatedAt":  "2026-08-27 18:14:01",
         "project":  "R1917",
         "materialName":  "交流电机",
         "productLine":  "智能牛体刷配件",
@@ -7654,7 +7668,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:05:34",
+        "stockAgeUpdatedAt":  "2026-08-27 18:09:45",
         "project":  "R1916",
         "materialName":  "粗管安装座焊合",
         "productLine":  "推料机器人配件",
@@ -7706,7 +7720,7 @@ window.inventoryRows = [
                                        "福州成品仓",
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:11:40",
+        "stockAgeUpdatedAt":  "2026-08-27 18:15:29",
         "project":  "R1916",
         "materialName":  "背胶海绵",
         "productLine":  "推料机器人配件",
@@ -7755,7 +7769,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:04:47",
+        "stockAgeUpdatedAt":  "2026-08-27 18:08:54",
         "project":  "R1916",
         "materialName":  "带弹平垫内六角圆柱头螺钉",
         "productLine":  "推料机器人配件",
@@ -7805,7 +7819,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:03:19",
+        "stockAgeUpdatedAt":  "2026-08-27 18:07:33",
         "project":  "R1916",
         "materialName":  "磁钉",
         "sellableSpare":  true,
@@ -7856,7 +7870,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:10:04",
+        "stockAgeUpdatedAt":  "2026-08-27 18:14:01",
         "project":  "R1916",
         "materialName":  "警示灯",
         "productLine":  "推料机器人配件",
@@ -7905,7 +7919,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州半成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:02:12",
+        "stockAgeUpdatedAt":  "2026-08-27 18:06:00",
         "project":  "R1916",
         "materialName":  "锁扣组件",
         "productLine":  "推料机器人配件",
@@ -7954,7 +7968,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:04:12",
+        "stockAgeUpdatedAt":  "2026-08-27 18:08:29",
         "project":  "R1916",
         "materialName":  "顶盖（不带包装）",
         "productLine":  "推料机器人配件",
@@ -8006,7 +8020,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:09:09",
+        "stockAgeUpdatedAt":  "2026-08-27 18:13:10",
         "project":  "R1916",
         "materialName":  "80A熔断器",
         "productLine":  "推料机器人配件",
@@ -8060,7 +8074,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:09:56",
+        "stockAgeUpdatedAt":  "2026-08-27 18:13:54",
         "project":  "R1916",
         "materialName":  "磁钉",
         "productLine":  "推料机器人配件",
@@ -8109,7 +8123,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:04:39",
+        "stockAgeUpdatedAt":  "2026-08-27 18:08:46",
         "project":  "R1916",
         "materialName":  "举升连杆焊合",
         "productLine":  "推料机器人配件",
@@ -8157,7 +8171,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:01:13",
+        "stockStatusUpdatedAt":  "2026-08-27 22:03:05",
         "project":  "R1916",
         "materialName":  "胶皮",
         "productLine":  "推料机器人配件",
@@ -8205,7 +8219,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:01:13",
+        "stockStatusUpdatedAt":  "2026-08-27 22:03:05",
         "project":  "R1916",
         "materialName":  "胶皮",
         "productLine":  "推料机器人配件",
@@ -8253,7 +8267,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:01:13",
+        "stockStatusUpdatedAt":  "2026-08-27 22:03:05",
         "project":  "R1916",
         "materialName":  "超声波测距传感器",
         "productLine":  "推料机器人配件",
@@ -8279,18 +8293,18 @@ window.inventoryRows = [
         "category":  "All",
         "location":  "Frankfurt",
         "unit":  "个",
-        "onHandQty":  20,
+        "onHandQty":  19,
         "reservedQty":  0,
         "frozenQty":  0,
-        "availableQty":  20,
+        "availableQty":  19,
         "currentMonthDemandQty":  0,
         "nextMonthDemandQty":  0,
         "nextTwoMonthDemandQty":  0,
         "totalDemandQty":  0,
-        "demandSupplyGapQty":  -30,
+        "demandSupplyGapQty":  -29,
         "supplierOwnedQty":  0,
         "unitCost":  153,
-        "inventoryAmount":  3060,
+        "inventoryAmount":  2907,
         "spec":  "",
         "model":  "",
         "productId":  "324",
@@ -8301,7 +8315,7 @@ window.inventoryRows = [
         "actualTransit":  10,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:01:13",
+        "stockStatusUpdatedAt":  "2026-08-27 22:03:05",
         "project":  "R1916",
         "materialName":  "充电机",
         "productLine":  "推料机器人配件",
@@ -8349,7 +8363,7 @@ window.inventoryRows = [
         "actualTransit":  10,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:02:45",
+        "stockStatusUpdatedAt":  "2026-08-27 22:04:42",
         "project":  "R1916",
         "materialName":  "接触器",
         "productLine":  "推料机器人配件",
@@ -8397,7 +8411,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:01:13",
+        "stockStatusUpdatedAt":  "2026-08-27 22:03:05",
         "project":  "R1916",
         "materialName":  "超声波测距总成",
         "productLine":  "推料机器人配件",
@@ -8445,7 +8459,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:12:17",
+        "stockStatusUpdatedAt":  "2026-08-27 22:14:41",
         "project":  "R1916",
         "materialName":  "激光雷达备件总成",
         "productLine":  "推料机器人配件",
@@ -8493,7 +8507,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:11:49",
+        "stockStatusUpdatedAt":  "2026-08-27 22:14:11",
         "project":  "R1916",
         "materialName":  "胶棒天线",
         "productLine":  "推料机器人配件",
@@ -8541,7 +8555,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:10:55",
+        "stockStatusUpdatedAt":  "2026-08-27 22:13:14",
         "project":  "R1916",
         "materialName":  "主线束",
         "productLine":  "推料机器人配件",
@@ -8589,7 +8603,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:06:14",
+        "stockStatusUpdatedAt":  "2026-08-27 22:08:20",
         "project":  "R1916",
         "materialName":  "（旧版）MID-360激光雷达",
         "productLine":  "推料机器人配件",
@@ -8637,7 +8651,7 @@ window.inventoryRows = [
         "actualTransit":  20,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:11:49",
+        "stockStatusUpdatedAt":  "2026-08-27 22:14:11",
         "project":  "R1916",
         "materialName":  "直流变换器",
         "productLine":  "推料机器人配件",
@@ -8689,7 +8703,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:12:17",
+        "stockStatusUpdatedAt":  "2026-08-27 22:14:41",
         "project":  "R1916",
         "materialName":  "激光雷达备件总成",
         "productLine":  "推料机器人配件",
@@ -8737,7 +8751,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:01:13",
+        "stockStatusUpdatedAt":  "2026-08-27 22:03:05",
         "project":  "R1916",
         "materialName":  "驱动类",
         "productLine":  "推料机器人配件",
@@ -8785,7 +8799,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:02:45",
+        "stockStatusUpdatedAt":  "2026-08-27 22:04:42",
         "project":  "R1916",
         "materialName":  "急停开关",
         "productLine":  "推料机器人配件",
@@ -8833,7 +8847,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:01:13",
+        "stockStatusUpdatedAt":  "2026-08-27 22:03:05",
         "project":  "R1916",
         "materialName":  "控制类",
         "productLine":  "推料机器人配件",
@@ -8881,7 +8895,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:01:13",
+        "stockStatusUpdatedAt":  "2026-08-27 22:03:05",
         "project":  "R1916",
         "materialName":  "磁钉",
         "productLine":  "推料机器人配件",
@@ -8929,7 +8943,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:04:48",
+        "stockStatusUpdatedAt":  "2026-08-27 22:06:50",
         "project":  "R1916",
         "materialName":  "MCU总成",
         "productLine":  "推料机器人配件",
@@ -8977,7 +8991,7 @@ window.inventoryRows = [
         "actualTransit":  5,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:04:48",
+        "stockStatusUpdatedAt":  "2026-08-27 22:06:50",
         "project":  "R1916",
         "materialName":  "清洁布",
         "productLine":  "推料机器人配件",
@@ -9003,7 +9017,7 @@ window.inventoryRows = [
         "category":  "All",
         "location":  "Frankfurt",
         "unit":  "个",
-        "onHandQty":  31,
+        "onHandQty":  28,
         "reservedQty":  147,
         "frozenQty":  0,
         "availableQty":  0,
@@ -9011,10 +9025,10 @@ window.inventoryRows = [
         "nextMonthDemandQty":  303,
         "nextTwoMonthDemandQty":  246,
         "totalDemandQty":  696,
-        "demandSupplyGapQty":  505,
+        "demandSupplyGapQty":  508,
         "supplierOwnedQty":  0,
         "unitCost":  840,
-        "inventoryAmount":  26040,
+        "inventoryAmount":  23520,
         "spec":  "",
         "model":  "",
         "productId":  "9365",
@@ -9025,7 +9039,7 @@ window.inventoryRows = [
         "actualTransit":  160,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:05:17",
+        "stockStatusUpdatedAt":  "2026-08-27 22:07:22",
         "odooProject":  "R2106",
         "project":  "R1916",
         "materialName":  "可充电锂离子电池",
@@ -9073,7 +9087,7 @@ window.inventoryRows = [
         "actualTransit":  10,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:01:13",
+        "stockStatusUpdatedAt":  "2026-08-27 22:03:05",
         "project":  "R1916",
         "materialName":  "补光灯",
         "productLine":  "推料机器人配件",
@@ -9121,7 +9135,7 @@ window.inventoryRows = [
         "actualTransit":  10,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:01:13",
+        "stockStatusUpdatedAt":  "2026-08-27 22:03:05",
         "project":  "R1916",
         "materialName":  "63A熔断器",
         "productLine":  "推料机器人配件",
@@ -9169,7 +9183,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:01:13",
+        "stockStatusUpdatedAt":  "2026-08-27 22:03:05",
         "project":  "R1916",
         "materialName":  "行走驱动电机",
         "productLine":  "推料机器人配件",
@@ -9217,7 +9231,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:01:13",
+        "stockStatusUpdatedAt":  "2026-08-27 22:03:05",
         "project":  "R1916",
         "materialName":  "（旧版）陀螺仪",
         "productLine":  "推料机器人配件",
@@ -9265,7 +9279,7 @@ window.inventoryRows = [
         "actualTransit":  40,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:01:13",
+        "stockStatusUpdatedAt":  "2026-08-27 22:03:05",
         "project":  "R1916",
         "materialName":  "80A熔断器",
         "productLine":  "推料机器人配件",
@@ -9313,7 +9327,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:01:13",
+        "stockStatusUpdatedAt":  "2026-08-27 22:03:05",
         "project":  "R1916",
         "materialName":  "按键板总成",
         "productLine":  "推料机器人配件",
@@ -9360,7 +9374,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:11:22",
+        "stockStatusUpdatedAt":  "2026-08-27 22:13:42",
         "project":  "R1916",
         "materialName":  "控制类",
         "productLine":  "推料机器人配件",
@@ -9408,7 +9422,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:06:14",
+        "stockStatusUpdatedAt":  "2026-08-27 22:08:20",
         "project":  "R1916",
         "materialName":  "塑料膨胀螺丝",
         "productLine":  "推料机器人配件",
@@ -9456,7 +9470,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:07:39",
+        "stockStatusUpdatedAt":  "2026-08-27 22:09:47",
         "project":  "R1916",
         "materialName":  "电池扣板",
         "productLine":  "推料机器人配件",
@@ -9504,7 +9518,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:10:00",
+        "stockStatusUpdatedAt":  "2026-08-27 22:12:14",
         "project":  "R1916",
         "materialName":  "激光雷达盖",
         "productLine":  "推料机器人配件",
@@ -9552,7 +9566,7 @@ window.inventoryRows = [
         "actualTransit":  5,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:06:14",
+        "stockStatusUpdatedAt":  "2026-08-27 22:08:20",
         "project":  "R1916",
         "materialName":  "楔形清洁布",
         "productLine":  "推料机器人配件",
@@ -9600,7 +9614,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:06:14",
+        "stockStatusUpdatedAt":  "2026-08-27 22:08:20",
         "project":  "R1916",
         "materialName":  "驱动类",
         "productLine":  "推料机器人配件",
@@ -9648,7 +9662,7 @@ window.inventoryRows = [
         "actualTransit":  6,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:06:14",
+        "stockStatusUpdatedAt":  "2026-08-27 22:08:20",
         "project":  "R1916",
         "materialName":  "驱动类",
         "productLine":  "推料机器人配件",
@@ -9696,7 +9710,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:08:08",
+        "stockStatusUpdatedAt":  "2026-08-27 22:10:16",
         "project":  "R1916",
         "materialName":  "锁扣",
         "productLine":  "推料机器人配件",
@@ -9744,7 +9758,7 @@ window.inventoryRows = [
         "actualTransit":  20,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:10:00",
+        "stockStatusUpdatedAt":  "2026-08-27 22:12:14",
         "project":  "R1916",
         "materialName":  "视觉算法板",
         "productLine":  "推料机器人配件",
@@ -9792,7 +9806,7 @@ window.inventoryRows = [
         "actualTransit":  6,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:10:00",
+        "stockStatusUpdatedAt":  "2026-08-27 22:12:14",
         "project":  "R1916",
         "materialName":  "雷达线束",
         "productLine":  "推料机器人配件",
@@ -9840,7 +9854,7 @@ window.inventoryRows = [
         "actualTransit":  4,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:10:27",
+        "stockStatusUpdatedAt":  "2026-08-27 22:12:43",
         "project":  "R1916",
         "materialName":  "出风口",
         "productLine":  "推料机器人配件",
@@ -9888,7 +9902,7 @@ window.inventoryRows = [
         "actualTransit":  3,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:10:27",
+        "stockStatusUpdatedAt":  "2026-08-27 22:12:43",
         "project":  "R1916",
         "materialName":  "视觉盒子3.0",
         "productLine":  "推料机器人配件",
@@ -9936,7 +9950,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:10:00",
+        "stockStatusUpdatedAt":  "2026-08-27 22:12:14",
         "project":  "R1916",
         "materialName":  "雷达座",
         "productLine":  "推料机器人配件",
@@ -9984,7 +9998,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:07:10",
+        "stockStatusUpdatedAt":  "2026-08-27 22:09:17",
         "project":  "R1916",
         "materialName":  "（旧版）MID-360激光雷达",
         "productLine":  "推料机器人配件",
@@ -10032,7 +10046,7 @@ window.inventoryRows = [
         "actualTransit":  5,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:13:42",
+        "stockStatusUpdatedAt":  "2026-08-27 22:16:11",
         "project":  "R1916",
         "materialName":  "激光雷达",
         "productLine":  "推料机器人配件",
@@ -10080,7 +10094,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:14:38",
+        "stockStatusUpdatedAt":  "2026-08-27 22:17:09",
         "project":  "R1916",
         "materialName":  "举升主线束",
         "productLine":  "推料机器人配件",
@@ -10128,7 +10142,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:12:45",
+        "stockStatusUpdatedAt":  "2026-08-27 22:15:12",
         "project":  "R1916",
         "materialName":  "行走驱动电机",
         "productLine":  "推料机器人配件",
@@ -10176,7 +10190,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:11:49",
+        "stockStatusUpdatedAt":  "2026-08-27 22:14:11",
         "project":  "R1916",
         "materialName":  "线束",
         "productLine":  "推料机器人配件",
@@ -10224,7 +10238,7 @@ window.inventoryRows = [
         "actualTransit":  3,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:12:17",
+        "stockStatusUpdatedAt":  "2026-08-27 22:14:41",
         "project":  "R1916",
         "materialName":  "升降滚筒备件总成（带包装）",
         "productLine":  "推料机器人配件",
@@ -10272,7 +10286,7 @@ window.inventoryRows = [
         "actualTransit":  15,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:12:45",
+        "stockStatusUpdatedAt":  "2026-08-27 22:15:12",
         "project":  "R1916",
         "materialName":  "前盖玻璃片",
         "productLine":  "推料机器人配件",
@@ -10320,7 +10334,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:10:55",
+        "stockStatusUpdatedAt":  "2026-08-27 22:13:14",
         "project":  "R1916",
         "materialName":  "激光雷达备件总成",
         "productLine":  "推料机器人配件",
@@ -10368,7 +10382,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:06:42",
+        "stockStatusUpdatedAt":  "2026-08-27 22:08:48",
         "project":  "R1916",
         "materialName":  "驱动轮",
         "productLine":  "推料机器人配件",
@@ -10416,7 +10430,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:06:42",
+        "stockStatusUpdatedAt":  "2026-08-27 22:08:48",
         "project":  "R1916",
         "materialName":  "顶盖备件组合（带包装）",
         "productLine":  "推料机器人配件",
@@ -10464,7 +10478,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:12:17",
+        "stockStatusUpdatedAt":  "2026-08-27 22:14:41",
         "project":  "R1916",
         "materialName":  "滚筒备件总成（带包装）",
         "productLine":  "推料机器人配件",
@@ -10512,7 +10526,7 @@ window.inventoryRows = [
         "actualTransit":  12,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:12:45",
+        "stockStatusUpdatedAt":  "2026-08-27 22:15:12",
         "project":  "R1916",
         "materialName":  "锁扣组件",
         "productLine":  "推料机器人配件",
@@ -10560,7 +10574,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:12:45",
+        "stockStatusUpdatedAt":  "2026-08-27 22:15:12",
         "project":  "R1916",
         "materialName":  "标识牌组件",
         "productLine":  "推料机器人配件",
@@ -10614,7 +10628,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:04:06",
+        "stockAgeUpdatedAt":  "2026-08-27 18:08:23",
         "project":  "R1916",
         "materialName":  "充电机",
         "productLine":  "推料机器人配件",
@@ -10663,7 +10677,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:04:29",
+        "stockAgeUpdatedAt":  "2026-08-27 18:08:37",
         "project":  "R1916",
         "materialName":  "板销焊合",
         "productLine":  "推料机器人配件",
@@ -10715,7 +10729,7 @@ window.inventoryRows = [
                                        "福州成品仓",
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:08:14",
+        "stockAgeUpdatedAt":  "2026-08-27 18:12:17",
         "project":  "R1916",
         "materialName":  "胶皮压板",
         "productLine":  "推料机器人配件",
@@ -10764,7 +10778,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:04:06",
+        "stockAgeUpdatedAt":  "2026-08-27 18:08:23",
         "project":  "R1916",
         "materialName":  "胶皮",
         "productLine":  "推料机器人配件",
@@ -10817,7 +10831,7 @@ window.inventoryRows = [
                                        "福州成品仓",
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:02:42",
+        "stockAgeUpdatedAt":  "2026-08-27 18:06:44",
         "project":  "R1916",
         "materialName":  "滑盖魔术贴",
         "sellableSpare":  true,
@@ -10865,7 +10879,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:01:36",
+        "stockAgeUpdatedAt":  "2026-08-27 18:05:10",
         "project":  "R1916",
         "materialName":  "通风管",
         "productLine":  "推料机器人配件",
@@ -10914,7 +10928,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:05:57",
+        "stockAgeUpdatedAt":  "2026-08-27 18:10:06",
         "project":  "R1916",
         "materialName":  "滑槽结构右件",
         "productLine":  "推料机器人配件",
@@ -10963,7 +10977,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:06:14",
+        "stockAgeUpdatedAt":  "2026-08-27 18:10:22",
         "project":  "R1916",
         "materialName":  "滚筒焊合（不带包装）",
         "productLine":  "推料机器人配件",
@@ -11015,7 +11029,7 @@ window.inventoryRows = [
                                        "福州成品仓",
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:07:13",
+        "stockAgeUpdatedAt":  "2026-08-27 18:11:16",
         "project":  "R1916",
         "materialName":  "PCB盖子",
         "productLine":  "推料机器人配件",
@@ -11067,7 +11081,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:06:14",
+        "stockAgeUpdatedAt":  "2026-08-27 18:10:22",
         "project":  "R1916",
         "materialName":  "举升主线束",
         "productLine":  "推料机器人配件",
@@ -11116,7 +11130,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 17:56:12",
+        "stockAgeUpdatedAt":  "2026-08-27 17:57:12",
         "project":  "R1916",
         "materialName":  "轴用弹性挡圈-A型",
         "productLine":  "推料机器人配件",
@@ -11164,7 +11178,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:09:56",
+        "stockAgeUpdatedAt":  "2026-08-27 18:13:54",
         "project":  "R1916",
         "materialName":  "刷板",
         "productLine":  "推料机器人配件",
@@ -11216,7 +11230,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:05:26",
+        "stockAgeUpdatedAt":  "2026-08-27 18:09:39",
         "project":  "R1916",
         "materialName":  "鼓风机",
         "productLine":  "推料机器人配件",
@@ -11268,7 +11282,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:02:48",
+        "stockAgeUpdatedAt":  "2026-08-27 18:06:57",
         "project":  "R1916",
         "materialName":  "线束",
         "productLine":  "推料机器人配件",
@@ -11317,7 +11331,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:06:19",
+        "stockAgeUpdatedAt":  "2026-08-27 18:10:27",
         "project":  "R1917",
         "materialName":  "1型六角锁紧螺母",
         "productLine":  "智能牛体刷配件",
@@ -11365,7 +11379,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:03:11",
+        "stockAgeUpdatedAt":  "2026-08-27 18:07:25",
         "project":  "R1916",
         "materialName":  "弹簧",
         "productLine":  "推料机器人配件",
@@ -11417,7 +11431,7 @@ window.inventoryRows = [
                                        "福州成品仓",
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:08:14",
+        "stockAgeUpdatedAt":  "2026-08-27 18:12:17",
         "project":  "R1916",
         "materialName":  "补光灯",
         "productLine":  "推料机器人配件",
@@ -11443,12 +11457,12 @@ window.inventoryRows = [
         "category":  "成品_电池",
         "location":  "福州半成品仓",
         "unit":  "个",
-        "onHandQty":  295,
+        "onHandQty":  243,
         "reservedQty":  0,
         "frozenQty":  0,
         "supplierOwnedQty":  0,
-        "unitCost":  1819.6932088440678,
-        "inventoryAmount":  536809.496609,
+        "unitCost":  1730.0368160534981,
+        "inventoryAmount":  420398.946301,
         "spec":  "",
         "model":  "",
         "productId":  "9365",
@@ -11469,7 +11483,7 @@ window.inventoryRows = [
                                        "福州半成品仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:01:54",
+        "stockAgeUpdatedAt":  "2026-08-27 18:05:42",
         "odooProject":  "R2106",
         "project":  "R1916",
         "materialName":  "可充电锂离子电池",
@@ -11518,7 +11532,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:11:32",
+        "stockAgeUpdatedAt":  "2026-08-27 18:15:22",
         "project":  "R1916",
         "materialName":  "万向轮总成",
         "productLine":  "推料机器人配件",
@@ -11570,7 +11584,7 @@ window.inventoryRows = [
                                        "福州成品仓",
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:06:06",
+        "stockAgeUpdatedAt":  "2026-08-27 18:10:13",
         "project":  "R1916",
         "materialName":  "雷达支架焊合",
         "productLine":  "推料机器人配件",
@@ -11619,7 +11633,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:06:19",
+        "stockAgeUpdatedAt":  "2026-08-27 18:10:27",
         "project":  "R1916",
         "materialName":  "喉箍",
         "productLine":  "推料机器人配件",
@@ -11667,7 +11681,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:03:19",
+        "stockAgeUpdatedAt":  "2026-08-27 18:07:33",
         "project":  "R1916",
         "materialName":  "IMU安装板",
         "productLine":  "推料机器人配件",
@@ -11719,7 +11733,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:01:29",
+        "stockAgeUpdatedAt":  "2026-08-27 18:04:57",
         "project":  "R1916",
         "materialName":  "超声波测距传感器",
         "productLine":  "推料机器人配件",
@@ -11768,7 +11782,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:09:35",
+        "stockAgeUpdatedAt":  "2026-08-27 18:13:36",
         "project":  "R1916",
         "materialName":  "轴用弹性挡圈-A型",
         "productLine":  "推料机器人配件",
@@ -11816,7 +11830,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:04:39",
+        "stockAgeUpdatedAt":  "2026-08-27 18:08:46",
         "project":  "R1916",
         "materialName":  "视觉支架焊合",
         "productLine":  "推料机器人配件",
@@ -11868,7 +11882,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:01:44",
+        "stockAgeUpdatedAt":  "2026-08-27 18:05:22",
         "project":  "R1916",
         "materialName":  "塑料膨胀螺丝",
         "productLine":  "推料机器人配件",
@@ -11916,7 +11930,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:03:16",
+        "stockStatusUpdatedAt":  "2026-08-27 22:05:18",
         "project":  "R1916",
         "materialName":  "警示灯",
         "productLine":  "推料机器人配件",
@@ -11964,7 +11978,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:02:45",
+        "stockStatusUpdatedAt":  "2026-08-27 22:04:42",
         "project":  "R1916",
         "materialName":  "磁导航传感器",
         "productLine":  "推料机器人配件",
@@ -12012,7 +12026,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:02:45",
+        "stockStatusUpdatedAt":  "2026-08-27 22:04:42",
         "project":  "R1916",
         "materialName":  "车控盒总成",
         "productLine":  "智能割草机",
@@ -12060,7 +12074,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:03:16",
+        "stockStatusUpdatedAt":  "2026-08-27 22:05:18",
         "project":  "R1916",
         "materialName":  "驱动轴",
         "productLine":  "推料机器人配件",
@@ -12108,7 +12122,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:03:16",
+        "stockStatusUpdatedAt":  "2026-08-27 22:05:18",
         "project":  "R1916",
         "materialName":  "刷板",
         "productLine":  "推料机器人配件",
@@ -12156,7 +12170,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:03:48",
+        "stockStatusUpdatedAt":  "2026-08-27 22:05:49",
         "project":  "R1916",
         "materialName":  "万向轮总成",
         "productLine":  "推料机器人配件",
@@ -12204,7 +12218,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:05:17",
+        "stockStatusUpdatedAt":  "2026-08-27 22:07:22",
         "odooProject":  "R2106",
         "project":  "R1916",
         "materialName":  "可充电锂离子电池",
@@ -12238,7 +12252,7 @@ window.inventoryRows = [
         "nextMonthDemandQty":  0,
         "nextTwoMonthDemandQty":  85,
         "totalDemandQty":  92,
-        "demandSupplyGapQty":  -72,
+        "demandSupplyGapQty":  -112,
         "supplierOwnedQty":  0,
         "unitCost":  840,
         "inventoryAmount":  3360,
@@ -12249,10 +12263,10 @@ window.inventoryRows = [
         "imageUrl":  "https://odoo-se.fjdac.com/web/image/554664",
         "priceSource":  "割草机USD价格表 (USD)",
         "priceStartPlace":  "Fuzhou",
-        "actualTransit":  160,
+        "actualTransit":  200,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:05:17",
+        "stockStatusUpdatedAt":  "2026-08-27 22:07:22",
         "odooProject":  "R2106",
         "project":  "R1916",
         "materialName":  "可充电锂离子电池",
@@ -12286,7 +12300,7 @@ window.inventoryRows = [
         "nextMonthDemandQty":  0,
         "nextTwoMonthDemandQty":  10,
         "totalDemandQty":  50,
-        "demandSupplyGapQty":  -15,
+        "demandSupplyGapQty":  -123,
         "supplierOwnedQty":  0,
         "unitCost":  840,
         "inventoryAmount":  0,
@@ -12297,10 +12311,10 @@ window.inventoryRows = [
         "imageUrl":  "https://odoo-se.fjdac.com/web/image/554664",
         "priceSource":  "割草机USD价格表 (USD)",
         "priceStartPlace":  "Fuzhou",
-        "actualTransit":  65,
+        "actualTransit":  173,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:05:17",
+        "stockStatusUpdatedAt":  "2026-08-27 22:07:22",
         "odooProject":  "R2106",
         "project":  "R1916",
         "materialName":  "可充电锂离子电池",
@@ -12348,7 +12362,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:03:16",
+        "stockStatusUpdatedAt":  "2026-08-27 22:05:18",
         "project":  "R1916",
         "materialName":  "驱动轮",
         "productLine":  "推料机器人配件",
@@ -12396,7 +12410,7 @@ window.inventoryRows = [
         "actualTransit":  0,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:04:18",
+        "stockStatusUpdatedAt":  "2026-08-27 22:06:20",
         "project":  "R1916",
         "materialName":  "底部配重装箱",
         "productLine":  "推料机器人配件",
@@ -12422,7 +12436,7 @@ window.inventoryRows = [
         "category":  "All",
         "location":  "Chicago",
         "unit":  "个",
-        "onHandQty":  32,
+        "onHandQty":  36,
         "reservedQty":  52,
         "frozenQty":  0,
         "availableQty":  0,
@@ -12430,10 +12444,10 @@ window.inventoryRows = [
         "nextMonthDemandQty":  104,
         "nextTwoMonthDemandQty":  0,
         "totalDemandQty":  156,
-        "demandSupplyGapQty":  60,
+        "demandSupplyGapQty":  62,
         "supplierOwnedQty":  0,
         "unitCost":  840,
-        "inventoryAmount":  26880,
+        "inventoryAmount":  30240,
         "spec":  "",
         "model":  "",
         "productId":  "9365",
@@ -12441,10 +12455,10 @@ window.inventoryRows = [
         "imageUrl":  "https://odoo-se.fjdac.com/web/image/554664",
         "priceSource":  "割草机USD价格表 (USD)",
         "priceStartPlace":  "Fuzhou",
-        "actualTransit":  64,
+        "actualTransit":  58,
         "availabilitySource":  "Odoo overseas.warehouse.stock.status current_month_demand",
         "stockSource":  "Odoo overseas.warehouse.stock.status",
-        "stockStatusUpdatedAt":  "2026-08-26 22:05:17",
+        "stockStatusUpdatedAt":  "2026-08-27 22:07:22",
         "odooProject":  "R2106",
         "project":  "R1916",
         "materialName":  "可充电锂离子电池",
@@ -12496,7 +12510,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:11:32",
+        "stockAgeUpdatedAt":  "2026-08-27 18:15:22",
         "project":  "R1916",
         "materialName":  "驱动轮",
         "productLine":  "推料机器人配件",
@@ -12548,7 +12562,7 @@ window.inventoryRows = [
                                        "福州成品仓",
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:11:49",
+        "stockAgeUpdatedAt":  "2026-08-27 18:15:38",
         "project":  "R1916",
         "materialName":  "带弹平垫内六角圆柱头螺钉",
         "productLine":  "推料机器人配件",
@@ -12597,7 +12611,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:09:42",
+        "stockAgeUpdatedAt":  "2026-08-27 18:13:41",
         "project":  "R1916",
         "materialName":  "弹簧2",
         "productLine":  "推料机器人配件",
@@ -12646,7 +12660,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:05:06",
+        "stockAgeUpdatedAt":  "2026-08-27 18:09:17",
         "project":  "R1916",
         "materialName":  "透明盖",
         "productLine":  "推料机器人配件",
@@ -12696,7 +12710,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:10:21",
+        "stockAgeUpdatedAt":  "2026-08-27 18:14:18",
         "project":  "R1916",
         "materialName":  "RTK支架密封垫",
         "sellableSpare":  true,
@@ -12744,7 +12758,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:09:16",
+        "stockAgeUpdatedAt":  "2026-08-27 18:13:17",
         "project":  "R1916",
         "materialName":  "驱动轮连接件",
         "productLine":  "推料机器人配件",
@@ -12796,7 +12810,7 @@ window.inventoryRows = [
                                        "福州成品仓",
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:01:54",
+        "stockAgeUpdatedAt":  "2026-08-27 18:05:42",
         "project":  "R1916",
         "materialName":  "气口",
         "productLine":  "推料机器人配件",
@@ -12845,7 +12859,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州半成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:04:47",
+        "stockAgeUpdatedAt":  "2026-08-27 18:08:54",
         "project":  "R1916",
         "materialName":  "MCU总成",
         "productLine":  "推料机器人配件",
@@ -12894,7 +12908,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州原材料仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:10:12",
+        "stockAgeUpdatedAt":  "2026-08-27 18:14:09",
         "project":  "R1916",
         "materialName":  "护线管焊合",
         "productLine":  "推料机器人配件",
@@ -12935,15 +12949,18 @@ window.inventoryRows = [
         "priceStartPlace":  "",
         "stockSource":  "Odoo fj.inventory.age",
         "stockAgeOrgCodes":  [
-                                 "FJ01-FZ"
+                                 "FJ01-FZ",
+                                 "FJ05"
                              ],
         "stockAgeOrgNames":  [
-                                 "FJ01福州仓库工厂"
+                                 "FJ01福州仓库工厂",
+                                 "丰疆智能（深圳）有限公司"
                              ],
         "stockAgeWarehouseNames":  [
-                                       "福州原材料仓"
+                                       "福州原材料仓",
+                                       "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:07:38",
+        "stockAgeUpdatedAt":  "2026-08-27 18:11:43",
         "project":  "R1916",
         "materialName":  "行走驱动电机",
         "productLine":  "推料机器人配件",
@@ -12995,7 +13012,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:05:34",
+        "stockAgeUpdatedAt":  "2026-08-27 18:09:45",
         "project":  "R1916",
         "materialName":  "Mini机自研电池转接线束",
         "productLine":  "推料机器人配件",
@@ -13047,7 +13064,7 @@ window.inventoryRows = [
                                        "福州原材料仓",
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:07:21",
+        "stockAgeUpdatedAt":  "2026-08-27 18:11:26",
         "project":  "R1916",
         "materialName":  "驱动类",
         "productLine":  "推料机器人配件",
@@ -13098,7 +13115,7 @@ window.inventoryRows = [
         "stockAgeWarehouseNames":  [
                                        "福州成品仓"
                                    ],
-        "stockAgeUpdatedAt":  "2026-08-26 18:02:03",
+        "stockAgeUpdatedAt":  "2026-08-27 18:05:52",
         "project":  "R1916",
         "materialName":  "标识牌组件",
         "productLine":  "推料机器人配件",
