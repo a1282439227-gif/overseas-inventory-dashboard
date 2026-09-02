@@ -1,5 +1,5 @@
 window.afterSalesData = {
-    "generatedAt":  "2026-09-02 10:01:44",
+    "generatedAt":  "2026-09-02 10:14:49",
     "odooRmaSyncedAt":  "2026-08-31 18:07:25",
     "rmaSource":  "Odoo sale.order / sale.order.line / helpdesk.ticket",
     "rmaRows":  1419,
@@ -45417,7 +45417,7 @@ window.afterSalesData = {
                           "odooTicketId":  0
                       }
                   ],
-    "feishuSyncedAt":  "2026-09-02 10:01:15",
+    "feishuSyncedAt":  "2026-09-02 10:14:29",
     "rmaSourceScope":  "Odoo RMA history; livestock filters: 畜牧, 推料机器人配件, 智能牛体刷配件; projects: R1916, R1917, R2404",
     "replenishmentOrders":  [
                                 {
@@ -49535,7 +49535,7 @@ window.afterSalesData = {
                                     "createDate":  "2026-08-31"
                                 }
                             ],
-    "odooStockingSyncedAt":  "2026-09-02 10:01:44",
+    "odooStockingSyncedAt":  "2026-09-02 10:14:49",
     "replenishmentSourceScope":  "Odoo overseas.warehouse.stocking.order create_uid=6531 animal husbandry lines merged with Feishu Base replenishment dates",
     "sourceFiles":  [
                         "Feishu Base RMA animal product line",
